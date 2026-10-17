@@ -1,0 +1,21 @@
+START SESSION DEMO 1 — LLaMA SUPPORT ROUTER
+
+Use this file as a presenter script. Paste or speak only one numbered message at a time.
+
+MESSAGE 1 — create the experiment
+We tested Llama 3 as a support-ticket router using dataset version 5.0 and an 85/15 data split. Training used batch size 8, learning rate 0.0001, and 6 epochs. The model reached 88 percent routing accuracy, but we forgot to record the random seed.
+
+EXPECTED ALEXA+ FOLLOW-UP
+What random seed did you use? Without it, another training run may differ.
+
+MESSAGE 2 — answer the follow-up
+The random seed was 73 because it matches the seed used by our baseline run.
+
+EXPECTED RESULT
+Alexa+ proposes a revision for training.randomSeed. Select “Approve and re-audit.”
+
+MESSAGE 3 — demonstrate a second governed change
+We decided the learning rate should be 0.00005 because the validation loss became unstable near the end of training.
+
+EXPECTED RESULT
+Alexa+ preserves the reason, proposes the learning-rate change, and asks for approval before editing the record.

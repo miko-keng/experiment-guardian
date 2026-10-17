@@ -1,0 +1,21 @@
+START SESSION DEMO 2 — RESNET QUALITY INSPECTION
+
+Use this file as a presenter script. Paste or speak only one numbered message at a time.
+
+MESSAGE 1 — create the experiment
+We trained ResNet-50 on manufacturing images, dataset version 7.2. Training used PyTorch 2.4, batch size 64, learning rate 0.002, random seed 101, AdamW, and 12 epochs. Accuracy was 93 percent. The meeting did not record the training and test split.
+
+EXPECTED ALEXA+ FOLLOW-UP
+Alexa+ asks for clarification because the evaluation data split is not specified.
+
+MESSAGE 2 — answer the follow-up
+We used an 80/20 data split, with 80 percent for training and 20 percent held out for final testing.
+
+EXPECTED RESULT
+Alexa+ proposes train and test split revisions. Select “Approve and re-audit.”
+
+MESSAGE 3 — capture exact code provenance
+The code commit was a4c91e7 because that was the reviewed release candidate.
+
+EXPECTED RESULT
+Alexa+ proposes an evaluation.codeCommit revision and asks for approval.

@@ -1,0 +1,7 @@
+Experiment: Customer Feedback Sentiment Model
+
+We fine-tuned BERT-Base on the GLUE-SST2 dataset, dataset version 3.1, to test whether domain-specific training improves sentiment classification for support messages.
+
+Training used PyTorch 2.3, batch size 16, learning rate 0.00002, random seed 17, AdamW, and 4 epochs. The model reached 90.4 percent accuracy.
+
+The team confirmed the dataset version and seed, but the notes do not say how the examples were divided between training and evaluation. We must confirm the data split before accepting the result.

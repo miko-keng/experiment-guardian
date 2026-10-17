@@ -1,0 +1,9 @@
+Experiment: Packaging Defect Vision Classifier
+
+We evaluated whether a ResNet-50 model could detect dents and scratches on aluminum packaging more accurately than the previous classifier.
+
+The training data was ImageNet-derived packaging imagery, dataset version 4.2, using an 80/20 data split. Images were resized to 224 by 224 pixels and normalized before training.
+
+The model used PyTorch 2.4, batch size 32, learning rate 0.001, AdamW, and 20 epochs. The final model reached 92.1 percent accuracy on the held-out test partition.
+
+The random seed was not recorded in the meeting notes. The team decided not to promote the model until that value is confirmed and the reproducibility audit is rerun.
