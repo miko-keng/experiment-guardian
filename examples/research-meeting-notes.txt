@@ -1,0 +1,23 @@
+Experiment Guardian Demo — Vision Model Meeting Notes
+Date: October 17, 2026
+Project: Surface Defect Classifier
+
+Research goal
+We are testing whether a ResNet-50 image classifier can improve detection of scratches and dents on manufactured metal panels compared with our previous baseline model.
+
+Dataset
+We used the Metal Surface Defects dataset, version 2.3. The training split contains 18,400 images and the held-out test split contains 2,100 images. Images were resized to 224 by 224 pixels. We used random horizontal flips and small brightness changes during training. The held-out test set was not used for model selection.
+
+Model and training
+The model was ResNet-50 initialized with ImageNet weights. Training used PyTorch 2.4, batch size 32, learning rate 0.001, and 20 epochs. We used the AdamW optimizer with weight decay 0.01.
+
+The team reduced the learning rate from 0.003 to 0.001 because the validation loss oscillated during the first run. We kept the same dataset split so that the comparison with the baseline would remain fair.
+
+Evaluation and result
+We evaluated the final checkpoint on the held-out test set using accuracy and macro F1. The new model reached 91.2 percent accuracy and 0.887 macro F1. The previous baseline reached 87.6 percent accuracy.
+
+Open items
+The random seed was not written down during the meeting. The exact Git commit and CUDA version also need to be confirmed before the experiment can be considered reproducible.
+
+Decision
+Do not promote the model yet. First confirm the random seed and code commit, rerun the reproducibility audit, and attach the resulting report to the experiment review.
