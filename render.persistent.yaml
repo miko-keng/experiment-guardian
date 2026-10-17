@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: experiment-guardian
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    disk:
+      name: experiment-guardian-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: DATABASE_PATH
+        value: /var/data/experiment-guardian.sqlite
+      - key: AWS_REGION
+        value: ap-southeast-2
+      - key: ALLOW_MOCK_AI
+        value: true
+      - key: BEE_ENABLED
+        value: false
+      - key: TRANSCRIBE_ENABLED
+        value: false
+      - key: PERSIST_TRANSCRIPTS
+        value: true
+      - key: FRONTEND_ORIGIN
+        sync: false

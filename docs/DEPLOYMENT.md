@@ -6,14 +6,18 @@ Experiment Guardian is packaged as one container. In production, Express serves 
 
 1. Push this repository to GitHub.
 2. In Render, choose **New > Blueprint** and select the repository.
-3. Render reads `render.yaml`, builds `Dockerfile`, creates a web service, and attaches a persistent disk at `/var/data`.
+3. Render reads `render.yaml`, builds `Dockerfile`, and creates a free web service.
 4. Set `FRONTEND_ORIGIN` to the final Render URL, for example `https://experiment-guardian.onrender.com`.
 5. Deploy and verify:
    - `/` opens the React application.
    - `/api/v1/health` reports service readiness.
    - `/mcp` is the Alexa+ Streamable HTTP endpoint.
 
-The default Blueprint uses the deterministic extractor and disables unavailable external integrations. This makes the judging demo repeatable.
+The default Blueprint uses the deterministic extractor and disables unavailable external integrations. This makes the judging demo repeatable without requiring a payment card.
+
+The free service stores SQLite under `/tmp`. Render can erase that filesystem during a restart or redeploy, so experiment history may reset. That is acceptable for a judge demonstration: use one of the built-in demo scenarios whenever a fresh state is needed.
+
+For durable SQLite storage, use `render.persistent.yaml` and a paid Render disk. A longer-lived production deployment should use a managed PostgreSQL database instead.
 
 ## Optional live AWS configuration
 

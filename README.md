@@ -168,7 +168,7 @@ The web experience is a visual companion and standards-based Alexa+ simulation. 
 
 ## Public deployment
 
-The repository includes a production `Dockerfile` and `render.yaml`. The cloud container serves the React application, REST API, and Streamable HTTP MCP endpoint from one HTTPS origin and stores SQLite data on a persistent disk.
+The repository includes a production `Dockerfile` and a no-card `render.yaml` for a free judge demo. The cloud container serves the React application, REST API, and Streamable HTTP MCP endpoint from one HTTPS origin. Free deployments use temporary SQLite storage; `render.persistent.yaml` is available for paid durable storage.
 
 See [Public deployment](docs/DEPLOYMENT.md) for the Render and Alexa AI CLI steps.
 
