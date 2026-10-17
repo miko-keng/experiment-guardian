@@ -6,6 +6,7 @@ import { ExperimentDetailPage } from "../pages/ExperimentDetailPage";
 import { SettingsPage } from "../pages/SettingsPage";
 import { BeeImportPage } from "../pages/BeeImportPage";
 import { AlexaLabPage } from "../pages/AlexaLabPage";
+import { LegalPage } from "../pages/LegalPage";
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +36,14 @@ export const router = createBrowserRouter([
       {
         path: "settings",
         element: <SettingsPage />,
+      },
+      {
+        path: "privacy",
+        element: <LegalPage kind="privacy" />,
+      },
+      {
+        path: "terms",
+        element: <LegalPage kind="terms" />,
       },
     ],
   },

@@ -119,3 +119,13 @@ Yes, when device access is available. Bee remains optional in this submission be
 - **Severity:** High for a live Bee-track demonstration.
 - **Workaround:** Keep the adapter optional and use meeting-note/demo sources.
 - **Suggestion:** Offer a developer sandbox and sample live-data account.
+
+### 4. Alexa AI CLI package access
+
+- **Task:** Install the documented Alexa AI CLI and deploy the MCP add-on package.
+- **Steps:** Followed the official QuickStart command, `npm install -g @alexa-ai/cli`, from the project machine.
+- **Expected:** The CLI would install so the add-on could be created, validated, and deployed.
+- **Actual:** npm returned `E404 Not Found` for the documented package, consistent with the Alexa+ add-on Private Preview access requirement.
+- **Severity:** High for device and web-simulator validation; the public Streamable HTTP MCP server remains usable independently.
+- **Workaround:** Prepared a complete add-on manifest, public assets, MCP endpoint, privacy policy, terms, and agent instructions in the repository for deployment as soon as the Amazon account is enabled.
+- **Suggestion:** Make the package available before the QuickStart page is visible, or show an entitlement-specific error with an access-request link.
