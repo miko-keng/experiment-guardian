@@ -6,6 +6,7 @@ import { ProposedRevisionInputSchema } from "../revisions/revision-types.js";
 import { revisionService } from "../services/revision-service.js";
 import { CreateDecisionSchema, UpdateDecisionSchema } from "../decisions/decision-types.js";
 import { decisionRepository } from "../database/decision-repository.js";
+import { auditRepository } from "../database/audit-repository.js";
 
 export const experimentsRouter = Router();
 
@@ -72,6 +73,7 @@ experimentsRouter.get("/:id", (req: Request, res: Response, next: NextFunction) 
     const revisions = revisionService.list(id);
     const decisions = decisionRepository.listByExperiment(id);
     const auditHistory = auditService.getAuditHistory(id);
+    const findingComments = auditRepository.listCommentsByExperiment(id);
 
     let baseline = null;
     if (experiment.baselineExperimentId) {
@@ -85,6 +87,7 @@ experimentsRouter.get("/:id", (req: Request, res: Response, next: NextFunction) 
       revisions,
       decisions,
       auditHistory,
+      findingComments,
     });
   } catch (err) {
     next(err);

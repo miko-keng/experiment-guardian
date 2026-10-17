@@ -6,6 +6,16 @@ import crypto from "crypto";
 import type { AuditResult } from "../audit/audit-types.js";
 import type { AuditRunRecord } from "../revisions/revision-types.js";
 
+export interface AuditFindingComment {
+  id: string;
+  findingId: string;
+  experimentId: string;
+  sessionId: string;
+  comment: string;
+  analysis: Record<string, unknown>;
+  createdAt: string;
+}
+
 export class SqliteAuditRepository {
   constructor(private db: DatabaseType = defaultDb) {}
 
@@ -142,6 +152,37 @@ export class SqliteAuditRepository {
     }
 
     return this.findById(id);
+  }
+
+  createComment(input: Omit<AuditFindingComment, "id" | "createdAt">): AuditFindingComment {
+    const item: AuditFindingComment = {
+      ...input,
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
+    };
+    this.db.prepare(`
+      INSERT INTO audit_finding_comments (
+        id, finding_id, experiment_id, session_id, comment_text, analysis_json, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    `).run(item.id, item.findingId, item.experimentId, item.sessionId, item.comment, JSON.stringify(item.analysis), item.createdAt);
+    return item;
+  }
+
+  listCommentsByExperiment(experimentId: UUID): AuditFindingComment[] {
+    const rows = this.db.prepare(`
+      SELECT * FROM audit_finding_comments
+      WHERE experiment_id = ?
+      ORDER BY created_at DESC
+    `).all(experimentId) as any[];
+    return rows.map((row) => ({
+      id: row.id,
+      findingId: row.finding_id,
+      experimentId: row.experiment_id,
+      sessionId: row.session_id,
+      comment: row.comment_text,
+      analysis: JSON.parse(row.analysis_json || "{}"),
+      createdAt: row.created_at,
+    }));
   }
 
   private mapRowToFinding(row: any): AuditFinding {

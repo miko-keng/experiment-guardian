@@ -21,8 +21,12 @@ import {
   X,
   Radio,
   RefreshCw,
+  MessageSquare,
+  Sparkles,
+  Loader2,
 } from "lucide-react";
 import {
+  commentOnFinding,
   createDecision,
   getExperiment,
   proposeRevision,
@@ -64,6 +68,9 @@ export const ExperimentDetailPage: React.FC = () => {
   const [decisionOwner, setDecisionOwner] = useState("");
   const [actionId, setActionId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [commentingId, setCommentingId] = useState<string | null>(null);
+  const [findingComment, setFindingComment] = useState("");
+  const [investigatingId, setInvestigatingId] = useState<string | null>(null);
 
   const loadData = () => {
     if (!id) return;
@@ -181,6 +188,22 @@ export const ExperimentDetailPage: React.FC = () => {
     }
   };
 
+  const handleFindingComment = async (findingId: string) => {
+    if (findingComment.trim().length < 3) return;
+    setInvestigatingId(findingId);
+    setActionError(null);
+    try {
+      await commentOnFinding(findingId, findingComment.trim());
+      setCommentingId(null);
+      setFindingComment("");
+      loadData();
+    } catch (err: any) {
+      setActionError(err.message || "Alexa+ could not investigate this finding");
+    } finally {
+      setInvestigatingId(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-16 text-center text-slate-500">
@@ -208,6 +231,7 @@ export const ExperimentDetailPage: React.FC = () => {
   const revisions = data.revisions || [];
   const decisions = data.decisions || [];
   const auditHistory = data.auditHistory || [];
+  const findingComments = data.findingComments || [];
 
   const renderValue = (val: any) => {
     if (val === null || val === undefined || val === "") {
@@ -364,6 +388,22 @@ export const ExperimentDetailPage: React.FC = () => {
                   </div>
                 )}
 
+                {findingComments.filter((comment) => comment.findingId === f.id).map((comment) => (
+                  <div key={comment.id} className="rounded-xl border border-violet-200 bg-violet-50 p-3 space-y-2">
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-bold text-violet-800">
+                        <Sparkles className="w-3.5 h-3.5" /> Alexa+ investigation
+                      </span>
+                      <span className="text-[10px] text-violet-500">{new Date(comment.createdAt).toLocaleString()}</span>
+                    </div>
+                    <p className="text-xs text-slate-700"><span className="font-semibold">Researcher:</span> {comment.comment}</p>
+                    <p className="text-xs text-violet-950"><span className="font-semibold">Suggestion:</span> {comment.analysis.suggestion || comment.analysis.speech}</p>
+                    <Link to={`/?session=${comment.sessionId}`} className="inline-flex items-center gap-1 text-xs font-semibold text-violet-700 hover:text-violet-900">
+                      Continue in Alexa+ chat
+                    </Link>
+                  </div>
+                ))}
+
                 {/* Status action toggle */}
                 {f.status === "open" && (
                   <div className="pt-2">
@@ -415,6 +455,45 @@ export const ExperimentDetailPage: React.FC = () => {
                     )}
                   </div>
                 )}
+
+                <div className="pt-1">
+                  {commentingId === f.id ? (
+                    <div className="rounded-xl border border-violet-200 bg-violet-50/60 p-3 space-y-3">
+                      <div className="flex items-center gap-2 text-xs font-bold text-violet-800">
+                        <MessageSquare className="w-4 h-4" /> Comment and ask Alexa+ to investigate
+                      </div>
+                      <textarea
+                        value={findingComment}
+                        onChange={(event) => setFindingComment(event.target.value)}
+                        rows={3}
+                        placeholder="Add context or a correction, for example: The random seed was 42 in the training script. Please investigate and suggest the safe update."
+                        className="w-full rounded-lg border border-violet-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+                      />
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={() => handleFindingComment(f.id)}
+                          disabled={investigatingId === f.id || findingComment.trim().length < 3}
+                          className="inline-flex items-center gap-1.5 rounded-lg bg-violet-600 px-3 py-2 text-xs font-bold text-white hover:bg-violet-700 disabled:opacity-50"
+                        >
+                          {investigatingId === f.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                          Investigate and suggest
+                        </button>
+                        <button type="button" onClick={() => { setCommentingId(null); setFindingComment(""); }} className="px-3 py-2 text-xs font-semibold text-slate-600">
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => { setCommentingId(f.id); setFindingComment(""); }}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-violet-700 hover:text-violet-900"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5" /> Comment with Alexa+
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>

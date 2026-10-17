@@ -1,13 +1,15 @@
 import React,{useCallback,useEffect,useRef,useState} from "react";
-import {Link} from "react-router-dom";
+import {Link,useSearchParams} from "react-router-dom";
 import {Activity,AlertCircle,Check,ChevronRight,CircleStop,FileText,FlaskConical,Loader2,Mic,Pause,Play,Radio,RotateCcw,Send,Sparkles,Upload,Volume2,X} from "lucide-react";
 import {addObservation,confirmAction,finishSession,getReport,getSession,listDemoScenarios,loadDemoSource,pauseSession,resumeSession,startSession,uploadSource,type AlexaSession,type Approval,type DemoScenario,type Message,type SessionDetail,type ToolInvocation} from "../api/alexa";
 
 const statusText:Record<string,string>={active:"Listening",processing:"Working",waiting_for_answer:"Waiting for your answer",waiting_for_confirmation:"Waiting for confirmation",paused:"Paused",completed:"Completed",failed:"Needs attention"};
 export const AlexaLabPage:React.FC=()=>{
+ const [searchParams]=useSearchParams();
  const [detail,setDetail]=useState<SessionDetail|null>(null);const [draft,setDraft]=useState("");const [busy,setBusy]=useState(false);const [listening,setListening]=useState(false);const [error,setError]=useState<string|null>(null);const [demos,setDemos]=useState<DemoScenario[]>([]);const [report,setReport]=useState<any>(null);const recognition=useRef<any>(null);const fileRef=useRef<HTMLInputElement>(null);
  useEffect(()=>{listDemoScenarios().then(r=>setDemos(r.items)).catch(()=>{});},[]);
  const refresh=useCallback(async(id:string)=>{setDetail(await getSession(id));},[]);
+ useEffect(()=>{const sessionId=searchParams.get("session");if(sessionId)refresh(sessionId).catch(()=>setError("The linked Alexa+ investigation session could not be loaded."));},[searchParams,refresh]);
  const speak=(text:string)=>{if("speechSynthesis" in window){window.speechSynthesis.cancel();window.speechSynthesis.speak(new SpeechSynthesisUtterance(text));}};
  useEffect(()=>{if(!detail?.session.id)return;const stream=new EventSource(`/api/v1/alexa/sessions/${detail.session.id}/events`);stream.onmessage=()=>refresh(detail.session.id).catch(()=>{});const update=()=>refresh(detail.session.id).catch(()=>{});["tool.started","tool.completed","approval.required","revision.applied","report.completed","session.paused","session.resumed"].forEach(n=>stream.addEventListener(n,update));return()=>stream.close();},[detail?.session.id,refresh]);
  const begin=async(title?:string,sourceId?:string|null)=>{setBusy(true);setError(null);try{const r=await startSession({title,sourceId});await refresh(r.data.id);return r.data;}catch(e:any){setError(e.message);}finally{setBusy(false);}return null;};

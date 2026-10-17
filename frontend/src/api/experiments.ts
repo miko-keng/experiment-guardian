@@ -12,6 +12,7 @@ import {
   DecisionState,
   Experiment,
   AuditResult,
+  AuditFindingComment,
 } from "../types/index";
 
 const BASE_URL = "/api/v1";
@@ -57,6 +58,16 @@ export async function updateFindingStatus(
   return requestJson<AuditFinding>(`${BASE_URL}/audits/${findingId}`, {
     method: "PATCH",
     body: JSON.stringify({ status, resolutionNote }),
+  });
+}
+
+export async function commentOnFinding(
+  findingId: string,
+  comment: string
+): Promise<AuditFindingComment> {
+  return requestJson<AuditFindingComment>(`${BASE_URL}/audits/${findingId}/comments`, {
+    method: "POST",
+    body: JSON.stringify({ comment }),
   });
 }
 
