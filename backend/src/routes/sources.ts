@@ -1,0 +1,18 @@
+import { Router, type NextFunction, type Request, type Response } from "express";
+import multer from "multer";
+import mammoth from "mammoth";
+import { PDFParse } from "pdf-parse";
+import { z } from "zod";
+import { sourceRepository } from "../database/source-repository.js";
+import { demoScenarios } from "../demo/scenarios.js";
+import { BedrockIntegrationError } from "../integrations/bedrock/bedrock-errors.js";
+import { transcriptionService } from "../services/transcription-service.js";
+
+export const sourcesRouter=Router();
+const upload=multer({storage:multer.memoryStorage(),limits:{fileSize:Math.max(10*1024*1024, 25*1024*1024)}});
+sourcesRouter.get("/demo",(_req,res)=>res.json({items:demoScenarios.map(({transcript,...item})=>item)}));
+sourcesRouter.post("/demo/:id",(req,res,next)=>{try{const scenario=demoScenarios.find((item)=>item.id===req.params.id);if(!scenario)throw new BedrockIntegrationError("NOT_FOUND","Demo scenario not found",undefined,404);res.status(201).json(sourceRepository.create({sourceType:"demo",originalName:scenario.title,mediaType:"text/plain",text:scenario.transcript,metadata:{demo:true,scenarioId:scenario.id,description:scenario.description}}));}catch(e){next(e);}});
+sourcesRouter.post("/text",(req,res,next)=>{try{const input=z.object({text:z.string().min(1).max(50000),sourceType:z.enum(["manual","conversation","meeting_notes","browser_voice","audio_transcript","demo"]).default("manual"),originalName:z.string().max(255).nullable().optional(),metadata:z.record(z.unknown()).optional()}).parse(req.body);res.status(201).json(sourceRepository.create({sourceType:input.sourceType,originalName:input.originalName,mediaType:"text/plain",text:input.text,metadata:input.metadata}));}catch(e){next(e);}});
+sourcesRouter.post("/files",upload.single("file"),async(req:Request,res:Response,next:NextFunction)=>{try{const file=req.file;if(!file)throw new BedrockIntegrationError("INVALID_INPUT","A file is required",undefined,400);let text="";const name=file.originalname.toLowerCase();if(file.mimetype==="text/plain"||name.endsWith(".txt")||name.endsWith(".md")){text=file.buffer.toString("utf8");}else if(name.endsWith(".docx")){text=(await mammoth.extractRawText({buffer:file.buffer})).value;}else if(name.endsWith(".pdf")){const parser=new PDFParse({data:file.buffer});try{text=(await parser.getText()).text;}finally{await parser.destroy();}}else throw new BedrockIntegrationError("SOURCE_TYPE_UNSUPPORTED","Use TXT, Markdown, PDF, or DOCX",undefined,415);if(!text.trim())throw new BedrockIntegrationError("SOURCE_EXTRACTION_FAILED","No readable text was found in this file",undefined,422);res.status(201).json(sourceRepository.create({sourceType:"meeting_notes",originalName:file.originalname,mediaType:file.mimetype,text:text.trim(),metadata:{size:file.size}}));}catch(e){next(e);}});
+sourcesRouter.post("/audio",upload.single("file"),async(req,res,next)=>{try{if(!req.file)throw new BedrockIntegrationError("INVALID_INPUT","An audio file is required",undefined,400);const result=await transcriptionService.transcribeFile({buffer:req.file.buffer,originalName:req.file.originalname,contentType:req.file.mimetype});res.status(201).json(sourceRepository.create({sourceType:"audio_transcript",originalName:req.file.originalname,mediaType:req.file.mimetype,text:result.text,metadata:{transcriptionJob:result.jobName,languageCode:result.languageCode,...result.metadata}}));}catch(e){next(e);}});
+sourcesRouter.get("/:id",(req,res)=>{const item=sourceRepository.findById(String(req.params.id));if(!item){res.status(404).json({error:{code:"NOT_FOUND",message:"Source not found"}});return;}res.json(item);});

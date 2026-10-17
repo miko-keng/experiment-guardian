@@ -1,0 +1,5 @@
+import crypto from "crypto";
+import { db as defaultDb, type DatabaseType } from "./connection.js";
+export interface ExperimentReport {id:string;experimentId:string;auditRunId:string|null;format:"markdown"|"json";content:string;createdAt:string}
+export class ReportRepository{constructor(private database:DatabaseType=defaultDb){} create(input:Omit<ExperimentReport,"id"|"createdAt">):ExperimentReport{const item={...input,id:crypto.randomUUID(),createdAt:new Date().toISOString()};this.database.prepare(`INSERT INTO experiment_reports (id,experiment_id,audit_run_id,format,content,created_at) VALUES (?,?,?,?,?,?)`).run(item.id,item.experimentId,item.auditRunId,item.format,item.content,item.createdAt);return item;} findById(id:string):ExperimentReport|null{const r=this.database.prepare(`SELECT * FROM experiment_reports WHERE id=?`).get(id) as any;return r?{id:r.id,experimentId:r.experiment_id,auditRunId:r.audit_run_id,format:r.format,content:r.content,createdAt:r.created_at}:null;}}
+export const reportRepository=new ReportRepository();
