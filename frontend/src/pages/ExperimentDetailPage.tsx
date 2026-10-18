@@ -26,7 +26,6 @@ import {
   Loader2,
 } from "lucide-react";
 import {
-  commentOnFinding,
   createDecision,
   getExperiment,
   proposeRevision,
@@ -36,6 +35,8 @@ import {
 } from "../api/experiments";
 import { syncBeeConversation } from "../api/bee";
 import { DecisionState, ExperimentDetailResponse, FindingStatus } from "../types/index";
+import { getSession, type SessionDetail } from "../api/alexa";
+import { callMcpTool } from "../api/mcp";
 
 const REVISION_FIELDS = [
   ["training.randomSeed", "Random seed"],
@@ -71,6 +72,8 @@ export const ExperimentDetailPage: React.FC = () => {
   const [commentingId, setCommentingId] = useState<string | null>(null);
   const [findingComment, setFindingComment] = useState("");
   const [investigatingId, setInvestigatingId] = useState<string | null>(null);
+  const [investigationSessions, setInvestigationSessions] = useState<Record<string, SessionDetail>>({});
+  const [investigationDrafts, setInvestigationDrafts] = useState<Record<string, string>>({});
 
   const loadData = () => {
     if (!id) return;
@@ -79,6 +82,9 @@ export const ExperimentDetailPage: React.FC = () => {
       .then((res) => {
         setData(res);
         setError(null);
+        Promise.all(res.findingComments.map(async (comment) => [comment.sessionId, await getSession(comment.sessionId)] as const))
+          .then((items) => setInvestigationSessions((current) => ({ ...current, ...Object.fromEntries(items) })))
+          .catch(() => {});
       })
       .catch((err) => {
         setError(err.message || "Failed to load experiment details");
@@ -193,7 +199,8 @@ export const ExperimentDetailPage: React.FC = () => {
     setInvestigatingId(findingId);
     setActionError(null);
     try {
-      await commentOnFinding(findingId, findingComment.trim());
+      const saved = await callMcpTool<any>("comment_on_audit_finding", { findingId, comment: findingComment.trim() });
+      if (saved?.sessionId) { const sessionDetail=await getSession(saved.sessionId);setInvestigationSessions((current) => ({ ...current, [saved.sessionId]: sessionDetail })); }
       setCommentingId(null);
       setFindingComment("");
       loadData();
@@ -202,6 +209,27 @@ export const ExperimentDetailPage: React.FC = () => {
     } finally {
       setInvestigatingId(null);
     }
+  };
+
+  const handleInvestigationMessage = async (findingId: string, sessionId: string) => {
+    const message = (investigationDrafts[sessionId] || "").trim();
+    if (!message) return;
+    setInvestigatingId(findingId);setActionError(null);
+    try {
+      const detail = investigationSessions[sessionId] || await getSession(sessionId);
+      const pending = detail.approvals.find((approval) => approval.status === "pending");
+      if (pending && /^(?:approved?|yes|confirm|apply|go ahead)[.!]?$/i.test(message)) {
+        await callMcpTool("confirm_experiment_action", { sessionId, approvalRequestId: pending.id, decision: "approve" });
+      } else if (pending && /^(?:reject|rejected|no|cancel|do not apply)[.!]?$/i.test(message)) {
+        await callMcpTool("confirm_experiment_action", { sessionId, approvalRequestId: pending.id, decision: "reject" });
+      } else {
+        await callMcpTool("continue_audit_finding_investigation", { findingId, sessionId, message });
+      }
+      setInvestigationDrafts((current) => ({ ...current, [sessionId]: "" }));
+      const updatedSession=await getSession(sessionId);setInvestigationSessions((current) => ({ ...current, [sessionId]: updatedSession }));
+      loadData();
+    } catch (err:any) { setActionError(err.message || "The investigation could not continue"); }
+    finally { setInvestigatingId(null); }
   };
 
   if (loading) {
@@ -392,15 +420,21 @@ export const ExperimentDetailPage: React.FC = () => {
                   <div key={comment.id} className="rounded-xl border border-violet-200 bg-violet-50 p-3 space-y-2">
                     <div className="flex items-center justify-between gap-3">
                       <span className="inline-flex items-center gap-1.5 text-xs font-bold text-violet-800">
-                        <Sparkles className="w-3.5 h-3.5" /> Alexa+ investigation
+                        <Sparkles className="w-3.5 h-3.5" /> Alexa+ Simulator · governed investigation
                       </span>
                       <span className="text-[10px] text-violet-500">{new Date(comment.createdAt).toLocaleString()}</span>
                     </div>
                     <p className="text-xs text-slate-700"><span className="font-semibold">Researcher:</span> {comment.comment}</p>
                     <p className="text-xs text-violet-950"><span className="font-semibold">Suggestion:</span> {comment.analysis.suggestion || comment.analysis.speech}</p>
-                    <Link to={`/?session=${comment.sessionId}`} className="inline-flex items-center gap-1 text-xs font-semibold text-violet-700 hover:text-violet-900">
-                      Continue in Alexa+ chat
-                    </Link>
+                    <div className="rounded-lg border border-violet-200 bg-white/80 p-3 space-y-2 max-h-64 overflow-y-auto">
+                      {(investigationSessions[comment.sessionId]?.messages || []).map((message) => <div key={message.id} className={`max-w-[92%] rounded-lg px-3 py-2 text-xs ${message.role === "user" ? "ml-auto bg-violet-600 text-white" : "bg-slate-100 text-slate-800"}`}><span className="block mb-1 text-[10px] font-bold uppercase opacity-70">{message.role === "user" ? "Researcher" : "Alexa+ Simulator"}</span>{message.content}</div>)}
+                    </div>
+                    {investigationSessions[comment.sessionId]?.approvals.some((approval) => approval.status === "pending") && <div className="rounded-lg border border-amber-300 bg-amber-50 p-2 text-xs text-amber-900"><strong>Explicit approval required.</strong> Reply “Approved” to apply the exact proposal and rerun the audit, or “Reject”.</div>}
+                    <div className="flex gap-2">
+                      <input value={investigationDrafts[comment.sessionId] || ""} onChange={(event) => setInvestigationDrafts((current) => ({ ...current, [comment.sessionId]: event.target.value }))} onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); void handleInvestigationMessage(f.id, comment.sessionId); } }} placeholder="Ask why, correct a value, approve, reject, or follow up…" className="min-w-0 flex-1 rounded-lg border border-violet-200 bg-white px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-violet-400" />
+                      <button type="button" disabled={investigatingId === f.id || !(investigationDrafts[comment.sessionId] || "").trim()} onClick={() => handleInvestigationMessage(f.id, comment.sessionId)} className="rounded-lg bg-violet-700 px-3 py-2 text-xs font-bold text-white disabled:opacity-50">{investigatingId === f.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Send"}</button>
+                    </div>
+                    <p className="text-[10px] text-violet-600">Deterministic Alexa+ simulation. Suggestions use stored evidence; changes execute through MCP and require approval.</p>
                   </div>
                 ))}
 
@@ -460,7 +494,7 @@ export const ExperimentDetailPage: React.FC = () => {
                   {commentingId === f.id ? (
                     <div className="rounded-xl border border-violet-200 bg-violet-50/60 p-3 space-y-3">
                       <div className="flex items-center gap-2 text-xs font-bold text-violet-800">
-                        <MessageSquare className="w-4 h-4" /> Comment and ask Alexa+ to investigate
+                        <MessageSquare className="w-4 h-4" /> Investigate with Alexa+ Simulator
                       </div>
                       <textarea
                         value={findingComment}
@@ -490,7 +524,7 @@ export const ExperimentDetailPage: React.FC = () => {
                       onClick={() => { setCommentingId(f.id); setFindingComment(""); }}
                       className="inline-flex items-center gap-1.5 text-xs font-semibold text-violet-700 hover:text-violet-900"
                     >
-                      <MessageSquare className="w-3.5 h-3.5" /> Comment with Alexa+
+                      <MessageSquare className="w-3.5 h-3.5" /> Investigate with Alexa+ Simulator
                     </button>
                   )}
                 </div>

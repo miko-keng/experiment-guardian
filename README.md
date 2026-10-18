@@ -28,8 +28,8 @@ Transcript    Experiment       Audit
  Extractor      Service       Engine
      │             │             │
      ▼             ▼             ▼
-AWS Bedrock     SQLite      Audit Rules
-(Converse API) (Persistent) (Deterministic)
+Bedrock or       SQLite      Audit Rules
+Mock Extractor (Persistent) (Deterministic)
                    ▲
                    │
               Bee Adapter

@@ -13,7 +13,7 @@ healthRouter.get("/", (_req: Request, res: Response) => {
   }
 
   const bedrockConfigured = Boolean(
-    config.allowMockAi || (config.awsRegion && config.bedrockModelId && (config.awsBearerTokenBedrock || process.env.AWS_ACCESS_KEY_ID))
+    !config.allowMockAi && config.awsRegion && config.bedrockModelId && (config.awsBearerTokenBedrock || process.env.AWS_ACCESS_KEY_ID)
   );
 
   const beeConfigured = Boolean(

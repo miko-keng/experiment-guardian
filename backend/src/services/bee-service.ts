@@ -8,6 +8,7 @@ import { BedrockIntegrationError } from "../integrations/bedrock/bedrock-errors.
 import type { BeeConversation, BeeUtterance } from "../integrations/bee/bee-types.js";
 import type { Experiment } from "../extraction/experiment-schema.js";
 import type { EditableExperimentFieldPath } from "../revisions/revision-types.js";
+import { config } from "../config/env.js";
 
 const comparableFields: EditableExperimentFieldPath[] = [
   "model.architecture", "model.modelName", "model.modelVersion",
@@ -31,15 +32,20 @@ function transcriptFrom(utterances: BeeUtterance[]): string {
 }
 
 export class BeeService {
+  private requireEnabled() {
+    if (!config.beeEnabled) throw new BedrockIntegrationError("BEE_NOT_CONFIGURED", "Set BEE_ENABLED=true after authenticating the Bee CLI.", undefined, 501);
+  }
   getStatus() {
     return beeProvider.getConnectionStatus();
   }
 
   listConversations(cursor?: string, limit?: number) {
+    this.requireEnabled();
     return beeProvider.listConversations({ cursor, limit });
   }
 
   async getConversation(id: string): Promise<BeeConversation> {
+    this.requireEnabled();
     const conversation = await beeProvider.getConversation(id);
     if (conversation.utterances.length === 0) {
       conversation.utterances = await beeProvider.getTranscriptSince(id);
@@ -48,6 +54,7 @@ export class BeeService {
   }
 
   getRelated(id: string, limit?: number) {
+    this.requireEnabled();
     return beeProvider.findRelatedConversations(id, limit);
   }
 

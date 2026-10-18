@@ -85,7 +85,7 @@ export const NewExperimentPage: React.FC = () => {
         </button>
         <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Audit New Experiment</h1>
         <p className="text-sm text-slate-500 mt-1">
-          Paste experimental discussion transcripts from lab meetings or Slack. AWS Bedrock will extract structured parameters and verify scientific controls.
+          Paste experimental discussions from lab meetings or Slack. The configured extractor structures the record, then deterministic rules verify scientific controls. The public demo uses the Bedrock Mock Extractor.
         </p>
       </div>
 

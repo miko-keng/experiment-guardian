@@ -118,7 +118,7 @@ export const BeeImportPage: React.FC = () => {
             <Radio className="w-4 h-4" /> Continuous research memory
           </div>
           <h1 className="text-2xl font-bold text-slate-900">Bee Conversation Import</h1>
-          <p className="text-sm text-slate-500 mt-1 max-w-2xl">Review real Bee-captured discussions before turning them into evidence-linked experiment records.</p>
+          <p className="text-sm text-slate-500 mt-1 max-w-2xl">When Bee is connected, review Bee-captured discussions before turning them into evidence-linked experiment records. Bee is disabled in the public demo.</p>
         </div>
         <button type="button" onClick={load} className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
           <RefreshCw className="w-4 h-4" /> Refresh connection

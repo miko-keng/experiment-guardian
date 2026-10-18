@@ -2,7 +2,7 @@
 
 ## Project description
 
-Experiment Guardian is an Alexa+ research memory and reproducibility copilot. Researchers describe an experiment by voice, paste a transcript, or import meeting notes. Alexa+ coordinates MCP tools that convert the discussion into a structured experiment record, run deterministic reproducibility checks, identify missing controls, ask the next useful question, and request explicit confirmation before changing the record.
+Experiment Guardian is an Alexa+ research memory and reproducibility copilot. Researchers describe an experiment by voice, paste a transcript, or import meeting notes. In the submitted build, a clearly labeled deterministic Alexa+ Simulator coordinates real MCP tools that convert the discussion into a structured experiment record, run deterministic reproducibility checks, identify missing controls, ask the next useful question, and request explicit confirmation before changing the record.
 
 The system preserves the evidence behind every value and decision. When a session ends, it produces an evidence-linked report showing the experiment configuration, audit findings, decision history, and unresolved risks. This turns informal laboratory conversations into an auditable record without forcing researchers to stop their work and complete a long form.
 
@@ -23,7 +23,7 @@ The judge-facing web simulation shows the Alexa+ conversation, the exact MCP too
 
 Primary track: **Alexa+** using the simulated-experience path with a working Streamable HTTP MCP server and an included Agent Skill.
 
-Optional mini challenge: **AWS Builder**. The repository contains working Amazon Bedrock and Amazon Transcribe adapters plus S3 temporary-audio handling. Live invocation was blocked in the supplied project account, so the repeatable demo uses the deterministic extractor and browser speech recognition. The limitation and exact service feedback are documented in `docs/FEEDBACK_AND_FRICTION_LOG.md`.
+AWS Builder status: **not claimed unless live AWS invocation is enabled and demonstrated before submission**. The repository contains Amazon Bedrock and Amazon Transcribe/S3 adapters, but account policies blocked live invocation. The current public demo uses the deterministic Bedrock Mock Extractor and browser speech recognition. The limitation and exact service feedback are documented in `docs/FEEDBACK_AND_FRICTION_LOG.md`.
 
 ## Technology used
 
