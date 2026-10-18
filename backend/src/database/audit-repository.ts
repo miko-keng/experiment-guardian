@@ -105,6 +105,24 @@ export class SqliteAuditRepository {
     return rows.map((r) => this.mapRowToFinding(r));
   }
 
+  listHistoryByExperiment(experimentId: UUID): AuditFinding[] {
+    const rows = this.db.prepare(`
+      SELECT findings.*
+      FROM audit_findings AS findings
+      LEFT JOIN audit_runs AS runs ON runs.id = findings.audit_run_id
+      WHERE findings.experiment_id = ?
+      ORDER BY COALESCE(runs.completed_at, findings.created_at) DESC,
+        CASE findings.severity
+          WHEN 'critical' THEN 1
+          WHEN 'warning' THEN 2
+          WHEN 'info' THEN 3
+          ELSE 4
+        END,
+        findings.created_at DESC
+    `).all(experimentId) as any[];
+    return rows.map((row) => this.mapRowToFinding(row));
+  }
+
   listRunsByExperiment(experimentId: UUID): AuditRunRecord[] {
     const rows = this.db.prepare(`
       SELECT * FROM audit_runs
@@ -206,6 +224,7 @@ export class SqliteAuditRepository {
       resolutionNote: row.resolution_note,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
+      auditRunId: row.audit_run_id || null,
     };
   }
 }

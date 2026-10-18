@@ -8,6 +8,7 @@ import { MockExtractor } from "../../src/integrations/bedrock/mock-extractor.js"
 import { experimentService } from "../../src/services/experiment-service.js";
 import { auditService } from "../../src/services/audit-service.js";
 import { alexaSessionService } from "../../src/services/alexa-session-service.js";
+import request from "supertest";
 
 describe("MCP governed finding investigation", () => {
   let server: Server | undefined;
@@ -46,5 +47,12 @@ describe("MCP governed finding investigation", () => {
     expect(experimentService.getExperiment(initial.experiment.id)?.training.randomSeed).toBe(42);
     expect(auditService.getFindingsForExperiment(initial.experiment.id).some((item) => item.ruleId === "MISSING_RANDOM_SEED" && item.status === "open")).toBe(false);
     expect(alexaSessionService.get(sessionId).tools.map((tool) => tool.toolName)).toEqual(expect.arrayContaining(["get_pending_experiment_action", "continue_audit_finding_investigation", "confirm_experiment_action"]));
+
+    const detail = await request(app).get(`/api/v1/experiments/${initial.experiment.id}`).expect(200);
+    const archivedFinding = detail.body.findingHistory.find((item:any) => item.id === finding.id);
+    expect(archivedFinding.status).toBe("resolved");
+    expect(archivedFinding.auditRunId).toBeTruthy();
+    expect(detail.body.findingComments.some((item:any) => item.findingId === finding.id && item.sessionId === sessionId)).toBe(true);
+    expect(alexaSessionService.get(sessionId).messages.length).toBeGreaterThan(1);
   });
 });

@@ -29,6 +29,10 @@ export class AuditService {
     return auditRepository.listByExperiment(experimentId);
   }
 
+  getFindingHistory(experimentId: UUID): AuditFinding[] {
+    return auditRepository.listHistoryByExperiment(experimentId);
+  }
+
   updateFindingStatus(
     findingId: UUID,
     status: FindingStatus,

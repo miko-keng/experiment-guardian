@@ -74,6 +74,7 @@ experimentsRouter.get("/:id", (req: Request, res: Response, next: NextFunction) 
     const decisions = decisionRepository.listByExperiment(id);
     const auditHistory = auditService.getAuditHistory(id);
     const findingComments = auditRepository.listCommentsByExperiment(id);
+    const findingHistory = auditService.getFindingHistory(id);
 
     let baseline = null;
     if (experiment.baselineExperimentId) {
@@ -88,6 +89,7 @@ experimentsRouter.get("/:id", (req: Request, res: Response, next: NextFunction) 
       decisions,
       auditHistory,
       findingComments,
+      findingHistory,
     });
   } catch (err) {
     next(err);

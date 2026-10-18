@@ -260,6 +260,9 @@ export const ExperimentDetailPage: React.FC = () => {
   const decisions = data.decisions || [];
   const auditHistory = data.auditHistory || [];
   const findingComments = data.findingComments || [];
+  const findingHistory = data.findingHistory || findings;
+  const currentFindingIds = new Set(findings.map((finding) => finding.id));
+  const historicalFindings = findingHistory.filter((finding) => !currentFindingIds.has(finding.id));
 
   const renderValue = (val: any) => {
     if (val === null || val === undefined || val === "") {
@@ -533,6 +536,61 @@ export const ExperimentDetailPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Immutable finding and conversation history */}
+      <section className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+        <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <History className="h-5 w-5 text-violet-600" />
+            <div>
+              <h2 className="text-base font-bold text-slate-900">Finding History</h2>
+              <p className="text-xs text-slate-500">Earlier audit evidence and Alexa+ conversations remain available after re-audits.</p>
+            </div>
+          </div>
+          <span className="shrink-0 rounded-full bg-violet-100 px-2.5 py-1 text-xs font-semibold text-violet-800">{historicalFindings.length} archived</span>
+        </div>
+        {historicalFindings.length === 0 ? (
+          <p className="px-6 py-5 text-sm text-slate-500">History appears here after the experiment is corrected or audited again.</p>
+        ) : (
+          <div className="divide-y divide-slate-100">
+            {historicalFindings.map((finding) => {
+              const run = auditHistory.find((item) => item.id === finding.auditRunId);
+              const comments = findingComments.filter((comment) => comment.findingId === finding.id);
+              return (
+                <details key={finding.id} className="group px-6 py-4">
+                  <summary className="flex cursor-pointer list-none items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase ${finding.status === "open" ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-800"}`}>{finding.status}</span>
+                        <span className="text-sm font-bold text-slate-900">{finding.title}</span>
+                        <span className="font-mono text-[10px] text-slate-400">{finding.ruleId}</span>
+                      </div>
+                      <p className="mt-1 text-xs text-slate-500">{run ? `Audit run ${new Date(run.completedAt).toLocaleString()}` : new Date(finding.createdAt).toLocaleString()} · {comments.length} investigation{comments.length === 1 ? "" : "s"}</p>
+                    </div>
+                    <ChevronDown className="h-4 w-4 shrink-0 text-slate-400 transition-transform group-open:rotate-180" />
+                  </summary>
+                  <div className="mt-4 space-y-3 border-l-2 border-violet-100 pl-4">
+                    <p className="text-sm text-slate-700">{finding.description}</p>
+                    {finding.resolutionNote && <p className="rounded-lg bg-emerald-50 p-2 text-xs text-emerald-800"><strong>Outcome:</strong> {finding.resolutionNote}</p>}
+                    {comments.length === 0 ? <p className="text-xs text-slate-400">No linked conversation for this finding.</p> : comments.map((comment) => (
+                      <div key={comment.id} className="rounded-xl border border-violet-200 bg-violet-50/60 p-3">
+                        <div className="mb-2 flex items-center justify-between gap-3 text-xs"><strong className="text-violet-800">Alexa+ governed investigation</strong><span className="text-[10px] text-violet-500">{new Date(comment.createdAt).toLocaleString()}</span></div>
+                        <div className="space-y-2">
+                          {(investigationSessions[comment.sessionId]?.messages || []).map((message) => (
+                            <div key={message.id} className={`max-w-[92%] rounded-lg px-3 py-2 text-xs ${message.role === "user" ? "ml-auto bg-violet-600 text-white" : "bg-white text-slate-800"}`}>
+                              <span className="mb-1 block text-[10px] font-bold uppercase opacity-70">{message.role === "user" ? "Researcher" : "Alexa+ Simulator"}</span>{message.content}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              );
+            })}
+          </div>
+        )}
+      </section>
 
       {/* Research decisions and governed revisions */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">

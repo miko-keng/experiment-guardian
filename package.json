@@ -15,7 +15,8 @@
     "start": "npm run start --workspace=backend",
     "test": "npm run test --workspaces",
     "test:backend": "npm run test --workspace=backend",
-    "test:frontend": "npm run test --workspace=frontend"
+    "test:frontend": "npm run test --workspace=frontend",
+    "trace:mcp": "npm run build --workspace=backend && node scripts/mcp-inspector-trace.mjs"
   },
   "keywords": [
     "experiment-integrity",

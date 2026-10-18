@@ -112,6 +112,7 @@ export interface AuditFinding {
   resolutionNote: string | null;
   createdAt: string;
   updatedAt: string;
+  auditRunId?: UUID | null;
 }
 
 export interface AuditFindingComment {
@@ -172,6 +173,7 @@ export interface ExperimentDetailResponse {
   decisions: ResearchDecision[];
   auditHistory: AuditRunRecord[];
   findingComments: AuditFindingComment[];
+  findingHistory: AuditFinding[];
 }
 
 export type RevisionStatus = "proposed" | "applied" | "rejected";

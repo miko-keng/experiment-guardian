@@ -139,7 +139,7 @@ npm run test:frontend
 | `/api/v1/health` | `GET` | Health status and configuration indicators |
 | `/api/v1/experiments/audit` | `POST` | Ingests transcript, extracts parameters, persists to SQLite, and runs audit |
 | `/api/v1/experiments` | `GET` | Paginated listing of recorded experiments |
-| `/api/v1/experiments/:id` | `GET` | Full experiment details, baseline summary, and findings |
+| `/api/v1/experiments/:id` | `GET` | Full experiment details, latest findings, immutable finding history, and linked investigations |
 | `/api/v1/experiments/:id/audit` | `GET` | Audit findings for a specific experiment |
 | `/api/v1/audits/:findingId` | `PATCH` | Updates finding status (`resolved`, `accepted`, `dismissed`) with notes |
 | `/api/v1/bee/status` | `GET` | Bee wearable AI integration readiness status |

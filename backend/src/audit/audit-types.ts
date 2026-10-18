@@ -30,6 +30,7 @@ export interface AuditFinding {
   resolutionNote: string | null;
   createdAt: string;
   updatedAt: string;
+  auditRunId?: UUID | null;
 }
 
 export interface AuditResult {
