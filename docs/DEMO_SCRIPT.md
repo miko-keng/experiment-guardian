@@ -41,3 +41,17 @@ Briefly show browser microphone input and the document import control. Mention t
 “Experiment Guardian gives Alexa+ an important research role: listen continuously, recover missing context, govern changes, and leave behind evidence another researcher can actually reproduce.”
 
 End on the report and MCP activity view.
+
+## Evidence-focused alternative (under three minutes)
+
+1. Load **Demo A · Stored configuration conflict**. Open its experiment page and show the note's seed 42 and dataset v2 beside the stored run's seed 7 and dataset v1. Point to the three deterministic rule IDs and the `block` gate.
+2. Load **Demo B · Missing result evidence**. Show the 91% claim and the absent evaluation script, result artifact, and checkpoint. Explain that a claim is not automatically verified.
+3. Attach a relevant file or approve a proposed correction, then show the new audit run and the earlier finding retained in history. State that fixture metadata remains `user_confirmed`; uploaded file bytes can be hash-verified.
+4. Open the Alexa+ Lab Copilot session and MCP timeline. State clearly that the web experience simulates Alexa+ while making real MCP calls, and that Bedrock extraction is in mock mode unless a live model is configured.
+
+## Connected ML review alternative
+
+1. Open [the demo merge request](https://gitlab.com/miko-keng/data-science-ci-example/-/merge_requests/1) and show commit `2d95c4d7` and `experiment-guardian.json` with seed 42 and learning rate 0.1.
+2. Show the locally logged GitLab MLflow run `e9cf4088-1ebe-44c5-bdcf-9c79007cad1f`, its accuracy metric, parameters, and matching commit tag. State that GitLab-hosted CI required account verification, so this run was executed locally and sent to GitLab through the MLflow API.
+3. In Guardian, paste the MR URL and run ID into **Review an existing ML run**. Show the pinned evidence snapshot, deterministic comparison, and any missing-artifact findings. Record the review status as observed; do not imply a passing gate if findings remain.
+4. Open **Discuss this run in the Alexa lab** to show the MCP-backed conversational follow-up and approval flow. Finish with the report and evidence history.

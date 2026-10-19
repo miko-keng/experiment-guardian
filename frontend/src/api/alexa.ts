@@ -14,8 +14,9 @@ export const confirmAction=(sessionId:string,approvalRequestId:string,decision:"
 export const pauseSession=(id:string)=>requestJson<Envelope>(`/api/v1/alexa/sessions/${id}/pause`,{method:"POST"});
 export const resumeSession=(id:string)=>requestJson<Envelope>(`/api/v1/alexa/sessions/${id}/resume`,{method:"POST"});
 export const finishSession=(id:string)=>requestJson<Envelope>(`/api/v1/alexa/sessions/${id}/finish`,{method:"POST"});
-export interface DemoScenario{id:string;title:string;description:string}
+export interface DemoScenario{id:string;title:string;description:string;databaseBacked?:boolean}
 export const listDemoScenarios=()=>requestJson<{items:DemoScenario[]}>("/api/v1/sources/demo");
 export const loadDemoSource=(id:string)=>requestJson<any>(`/api/v1/sources/demo/${id}`,{method:"POST"});
+export const loadDatabaseDemo=(id:string)=>requestJson<any>(`/api/v1/sources/demo/${id}/load`,{method:"POST"});
 export async function uploadSource(file:File){const body=new FormData();body.append("file",file);const audio=/\.(mp3|mp4|wav|flac|m4a|webm|ogg)$/i.test(file.name);const res=await fetch(audio?"/api/v1/sources/audio":"/api/v1/sources/files",{method:"POST",body});if(!res.ok){const data=await res.json().catch(()=>null);throw new Error(data?.error?.message||"Could not extract this file");}return res.json();}
 export const getReport=(id:string)=>requestJson<any>(`/api/v1/reports/${id}`);

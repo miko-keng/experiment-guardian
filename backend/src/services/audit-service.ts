@@ -3,20 +3,28 @@ import { auditRunner } from "../audit/audit-runner.js";
 import { auditRepository } from "../database/audit-repository.js";
 import { experimentRepository } from "../database/experiment-repository.js";
 import { Experiment, UUID } from "../extraction/experiment-schema.js";
+import { db } from "../database/connection.js";
 
 export class AuditService {
   runAuditForExperiment(experiment: Experiment, revisionId: UUID | null = null): AuditResult {
     const history = experimentRepository.list({ limit: 100, offset: 0 }).items;
     const auditResult = auditRunner.evaluate(experiment, history);
+    const previousFindings = auditRepository.listByExperiment(experiment.id);
 
     // Preserve every audit as an immutable run and attach its findings.
-    const auditRun = auditRepository.createRun(auditResult, revisionId);
-    auditRepository.createMany(auditResult.findings, auditRun.id);
-
-    // Derive and update experiment status
-    const derivedStatus = auditRunner.deriveStatus(auditResult);
-    experimentRepository.update(experiment.id, { status: derivedStatus });
-    experiment.status = derivedStatus;
+    db.transaction(() => {
+      const auditRun = auditRepository.createRun(auditResult, revisionId);
+      auditRepository.createMany(auditResult.findings, auditRun.id);
+      const currentRuleIds = new Set(auditResult.findings.map((finding) => finding.ruleId));
+      for (const previous of previousFindings) {
+        if (previous.status === "open" && !currentRuleIds.has(previous.ruleId)) {
+          auditRepository.updateStatus(previous.id, "resolved", `No longer detected in audit run ${auditRun.id}.`);
+        }
+      }
+      const derivedStatus = auditRunner.deriveStatus(auditResult);
+      experimentRepository.update(experiment.id, { status: derivedStatus });
+      experiment.status = derivedStatus;
+    })();
 
     return auditResult;
   }

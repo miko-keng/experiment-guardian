@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { PlusCircle, Search, AlertTriangle, CheckCircle, Clock, ChevronRight, FileText, ArrowRight } from "lucide-react";
-import { listExperiments } from "../api/experiments";
+import { createLinkedReview, listExperiments } from "../api/experiments";
 import { Experiment } from "../types/index";
 
 export const DashboardPage: React.FC = () => {
+  const navigate = useNavigate();
+  const [mergeRequestUrl, setMergeRequestUrl] = useState("");
+  const [runId, setRunId] = useState("");
+  const [linkBusy, setLinkBusy] = useState(false);
+  const [linkError, setLinkError] = useState<string | null>(null);
   const [experiments, setExperiments] = useState<Experiment[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -32,6 +37,15 @@ export const DashboardPage: React.FC = () => {
   const needsReviewCount = experiments.filter((e) => e.status === "needs_review").length;
   const auditedCount = experiments.filter((e) => e.status === "audited").length;
 
+  const linkRun = async (event: React.FormEvent) => {
+    event.preventDefault(); setLinkBusy(true); setLinkError(null);
+    try {
+      const result = await createLinkedReview({ mergeRequestUrl: mergeRequestUrl.trim(), runId: runId.trim() });
+      navigate(`/experiments/${result.experiment.id}`);
+    } catch (error: any) { setLinkError(error.message || "Could not link the merge request and run"); }
+    finally { setLinkBusy(false); }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header banner */}
@@ -50,6 +64,17 @@ export const DashboardPage: React.FC = () => {
           <span>Audit New Experiment</span>
         </Link>
       </div>
+
+      <form onSubmit={linkRun} className="mt-6 rounded-xl border border-indigo-200 bg-indigo-50 p-5 space-y-3">
+        <div><h2 className="font-bold text-slate-900">Review an existing ML run</h2>
+          <p className="text-sm text-slate-600">Paste a GitLab merge request and MLflow run ID. Guardian reads their evidence without moving your code or artifacts.</p></div>
+        <div className="grid gap-3 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_auto]">
+          <input required type="url" aria-label="GitLab merge request URL" placeholder="https://gitlab.com/group/project/-/merge_requests/12" value={mergeRequestUrl} onChange={e => setMergeRequestUrl(e.target.value)} className="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+          <input required aria-label="MLflow run ID" placeholder="MLflow run ID" value={runId} onChange={e => setRunId(e.target.value)} className="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+          <button disabled={linkBusy} className="rounded-lg bg-indigo-700 px-4 py-2 text-sm font-bold text-white disabled:opacity-50">{linkBusy ? "Reading evidence…" : "Start review"}</button>
+        </div>
+        {linkError && <p role="alert" className="text-sm text-red-700">{linkError}</p>}
+      </form>
 
       {/* Metrics overview */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-6">

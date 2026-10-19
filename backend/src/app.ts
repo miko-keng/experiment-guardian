@@ -14,6 +14,7 @@ import { sourcesRouter } from "./routes/sources.js";
 import { capabilitiesRouter } from "./routes/capabilities.js";
 import { reportsRouter } from "./routes/reports.js";
 import { handleMcpRequest } from "./mcp/server.js";
+import crypto from "crypto";
 
 export function createApp(): Express {
   const app = express();
@@ -38,8 +39,33 @@ export function createApp(): Express {
   // Body parsing
   app.use(express.json({ limit: "2mb" }));
 
-  // Versioned API Prefix /api/v1
+  // Render probes this endpoint without credentials. Keep only health public.
   app.use("/api/v1/health", healthRouter);
+
+  // Protect the other routes and hosted UI when private source tokens are used.
+  if (config.appAccessPassword) {
+    app.use((req, res, next) => {
+      const authorization = req.headers.authorization || "";
+      let supplied = "";
+      if (authorization.startsWith("Basic ")) {
+        try {
+          const decoded = Buffer.from(authorization.slice(6), "base64").toString("utf8");
+          const separator = decoded.indexOf(":");
+          if (separator >= 0 && decoded.slice(0, separator) === "researcher") supplied = decoded.slice(separator + 1);
+        } catch { /* Invalid Basic credentials. */ }
+      }
+      const expected = Buffer.from(config.appAccessPassword!);
+      const actual = Buffer.from(supplied);
+      if (actual.length !== expected.length || !crypto.timingSafeEqual(actual, expected)) {
+        res.setHeader("WWW-Authenticate", 'Basic realm="Experiment Guardian"');
+        res.status(401).json({ error: { code: "UNAUTHORIZED", message: "Sign in to Experiment Guardian" } });
+        return;
+      }
+      next();
+    });
+  }
+
+  // Versioned API Prefix /api/v1
   app.use("/api/v1/experiments", experimentsRouter);
   app.use("/api/v1/audits", auditsRouter);
   app.use("/api/v1/bee", beeRouter);

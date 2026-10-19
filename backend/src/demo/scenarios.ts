@@ -1,5 +1,19 @@
 export const demoScenarios = [
   {
+    id: "database-configuration-conflict",
+    title: "Demo A · Stored configuration conflict",
+    description: "Notes say seed 42 and dataset v2; persisted run evidence says seed 7 and dataset v1, with no learning rate in its configuration.",
+    databaseBacked: true,
+    transcript: "Researcher: The final image classifier used random seed 42, dataset v2, and learning rate 0.001. We measured 91% accuracy.",
+  },
+  {
+    id: "database-missing-result-evidence",
+    title: "Demo B · Missing result evidence",
+    description: "Notes claim 91% accuracy, but no evaluation script, result output, or model checkpoint is linked.",
+    databaseBacked: true,
+    transcript: "Researcher: This classifier used random seed 42, dataset v2, and learning rate 0.001. It reached 91% accuracy.",
+  },
+  {
     id: "resnet-incomplete",
     title: "ResNet-50 reproducibility review",
     description: "An image-classification experiment with a strong result but missing controls.",

@@ -43,6 +43,12 @@ export interface AppConfig {
   transcribeJobTimeoutMs: number;
   maxAudioBytes: number;
   frontendOrigin: string;
+  gitlabBaseUrl: string;
+  gitlabToken?: string;
+  gitlabTrainingConfigPath: string;
+  mlflowTrackingUrl?: string;
+  mlflowToken?: string;
+  appAccessPassword?: string;
 }
 
 const booleanFromEnv = z
@@ -74,6 +80,12 @@ const EnvironmentSchema = z.object({
   TRANSCRIBE_JOB_TIMEOUT_MS: z.coerce.number().int().positive().default(120000),
   MAX_AUDIO_BYTES: z.coerce.number().int().positive().default(25000000),
   FRONTEND_ORIGIN: z.string().trim().url().default("http://localhost:5173"),
+  GITLAB_BASE_URL: z.string().trim().url().default("https://gitlab.com"),
+  GITLAB_TOKEN: z.string().trim().optional(),
+  GITLAB_TRAINING_CONFIG_PATH: z.string().trim().min(1).default("experiment-guardian.json"),
+  MLFLOW_TRACKING_URL: z.string().trim().url().optional().or(z.literal("")),
+  MLFLOW_TOKEN: z.string().trim().optional(),
+  APP_ACCESS_PASSWORD: z.string().min(12).optional().or(z.literal("")),
 });
 
 export function loadConfig(environment: NodeJS.ProcessEnv = process.env): AppConfig {
@@ -86,6 +98,9 @@ export function loadConfig(environment: NodeJS.ProcessEnv = process.env): AppCon
   }
 
   const values = parsed.data;
+  if ((values.MLFLOW_TRACKING_URL || values.GITLAB_TOKEN || values.MLFLOW_TOKEN) && !values.APP_ACCESS_PASSWORD) {
+    throw new Error("APP_ACCESS_PASSWORD (12+ characters) is required when linked evidence access is configured");
+  }
   return {
     nodeEnv: values.NODE_ENV,
     port: values.PORT,
@@ -111,6 +126,12 @@ export function loadConfig(environment: NodeJS.ProcessEnv = process.env): AppCon
     transcribeJobTimeoutMs: values.TRANSCRIBE_JOB_TIMEOUT_MS,
     maxAudioBytes: values.MAX_AUDIO_BYTES,
     frontendOrigin: values.FRONTEND_ORIGIN,
+    gitlabBaseUrl: values.GITLAB_BASE_URL.replace(/\/$/, ""),
+    gitlabToken: values.GITLAB_TOKEN || undefined,
+    gitlabTrainingConfigPath: values.GITLAB_TRAINING_CONFIG_PATH,
+    mlflowTrackingUrl: values.MLFLOW_TRACKING_URL?.replace(/\/$/, "") || undefined,
+    mlflowToken: values.MLFLOW_TOKEN || undefined,
+    appAccessPassword: values.APP_ACCESS_PASSWORD || undefined,
   };
 }
 

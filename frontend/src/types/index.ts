@@ -89,7 +89,8 @@ export interface AuditEvidence {
     | "transcript"
     | "experiment_field"
     | "historical_experiment"
-    | "evaluation_metric";
+    | "evaluation_metric"
+    | "artifact_metadata";
   experimentId: UUID | null;
   fieldPath: string | null;
   description: string;
@@ -174,6 +175,24 @@ export interface ExperimentDetailResponse {
   auditHistory: AuditRunRecord[];
   findingComments: AuditFindingComment[];
   findingHistory: AuditFinding[];
+  linkedEvidence?: Array<{
+    id: string; experimentId: string; gitlabMrUrl: string; gitlabCommitSha: string;
+    mlflowRunId: string; fetchedAt: string;
+    evidence: {
+      source: { mergeRequest: string; commit: string; config: string; run: string };
+      gitlab: { title: string; trainingConfig: Record<string, unknown> | null };
+      mlflow: { params: Record<string, string>; metrics: Record<string, number>;
+        artifacts: Array<{ path: string; isDir: boolean; fileSize: number | null }> };
+      observed: Record<string, unknown>;
+    };
+  }>;
+  verification?: {
+    policyId: string | null;
+    fieldStates: Record<string, "verified" | "source_linked" | "user_confirmed" | "missing" | "conflict" | "not_applicable">;
+    artifacts: Array<{ id: string; kind: string; uri: string | null; metadata: Record<string, unknown>; source: string; contentHash: string | null }>;
+    qualityGate: { decision: "pass" | "warn" | "block" | "not_configured"; auditRunId: string | null; blockingRuleIds: string[]; warningRuleIds: string[]; note: string | null;
+      linkedReview: { snapshotId: string; mergeRequestUrl: string; commitSha: string; runId: string; fetchedAt: string } | null };
+  } | null;
 }
 
 export type RevisionStatus = "proposed" | "applied" | "rejected";

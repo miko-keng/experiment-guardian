@@ -1,0 +1,28 @@
+name: Experiment Guardian quality gate (manual example)
+
+on:
+  workflow_dispatch:
+    inputs:
+      guardian_url:
+        description: HTTPS base URL of your Experiment Guardian service
+        required: true
+      experiment_id:
+        description: Experiment UUID to check
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Read latest quality gate
+        env:
+          GUARDIAN_URL: ${{ inputs.guardian_url }}
+          EXPERIMENT_ID: ${{ inputs.experiment_id }}
+        run: node scripts/check-quality-gate.mjs "$GUARDIAN_URL" "$EXPERIMENT_ID"

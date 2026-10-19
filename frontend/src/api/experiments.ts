@@ -50,6 +50,41 @@ export async function getExperiment(id: string): Promise<ExperimentDetailRespons
   return requestJson<ExperimentDetailResponse>(`${BASE_URL}/experiments/${id}`);
 }
 
+export async function createLinkedReview(input: { mergeRequestUrl: string; runId: string; title?: string }) {
+  return requestJson<{ experiment: Experiment }>(`${BASE_URL}/experiments/linked-review`, {
+    method: "POST", body: JSON.stringify(input),
+  });
+}
+
+export async function refreshLinkedEvidence(id: string, input: { mergeRequestUrl: string; runId: string }) {
+  return requestJson(`${BASE_URL}/experiments/${id}/linked-evidence`, {
+    method: "POST", body: JSON.stringify(input),
+  });
+}
+
+export async function setExperimentPolicy(id: string): Promise<unknown> {
+  return requestJson(`${BASE_URL}/experiments/${id}/policy`, {
+    method: "PUT", body: JSON.stringify({ policyId: "ml-research" }),
+  });
+}
+
+export async function addExperimentArtifact(id: string, input: {
+  kind: string; uri: string | null; metadata: Record<string, unknown>;
+}): Promise<unknown> {
+  return requestJson(`${BASE_URL}/experiments/${id}/artifacts`, {
+    method: "POST", body: JSON.stringify(input),
+  });
+}
+
+export async function uploadExperimentArtifactFile(id: string, kind: string, file: File): Promise<unknown> {
+  const body = new FormData();
+  body.append("kind", kind); body.append("file", file);
+  const response = await fetch(`${BASE_URL}/experiments/${id}/artifact-files`, { method: "POST", body });
+  const result = await response.json().catch(() => null);
+  if (!response.ok) throw new Error(result?.error?.message || "Could not upload artifact file");
+  return result;
+}
+
 export async function updateFindingStatus(
   findingId: string,
   status: FindingStatus,

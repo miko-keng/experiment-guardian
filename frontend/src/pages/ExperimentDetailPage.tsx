@@ -26,10 +26,14 @@ import {
   Loader2,
 } from "lucide-react";
 import {
+  addExperimentArtifact,
   createDecision,
   getExperiment,
   proposeRevision,
+  refreshLinkedEvidence,
   reviewRevision,
+  setExperimentPolicy,
+  uploadExperimentArtifactFile,
   updateDecisionState,
   updateFindingStatus,
 } from "../api/experiments";
@@ -74,6 +78,49 @@ export const ExperimentDetailPage: React.FC = () => {
   const [investigatingId, setInvestigatingId] = useState<string | null>(null);
   const [investigationSessions, setInvestigationSessions] = useState<Record<string, SessionDetail>>({});
   const [investigationDrafts, setInvestigationDrafts] = useState<Record<string, string>>({});
+  const [artifactKind, setArtifactKind] = useState("evaluation_result");
+  const [artifactUri, setArtifactUri] = useState("");
+  const [artifactMetadata, setArtifactMetadata] = useState('{"accuracy":0.91}');
+  const [artifactFile, setArtifactFile] = useState<File | null>(null);
+  const [linkedMrUrl, setLinkedMrUrl] = useState("");
+  const [linkedRunId, setLinkedRunId] = useState("");
+
+  const refreshEvidence = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!id) return;
+    const latest = data?.linkedEvidence?.[0];
+    setActionId("link-evidence"); setActionError(null);
+    try {
+      await refreshLinkedEvidence(id, {
+        mergeRequestUrl: linkedMrUrl.trim() || latest?.gitlabMrUrl || "",
+        runId: linkedRunId.trim() || latest?.mlflowRunId || "",
+      });
+      setLinkedMrUrl(""); setLinkedRunId(""); loadData();
+    } catch (error: any) { setActionError(error.message || "Could not refresh linked evidence"); }
+    finally { setActionId(null); }
+  };
+
+  const attachArtifact = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!id) return;
+    setActionId("attach-artifact"); setActionError(null);
+    try {
+      const metadata = JSON.parse(artifactMetadata) as Record<string, unknown>;
+      if (!metadata || Array.isArray(metadata) || typeof metadata !== "object") throw new Error("Metadata must be a JSON object");
+      await addExperimentArtifact(id, { kind: artifactKind, uri: artifactUri.trim() || null, metadata });
+      setArtifactUri(""); setArtifactMetadata("{}"); loadData();
+    } catch (error: any) { setActionError(error.message || "Could not attach artifact metadata"); }
+    finally { setActionId(null); }
+  };
+
+  const uploadArtifact = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!id || !artifactFile) return;
+    setActionId("upload-artifact"); setActionError(null);
+    try { await uploadExperimentArtifactFile(id, artifactKind, artifactFile); setArtifactFile(null); loadData(); }
+    catch (error: any) { setActionError(error.message || "Could not upload artifact file"); }
+    finally { setActionId(null); }
+  };
 
   const loadData = () => {
     if (!id) return;
@@ -282,7 +329,7 @@ export const ExperimentDetailPage: React.FC = () => {
           </Link>
           <div className="flex items-center space-x-3">
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{experiment.title}</h1>
-            {experiment.status === "needs_review" ? (
+            {experiment.status === "needs_review" || data.verification?.qualityGate.decision === "block" ? (
               <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200">
                 <AlertTriangle className="w-3.5 h-3.5 mr-1 text-amber-500" />
                 Needs Review ({findings.filter((f) => f.status === "open").length} Open Findings)
@@ -290,7 +337,7 @@ export const ExperimentDetailPage: React.FC = () => {
             ) : (
               <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
                 <CheckCircle className="w-3.5 h-3.5 mr-1 text-emerald-500" />
-                Audited & Cleared
+                Record audited
               </span>
             )}
           </div>
@@ -329,6 +376,41 @@ export const ExperimentDetailPage: React.FC = () => {
         </div>
       )}
 
+      <section className="rounded-xl border border-indigo-200 bg-white p-6 space-y-4">
+        <div><h2 className="font-bold text-slate-900">Linked GitLab and MLflow evidence</h2>
+          <p className="text-xs text-slate-500">Import is read-only. Each refresh saves a new snapshot pinned to the merge request head commit; earlier snapshots remain below.</p></div>
+        <form onSubmit={refreshEvidence} className="grid gap-2 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_auto]">
+          <input type="url" aria-label="GitLab merge request URL" placeholder={data.linkedEvidence?.[0]?.gitlabMrUrl || "GitLab merge request URL"} value={linkedMrUrl} onChange={e => setLinkedMrUrl(e.target.value)} required={!data.linkedEvidence?.length} className="rounded-lg border p-2 text-sm" />
+          <input aria-label="MLflow run ID" placeholder={data.linkedEvidence?.[0]?.mlflowRunId || "MLflow run ID"} value={linkedRunId} onChange={e => setLinkedRunId(e.target.value)} required={!data.linkedEvidence?.length} className="rounded-lg border p-2 text-sm" />
+          <button disabled={actionId === "link-evidence"} className="rounded-lg bg-indigo-700 px-4 py-2 text-sm font-bold text-white disabled:opacity-50">{actionId === "link-evidence" ? "Reading…" : data.linkedEvidence?.length ? "Refresh evidence" : "Link evidence"}</button>
+        </form>
+        {data.linkedEvidence?.[0] && <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm space-y-3">
+          <div className="flex flex-wrap gap-3 text-indigo-700 font-semibold">
+            <a target="_blank" rel="noopener noreferrer" href={data.linkedEvidence[0].evidence.source.mergeRequest} className="underline">Merge request</a>
+            <a target="_blank" rel="noopener noreferrer" href={data.linkedEvidence[0].evidence.source.commit} className="underline">Pinned commit</a>
+            <a target="_blank" rel="noopener noreferrer" href={data.linkedEvidence[0].evidence.source.run} className="underline">Run</a>
+          </div>
+          <p className="text-xs text-slate-600">Run {data.linkedEvidence[0].mlflowRunId} · commit {data.linkedEvidence[0].gitlabCommitSha.slice(0, 12)} · fetched {new Date(data.linkedEvidence[0].fetchedAt).toLocaleString()}</p>
+          <Link to={`/?experiment=${encodeURIComponent(experiment.id)}`} className="inline-block rounded-lg bg-cyan-700 px-3 py-2 text-xs font-bold text-white">Discuss this run in the Alexa lab</Link>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{Object.entries(data.linkedEvidence[0].evidence.observed).map(([key, value]) => <div key={key} className="rounded border bg-white p-2"><div className="text-xs text-slate-500">{key}</div><div className="font-mono text-xs break-all">{value === null ? "Missing" : String(value)}</div></div>)}</div>
+          <details className="text-xs"><summary className="cursor-pointer font-semibold">Run parameters, metrics, and artifact references</summary><pre className="mt-2 whitespace-pre-wrap break-all">{JSON.stringify(data.linkedEvidence[0].evidence.mlflow, null, 2)}</pre></details>
+        </div>}
+        {(data.linkedEvidence?.length || 0) > 1 && <details className="text-xs text-slate-600"><summary className="cursor-pointer">Earlier evidence snapshots ({data.linkedEvidence!.length - 1})</summary><ul className="mt-2 space-y-1">{data.linkedEvidence!.slice(1).map(item => <li key={item.id}>{new Date(item.fetchedAt).toLocaleString()} · commit {item.gitlabCommitSha.slice(0, 12)} · run {item.mlflowRunId}</li>)}</ul></details>}
+      </section>
+
+      <section className="rounded-xl border border-slate-200 bg-white p-6 space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div><h2 className="font-bold text-slate-900">Stored evidence and quality gate</h2><p className="text-xs text-slate-500">Research claims are compared with separate, persisted artifact metadata. Demo fixtures are illustrative, not independently verified files.</p></div>
+          <span className={`rounded-full px-3 py-1 text-xs font-bold uppercase ${data.verification?.qualityGate.decision === "block" ? "bg-red-100 text-red-800" : data.verification?.qualityGate.decision === "pass" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>{data.verification?.qualityGate.decision || "not configured"}</span>
+        </div>
+        {!data.verification?.policyId && <button type="button" className="rounded-lg bg-indigo-700 px-3 py-2 text-xs font-bold text-white" onClick={async () => { if (!id) return; try { await setExperimentPolicy(id); loadData(); } catch (error: any) { setActionError(error.message); } }}>Enable ML research policy and re-audit</button>}
+        {data.verification?.policyId && <p className="text-xs text-slate-600">Policy: {data.verification.policyId} · Audit run: {data.verification.qualityGate.auditRunId?.slice(0, 8) || "none"}</p>}
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{Object.entries(data.verification?.fieldStates || {}).map(([field, state]) => <div key={field} className="rounded-lg border border-slate-200 bg-slate-50 p-2"><p className="text-[11px] font-mono text-slate-500">{field}</p><p className={`text-xs font-bold ${state === "conflict" || state === "missing" ? "text-red-700" : "text-indigo-700"}`}>{state.replace("_", " ")}</p></div>)}</div>
+        {Boolean(data.verification?.artifacts.length) && <div className="overflow-x-auto"><table className="w-full text-xs text-left"><thead><tr className="border-b text-slate-500"><th className="p-2">Artifact</th><th className="p-2">Source</th><th className="p-2">URI</th><th className="p-2">Stored metadata</th></tr></thead><tbody>{data.verification?.artifacts.map((artifact) => <tr key={artifact.id} className="border-b"><td className="p-2 font-semibold">{artifact.kind}</td><td className="p-2">{artifact.source}</td><td className="p-2 font-mono">{artifact.uri?.startsWith("/api/") ? <a className="text-indigo-700 underline" href={artifact.uri}>Download file</a> : artifact.uri || "—"}</td><td className="p-2 font-mono">{JSON.stringify(artifact.metadata)}</td></tr>)}</tbody></table></div>}
+        {data.verification?.policyId && <><div className="border-t pt-4"><label htmlFor="artifact-kind" className="text-xs font-semibold text-slate-700">Artifact type</label><select id="artifact-kind" value={artifactKind} onChange={(e) => setArtifactKind(e.target.value)} className="mt-1 block rounded-lg border p-2 text-xs">{["run_manifest","dataset_manifest","training_config","evaluation_script","evaluation_result","model_checkpoint","dependency_lock"].map((kind) => <option key={kind} value={kind}>{kind}</option>)}</select></div><form onSubmit={uploadArtifact} className="flex flex-wrap items-center gap-2"><input aria-label="Artifact file" type="file" onChange={(e) => setArtifactFile(e.target.files?.[0] || null)} className="text-xs"/><button disabled={!artifactFile || actionId === "upload-artifact"} className="rounded-lg bg-indigo-700 px-3 py-2 text-xs font-bold text-white disabled:opacity-50">Upload file and re-audit</button><span className="text-xs text-slate-500">Run, dataset, training, and result files must be JSON. Maximum 10 MB.</span></form><form onSubmit={attachArtifact} className="grid gap-2 border-t pt-4 sm:grid-cols-3"><input aria-label="Artifact URI" placeholder="Artifact URI or path" value={artifactUri} onChange={(e) => setArtifactUri(e.target.value)} className="rounded-lg border p-2 text-xs"/><input aria-label="Artifact metadata JSON" placeholder='Metadata JSON, e.g. {"accuracy":0.91}' value={artifactMetadata} onChange={(e) => setArtifactMetadata(e.target.value)} className="rounded-lg border p-2 text-xs font-mono"/><button disabled={actionId === "attach-artifact"} className="rounded-lg border border-indigo-700 px-3 py-2 text-xs font-bold text-indigo-700 disabled:opacity-50">Add unverified metadata</button></form></>}
+        {data.verification?.qualityGate.note && <p className="text-xs text-amber-700">{data.verification.qualityGate.note}</p>}
+      </section>
+
       {/* Audit Findings Panel */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
         <div className="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
@@ -345,7 +427,7 @@ export const ExperimentDetailPage: React.FC = () => {
           <div className="p-8 text-center text-slate-500">
             <CheckCircle className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
             <p className="text-sm font-semibold text-slate-800">No integrity issues identified</p>
-            <p className="text-xs text-slate-500 mt-1">All checked experimental controls are verified.</p>
+            <p className="text-xs text-slate-500 mt-1">No current rule raised a finding. Check the verification states above for independent evidence.</p>
           </div>
         ) : (
           <div className="divide-y divide-slate-100">
@@ -396,11 +478,12 @@ export const ExperimentDetailPage: React.FC = () => {
                       <div key={idx} className="text-slate-600 pl-4 font-mono">
                         • {ev.description}
                         {ev.previousValue !== null && ev.previousValue !== undefined && (
-                          <span className="text-amber-700"> (was: {String(ev.previousValue)})</span>
+                          <span className="text-amber-700"> ({ev.type === "artifact_metadata" ? "research note" : "was"}: {String(ev.previousValue)})</span>
                         )}
                         {ev.currentValue !== null && ev.currentValue !== undefined && (
-                          <span className="text-emerald-700"> (now: {String(ev.currentValue)})</span>
+                          <span className="text-emerald-700"> ({ev.type === "artifact_metadata" ? "stored artifact" : "now"}: {String(ev.currentValue)})</span>
                         )}
+                        {ev.sourceReference && <span className="text-indigo-700"> · {ev.sourceReference}</span>}
                       </div>
                     ))}
                   </div>

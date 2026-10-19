@@ -2,9 +2,11 @@ import { Experiment, ExperimentStatus } from "../extraction/experiment-schema.js
 import { AuditFinding, AuditResult, AuditRule } from "./audit-types.js";
 import { missingControlsRule } from "./rules/missing-controls.js";
 import { confoundingChangesRule } from "./rules/confounding-changes.js";
+import { artifactVerificationRule } from "./rules/artifact-verification.js";
+import { linkedEvidenceRule } from "./rules/linked-evidence.js";
 
 export class AuditRunner {
-  private rules: AuditRule[] = [missingControlsRule, confoundingChangesRule];
+  private rules: AuditRule[] = [missingControlsRule, confoundingChangesRule, artifactVerificationRule, linkedEvidenceRule];
 
   registerRule(rule: AuditRule): void {
     this.rules.push(rule);
@@ -19,6 +21,7 @@ export class AuditRunner {
         allFindings.push(...findings);
       } catch (err) {
         console.error(`Audit rule ${rule.id} failed:`, err);
+        throw err;
       }
     }
 

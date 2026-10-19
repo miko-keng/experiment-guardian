@@ -1,0 +1,7 @@
+experiment-guardian-quality:
+  image: node:24-alpine
+  stage: test
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  script:
+    - node scripts/gitlab-advisory-review.mjs

@@ -8,11 +8,13 @@ The system preserves the evidence behind every value and decision. When a sessio
 
 The judge-facing web simulation shows the Alexa+ conversation, the exact MCP tool being called, the deterministic audit engine, approval requests, and the generated report. The same capabilities are exposed by a real Streamable HTTP MCP server at `/mcp`.
 
+The connected ML review path takes a GitLab merge request and MLflow run ID, pins the commit and run evidence, and compares recorded parameters with repository configuration using deterministic rules. The user has produced a real GitLab-backed MLflow run for this path. The Guardian deployment still requires connector credentials before this path can be demonstrated live.
+
 ## How it works
 
 1. A researcher starts a session and speaks, types, or imports notes.
 2. The configured extractor converts the text into a structured experiment.
-3. Deterministic rules audit controls and confounding changes.
+3. Deterministic rules audit controls, confounding changes, and (when the ML research policy is enabled) separately stored artifact evidence.
 4. Alexa+ selects a concise follow-up question from open findings.
 5. New parameter values become proposed revisions rather than silent edits.
 6. The researcher approves or rejects the exact proposed action.
@@ -38,7 +40,7 @@ AWS Builder status: **not claimed unless live AWS invocation is enabled and demo
 
 ## Work completed during the submission window
 
-- Built the Alexa+ session conductor and eleven MCP research tools.
+- Built the Alexa+ session conductor and MCP research tools, including a read-only verification and quality-gate tool.
 - Added persisted conversation sessions, events, and tool traces.
 - Added deterministic reproducibility audits and immutable audit runs.
 - Added governed experiment revisions with explicit approval.
@@ -47,6 +49,10 @@ AWS Builder status: **not claimed unless live AWS invocation is enabled and demo
 - Added the animated Research Decision Observatory and tool timeline.
 - Added optional Bee, Bedrock, Transcribe, and S3 integrations.
 - Packaged the application for public HTTPS deployment.
+- Added two repeatable database-backed anomaly demos, artifact uploads, verification states, an ML research policy, and a read-only quality-gate decision.
+- Added a GitLab and MLflow linked-review importer, stored source snapshots, a browser review flow, and an advisory CI script.
+
+The quality gate remains advisory. The connected-review code fetches a pinned GitLab commit and MLflow run, but has not yet been verified end-to-end with the deployed app and its server-side token. It does not enforce a pull-request check or independently hash remote model and dataset artifacts. Demo fixture metadata is labelled user-confirmed rather than independently verified. Live Bedrock access remains account-dependent.
 
 ## Repository review
 
