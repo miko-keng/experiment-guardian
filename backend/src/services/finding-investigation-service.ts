@@ -13,14 +13,12 @@ export class FindingInvestigationService {
       experimentId: finding.experimentId,
     });
     assistantRepository.addEvent(started.data.id, "tool.started", { toolName: "comment_on_audit_finding", label: "Alexa+ Simulator called MCP finding investigation" });
-    const investigation = await alexaSessionService.addObservation({
-      sessionId: started.data.id,
-      text: `Researcher comment on audit finding "${finding.title}": ${comment}`,
-    });
+    assistantRepository.addMessage({ sessionId: started.data.id, role: "user", content: comment,
+      linkedExperimentId: finding.experimentId });
+    const speech = `I checked "${finding.title}" against its stored evidence. ${finding.description} ${finding.recommendation} I have not changed the experiment.`;
+    assistantRepository.addMessage({ sessionId: started.data.id, role: "assistant", content: speech,
+      linkedExperimentId: finding.experimentId });
     assistantRepository.updateSession(started.data.id, { unresolvedFindingId: finding.id });
-    const suggestion = investigation.nextAction === "request_confirmation"
-      ? investigation.speech.text
-      : `${finding.recommendation} ${investigation.speech.text}`;
 
     const saved = auditRepository.createComment({
       findingId: finding.id,
@@ -28,11 +26,11 @@ export class FindingInvestigationService {
       sessionId: started.data.id,
       comment,
       analysis: {
-        suggestion,
-        speech: investigation.speech.text,
-        nextAction: investigation.nextAction,
-        visual: investigation.visual,
-        data: investigation.data,
+        suggestion: finding.recommendation,
+        speech,
+        nextAction: "listen",
+        visual: { view: "audit", experimentId: finding.experimentId, findingId: finding.id },
+        data: { findingId: finding.id, ruleId: finding.ruleId, modified: false },
       },
     });
     assistantRepository.addEvent(started.data.id, "database.write", { operation: "finding.comment", experimentId: finding.experimentId, label: "Investigation context stored" });

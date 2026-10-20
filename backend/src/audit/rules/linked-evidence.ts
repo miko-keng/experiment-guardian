@@ -82,9 +82,11 @@ export const linkedEvidenceRule: AuditRule = {
     }
     const artifacts = (evidence.mlflow?.artifacts || []) as Array<{ path: string }>;
     if (evidence.mlflow?.artifactListingStatus !== "verified") {
-      findings.push(issue(experiment, "LINKED_ARTIFACT_LIST_UNAVAILABLE", "Run artifacts could not be verified",
+      const unavailable = issue(experiment, "LINKED_ARTIFACT_LIST_UNAVAILABLE", "Run artifacts could not be verified",
         "mlflow.artifacts", null, null, source.run, "warning",
-        "Open the linked run to inspect its artifacts and attach the required files or links."));
+        "Open the linked run to inspect its artifacts and attach the required files or links.");
+      unavailable.description = "GitLab supplied the run parameters and metrics, but its artifact location could not be listed through a supported API. Artifact presence is unknown.";
+      findings.push(unavailable);
     } else for (const [name, pattern] of [
       ["evaluation script", /(^|\/)(eval|evaluate|evaluation)[^/]*\.(py|ipynb)$/i],
       ["model checkpoint", /\.(pt|pth|ckpt|pkl|onnx|safetensors)$/i],
