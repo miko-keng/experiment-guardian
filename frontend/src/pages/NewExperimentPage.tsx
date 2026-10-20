@@ -83,7 +83,7 @@ export const NewExperimentPage: React.FC = () => {
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Dashboard</span>
         </button>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Audit New Experiment</h1>
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Audit Meeting Notes</h1>
         <p className="text-sm text-slate-500 mt-1">
           Paste experimental discussions from lab meetings or Slack. The configured extractor structures the record, then deterministic rules verify scientific controls. The public demo uses the Bedrock Mock Extractor.
         </p>

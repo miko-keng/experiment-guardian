@@ -61,7 +61,7 @@ export const DashboardPage: React.FC = () => {
           className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold shadow-sm transition"
         >
           <PlusCircle className="w-4 h-4" />
-          <span>Audit New Experiment</span>
+          <span>Audit meeting notes</span>
         </Link>
       </div>
 

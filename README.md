@@ -2,6 +2,8 @@
 
 **New: GitLab + MLflow linked experiment reviews.** Paste a merge request URL and a run ID in **Experiments** to fetch read-only source evidence, compare it with the research record, and keep immutable snapshots. The setup, logging convention, and advisory GitLab CI job are described in [Connected ML workflow](docs/CONNECTED_ML_WORKFLOW.md).
 
+The home page opens **Experiments**. To start without a run ID, choose **Audit meeting notes** there. Open **Discuss this run in the Alexa lab** from a linked review to keep the conversation attached to that experiment. The [recommended single-scenario judge demo](docs/JUDGE_DEMO.md) includes exact inputs and expected responses; [Alexa+ Q&A reference](docs/ALEXA_QA_REFERENCE.md) covers the other deterministic follow-up questions.
+
 **Alexa+ research memory and reproducibility copilot**  
 *Alexa+ hackathon project with optional AWS and Bee adapters*
 
@@ -195,7 +197,9 @@ See [Public deployment](docs/DEPLOYMENT.md) for the Render and Alexa AI CLI step
 ## Submission materials
 
 - [Project description](docs/SUBMISSION.md)
-- [Three-minute demo script](docs/DEMO_SCRIPT.md)
+- [Judge demo: fixed inputs and expected responses](docs/JUDGE_DEMO.md)
+- [Alexa+ question and answer reference](docs/ALEXA_QA_REFERENCE.md)
+- [Other three-minute demo options](docs/DEMO_SCRIPT.md)
 - [Product feedback and friction log](docs/FEEDBACK_AND_FRICTION_LOG.md)
 - [Public deployment guide](docs/DEPLOYMENT.md)
 

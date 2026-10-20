@@ -392,7 +392,7 @@ export const ExperimentDetailPage: React.FC = () => {
           </div>
           <p className="text-xs text-slate-600">Run {data.linkedEvidence[0].mlflowRunId} · commit {data.linkedEvidence[0].gitlabCommitSha.slice(0, 12)} · fetched {new Date(data.linkedEvidence[0].fetchedAt).toLocaleString()}</p>
           {data.linkedEvidence[0].evidence.mlflow.artifactListingStatus !== "verified" && <p className="text-xs text-amber-700">Run artifact listing is unavailable; Guardian has not verified whether required files exist.</p>}
-          <Link to={`/?experiment=${encodeURIComponent(experiment.id)}`} className="inline-block rounded-lg bg-cyan-700 px-3 py-2 text-xs font-bold text-white">Discuss this run in the Alexa lab</Link>
+          <Link to={`/lab?experiment=${encodeURIComponent(experiment.id)}`} className="inline-block rounded-lg bg-cyan-700 px-3 py-2 text-xs font-bold text-white">Discuss this run in the Alexa lab</Link>
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{Object.entries(data.linkedEvidence[0].evidence.observed).map(([key, value]) => <div key={key} className="rounded border bg-white p-2"><div className="text-xs text-slate-500">{key}</div><div className="font-mono text-xs break-all">{value === null ? "Missing" : String(value)}</div></div>)}</div>
           <details className="text-xs"><summary className="cursor-pointer font-semibold">Run parameters, metrics, and artifact references</summary><pre className="mt-2 whitespace-pre-wrap break-all">{JSON.stringify(data.linkedEvidence[0].evidence.mlflow, null, 2)}</pre></details>
         </div>}

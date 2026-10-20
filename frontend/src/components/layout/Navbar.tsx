@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ShieldCheck, PlusCircle, LayoutDashboard, Settings as SettingsIcon, AlertCircle, CheckCircle2, Radio, MessageCircle } from "lucide-react";
+import { ShieldCheck, LayoutDashboard, Settings as SettingsIcon, AlertCircle, CheckCircle2, Radio, MessageCircle } from "lucide-react";
 import { getHealth } from "../../api/experiments";
 import { HealthResponse } from "../../types/index";
 
@@ -32,19 +32,9 @@ export const Navbar: React.FC = () => {
 
           <nav className="flex items-center space-x-1 sm:space-x-4">
             <Link
-              to="/"
-              className={`flex items-center space-x-1.5 px-3 py-2 rounded-md text-sm font-medium transition ${
-                isActive("/") ? "bg-cyan-50 text-cyan-800" : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-              }`}
-            >
-              <MessageCircle className="w-4 h-4" />
-              <span>Alexa+ Lab</span>
-            </Link>
-
-            <Link
               to="/experiments"
               className={`flex items-center space-x-1.5 px-3 py-2 rounded-md text-sm font-medium transition ${
-                isActive("/experiments") ? "bg-slate-100 text-slate-900" : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                isActive("/experiments") || isActive("/") ? "bg-slate-100 text-slate-900" : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
               }`}
             >
               <LayoutDashboard className="w-4 h-4" />
@@ -52,13 +42,13 @@ export const Navbar: React.FC = () => {
             </Link>
 
             <Link
-              to="/new"
+              to="/lab"
               className={`flex items-center space-x-1.5 px-3 py-2 rounded-md text-sm font-medium transition ${
-                isActive("/new") ? "bg-indigo-600 text-white" : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+                isActive("/lab") ? "bg-cyan-50 text-cyan-800" : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
               }`}
             >
-              <PlusCircle className="w-4 h-4" />
-              <span>New Audit</span>
+              <MessageCircle className="w-4 h-4" />
+              <span>Alexa+ Lab</span>
             </Link>
 
             <Link

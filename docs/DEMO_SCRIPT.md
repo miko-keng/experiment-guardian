@@ -1,5 +1,7 @@
 # Demo video script — under three minutes
 
+For the current recommended recording, including every expected Alexa+ question and the exact answer to enter, use [Judge demo: fixed inputs and expected responses](JUDGE_DEMO.md). The scenarios below are alternatives.
+
 ## 0:00–0:20 — Problem and promise
 
 “Research decisions are often trapped in meetings, voice notes, and memory. Experiment Guardian is an Alexa+ reproducibility copilot that turns those conversations into traceable experiment records while the work is happening.”
