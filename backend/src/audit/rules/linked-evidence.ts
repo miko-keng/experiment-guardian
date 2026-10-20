@@ -81,7 +81,11 @@ export const linkedEvidenceRule: AuditRule = {
         "Add experiment-guardian.json to the merge request or configure the training config path."));
     }
     const artifacts = (evidence.mlflow?.artifacts || []) as Array<{ path: string }>;
-    for (const [name, pattern] of [
+    if (evidence.mlflow?.artifactListingStatus !== "verified") {
+      findings.push(issue(experiment, "LINKED_ARTIFACT_LIST_UNAVAILABLE", "Run artifacts could not be verified",
+        "mlflow.artifacts", null, null, source.run, "warning",
+        "Open the linked run to inspect its artifacts and attach the required files or links."));
+    } else for (const [name, pattern] of [
       ["evaluation script", /(^|\/)(eval|evaluate|evaluation)[^/]*\.(py|ipynb)$/i],
       ["model checkpoint", /\.(pt|pth|ckpt|pkl|onnx|safetensors)$/i],
       ["dependency lockfile", /(^|\/)(requirements[^/]*\.txt|poetry\.lock|uv\.lock|environment\.ya?ml)$/i],

@@ -111,6 +111,7 @@ export class LinkedEvidenceService {
     const artifactRoot = gitlabTracking && artifactUri.startsWith("mlflow-artifacts:")
       ? new URL(artifactUri).pathname.replace(/^\/+|\/+$/g, "") : "";
     const artifacts: Array<{ path: string; isDir: boolean; fileSize: number | null }> = [];
+    let artifactListingStatus: "verified" | "unavailable" = "unavailable";
     const gitlabProjectId = tracking.match(/\/api\/v4\/projects\/(\d+)\/ml\/mlflow\/?$/)?.[1];
     const packageUri = gitlabTracking && artifactUri.startsWith("https:") ? new URL(artifactUri) : null;
     const packageParts = packageUri?.origin === new URL(config.gitlabBaseUrl).origin
@@ -135,10 +136,8 @@ export class LinkedEvidenceService {
         }
         if (artifacts.length >= 100) break;
       }
-    } else {
-      if (gitlabTracking && (!artifactRoot || artifactRoot.split("/").includes(".."))) {
-        throw new Error("GitLab returned an unsupported artifact URI for this run");
-      }
+      artifactListingStatus = "verified";
+    } else if (!gitlabTracking || (artifactRoot && !artifactRoot.split("/").includes(".."))) {
       const directories = [""];
       while (directories.length && artifacts.length < 100) {
         const path = directories.shift()!;
@@ -158,6 +157,7 @@ export class LinkedEvidenceService {
           if (artifacts.length >= 100) break;
         }
       }
+      artifactListingStatus = "verified";
     }
     const params = pairs(run.data?.params);
     const tags = pairs(run.data?.tags);
@@ -188,7 +188,7 @@ export class LinkedEvidenceService {
       commitTitle: String(commitData.title || ""), committedDate: String(commitData.committed_date || ""),
       projectPath: mr.projectPath, iid: mr.iid, trainingConfig },
       mlflow: { runId: input.runId, experimentId: String(run.info?.experiment_id || ""),
-        artifactUri: String(run.info?.artifact_uri || ""), params, metrics, tags, artifacts,
+        artifactUri, artifactListingStatus, params, metrics, tags, artifacts,
         datasetInputs: datasetInputs.slice(0, 20) }, observed };
     const result = db.transaction(() => {
       const now = new Date().toISOString();
