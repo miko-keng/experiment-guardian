@@ -106,20 +106,57 @@ export class LinkedEvidenceService {
     if (!run || String(run.info?.run_id || run.info?.run_uuid || "") !== input.runId) {
       throw new Error("MLflow returned a different run ID");
     }
+    const gitlabTracking = tracking.includes("/api/v4/projects/") && tracking.includes("/ml/mlflow");
+    const artifactUri = String(run.info?.artifact_uri || "");
+    const artifactRoot = gitlabTracking && artifactUri.startsWith("mlflow-artifacts:")
+      ? new URL(artifactUri).pathname.replace(/^\/+|\/+$/g, "") : "";
     const artifacts: Array<{ path: string; isDir: boolean; fileSize: number | null }> = [];
-    const directories = [""];
-    while (directories.length && artifacts.length < 100) {
-      const path = directories.shift()!;
-      const artifactUrl = serviceUrl(tracking, "api/2.0/mlflow/artifacts/list");
-      artifactUrl.searchParams.set("run_id", input.runId);
-      if (path) artifactUrl.searchParams.set("path", path);
-      const response = await readJson(artifactUrl, mlflowHeaders);
-      for (const item of Array.isArray(response?.files) ? response.files : []) {
-        const entry = { path: String(item.path || ""), isDir: Boolean(item.is_dir),
-          fileSize: typeof item.file_size === "number" ? item.file_size : null };
-        artifacts.push(entry);
-        if (entry.isDir && entry.path.split("/").length <= 3 && directories.length < 20) directories.push(entry.path);
+    const gitlabProjectId = tracking.match(/\/api\/v4\/projects\/(\d+)\/ml\/mlflow\/?$/)?.[1];
+    const packageUri = gitlabTracking && artifactUri.startsWith("https:") ? new URL(artifactUri) : null;
+    const packageParts = packageUri?.origin === new URL(config.gitlabBaseUrl).origin
+      ? packageUri?.pathname.match(/^\/api\/v4\/projects\/(\d+)\/packages\/generic\/(ml_experiment_[^/]+)\/([^/]+)\/?$/) : null;
+    if (gitlabTracking && packageParts && packageParts[1] === gitlabProjectId) {
+      const packagesUrl = serviceUrl(config.gitlabBaseUrl, `api/v4/projects/${gitlabProjectId}/packages`);
+      packagesUrl.searchParams.set("package_type", "generic");
+      packagesUrl.searchParams.set("package_name", packageParts[2]);
+      packagesUrl.searchParams.set("package_version", packageParts[3]);
+      packagesUrl.searchParams.set("per_page", "100");
+      const packages = await readJson(packagesUrl, mlflowHeaders);
+      for (const pkg of Array.isArray(packages) ? packages : []) {
+        if (pkg.name !== packageParts[2] || pkg.version !== packageParts[3] || !Number.isInteger(pkg.id)) continue;
+        const filesUrl = serviceUrl(config.gitlabBaseUrl,
+          `api/v4/projects/${gitlabProjectId}/packages/${pkg.id}/package_files`);
+        filesUrl.searchParams.set("per_page", "100");
+        const files = await readJson(filesUrl, mlflowHeaders);
+        for (const file of Array.isArray(files) ? files : []) {
+          artifacts.push({ path: String(file.file_name || ""), isDir: false,
+            fileSize: typeof file.size === "number" ? file.size : null });
+          if (artifacts.length >= 100) break;
+        }
         if (artifacts.length >= 100) break;
+      }
+    } else {
+      if (gitlabTracking && (!artifactRoot || artifactRoot.split("/").includes(".."))) {
+        throw new Error("GitLab returned an unsupported artifact URI for this run");
+      }
+      const directories = [""];
+      while (directories.length && artifacts.length < 100) {
+        const path = directories.shift()!;
+        const artifactUrl = serviceUrl(tracking, gitlabTracking
+          ? "api/2.0/mlflow-artifacts/artifacts" : "api/2.0/mlflow/artifacts/list");
+        if (gitlabTracking) artifactUrl.searchParams.set("path", [artifactRoot, path].filter(Boolean).join("/"));
+        else {
+          artifactUrl.searchParams.set("run_id", input.runId);
+          if (path) artifactUrl.searchParams.set("path", path);
+        }
+        const response = await readJson(artifactUrl, mlflowHeaders);
+        for (const item of Array.isArray(response?.files) ? response.files : []) {
+          const entry = { path: String(item.path || ""), isDir: Boolean(item.is_dir),
+            fileSize: typeof item.file_size === "number" ? item.file_size : null };
+          artifacts.push(entry);
+          if (entry.isDir && entry.path.split("/").length <= 3 && directories.length < 20) directories.push(entry.path);
+          if (artifacts.length >= 100) break;
+        }
       }
     }
     const params = pairs(run.data?.params);
@@ -130,7 +167,6 @@ export class LinkedEvidenceService {
     const datasetInputs = Array.isArray(run.inputs?.dataset_inputs) ? run.inputs.dataset_inputs : [];
     const datasetTag = datasetInputs[0]?.tags || [];
     const datasetTags = pairs(datasetTag);
-    const gitlabTracking = tracking.includes("/api/v4/projects/") && tracking.includes("/ml/mlflow");
     const source = { mergeRequest: mr.url, commit: commitUrl,
       config: `${config.gitlabBaseUrl}/${mr.projectPath}/-/blob/${sha}/${configPath}`,
       run: gitlabTracking
