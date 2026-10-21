@@ -1,5 +1,7 @@
 # Experiment Guardian
 
+**Live demo:** [Open Experiment Guardian](https://experiment-guardian.onrender.com)
+
 **New: GitLab + MLflow linked experiment reviews.** Paste a merge request URL, run ID, and repository-relative JSON config path in **Experiments** to fetch read-only source evidence, compare it with the research record, and keep immutable snapshots. The setup, logging convention, and advisory GitLab CI job are described in [Connected ML workflow](docs/CONNECTED_ML_WORKFLOW.md).
 
 The home page opens **Experiments**. To start without a run ID, choose **Audit meeting notes** there. Open **Discuss this run in the Alexa lab** from a linked review to keep the conversation attached to that experiment. The [recommended connected judge demo](docs/JUDGE_DEMO.md) gives the recording route; [complete scenario answers](docs/JUDGE_SCENARIOS.md) gives exact inputs for every demo card; the same scenario reference also covers all deterministic question templates.
