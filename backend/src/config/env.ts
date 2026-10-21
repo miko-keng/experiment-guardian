@@ -45,7 +45,6 @@ export interface AppConfig {
   frontendOrigin: string;
   gitlabBaseUrl: string;
   gitlabToken?: string;
-  gitlabTrainingConfigPath: string;
   mlflowTrackingUrl?: string;
   mlflowToken?: string;
   appAccessPassword?: string;
@@ -82,7 +81,6 @@ const EnvironmentSchema = z.object({
   FRONTEND_ORIGIN: z.string().trim().url().default("http://localhost:5173"),
   GITLAB_BASE_URL: z.string().trim().url().default("https://gitlab.com"),
   GITLAB_TOKEN: z.string().trim().optional(),
-  GITLAB_TRAINING_CONFIG_PATH: z.string().trim().min(1).default("experiment-guardian.json"),
   MLFLOW_TRACKING_URL: z.string().trim().url().optional().or(z.literal("")),
   MLFLOW_TOKEN: z.string().trim().optional(),
   APP_ACCESS_PASSWORD: z.string().min(12).optional().or(z.literal("")),
@@ -128,7 +126,6 @@ export function loadConfig(environment: NodeJS.ProcessEnv = process.env): AppCon
     frontendOrigin: values.FRONTEND_ORIGIN,
     gitlabBaseUrl: values.GITLAB_BASE_URL.replace(/\/$/, ""),
     gitlabToken: values.GITLAB_TOKEN || undefined,
-    gitlabTrainingConfigPath: values.GITLAB_TRAINING_CONFIG_PATH,
     mlflowTrackingUrl: values.MLFLOW_TRACKING_URL?.replace(/\/$/, "") || undefined,
     mlflowToken: values.MLFLOW_TOKEN || undefined,
     appAccessPassword: values.APP_ACCESS_PASSWORD || undefined,

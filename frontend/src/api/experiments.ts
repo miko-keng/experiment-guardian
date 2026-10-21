@@ -50,13 +50,13 @@ export async function getExperiment(id: string): Promise<ExperimentDetailRespons
   return requestJson<ExperimentDetailResponse>(`${BASE_URL}/experiments/${id}`);
 }
 
-export async function createLinkedReview(input: { mergeRequestUrl: string; runId: string; title?: string; demoScenario?: "iris-composite" }) {
+export async function createLinkedReview(input: { mergeRequestUrl: string; runId: string; configFilePath: string; title?: string; demoScenario?: "iris-composite" }) {
   return requestJson<{ experiment: Experiment }>(`${BASE_URL}/experiments/linked-review`, {
     method: "POST", body: JSON.stringify(input),
   });
 }
 
-export async function refreshLinkedEvidence(id: string, input: { mergeRequestUrl: string; runId: string }) {
+export async function refreshLinkedEvidence(id: string, input: { mergeRequestUrl: string; runId: string; configFilePath: string }) {
   return requestJson(`${BASE_URL}/experiments/${id}/linked-evidence`, {
     method: "POST", body: JSON.stringify(input),
   });

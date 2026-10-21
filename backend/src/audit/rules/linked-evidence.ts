@@ -78,7 +78,7 @@ export const linkedEvidenceRule: AuditRule = {
     if (!evidence.gitlab?.trainingConfig) {
       findings.push(issue(experiment, "LINKED_MISSING_TRAINING_CONFIG", "Training config missing at pinned commit",
         "training.environment", null, null, source.commit, "warning",
-        "Add experiment-guardian.json to the merge request or configure the training config path."));
+        "Check the selected JSON config path at the pinned commit, or choose the correct file and refresh evidence."));
     }
     const artifacts = (evidence.mlflow?.artifacts || []) as Array<{ path: string }>;
     if (evidence.mlflow?.artifactListingStatus !== "verified") {

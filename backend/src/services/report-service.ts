@@ -56,6 +56,8 @@ ${Object.entries(verification?.fieldStates || {}).map(([field, state]) => `- ${f
 
 ${data.linkedEvidence[0] ? `- Merge request: ${data.linkedEvidence[0].gitlabMrUrl}
 - Pinned commit: ${data.linkedEvidence[0].gitlabCommitSha}
+- Selected config path: ${data.linkedEvidence[0].evidence?.gitlab?.trainingConfigPath || "Not recorded in this snapshot"}
+- Config source: ${data.linkedEvidence[0].evidence?.source?.config || "Not available"}
 - MLflow run: ${data.linkedEvidence[0].mlflowRunId}
 - Fetched at: ${data.linkedEvidence[0].fetchedAt}
 - Earlier snapshots retained: ${data.linkedEvidence.length - 1}` : "- No GitLab or MLflow source linked"}

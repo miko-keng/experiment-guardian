@@ -8,6 +8,7 @@ export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const [mergeRequestUrl, setMergeRequestUrl] = useState("");
   const [runId, setRunId] = useState("");
+  const [configFilePath, setConfigFilePath] = useState("");
   const [linkBusy, setLinkBusy] = useState(false);
   const [linkError, setLinkError] = useState<string | null>(null);
   const [experiments, setExperiments] = useState<Experiment[]>([]);
@@ -41,8 +42,8 @@ export const DashboardPage: React.FC = () => {
     event.preventDefault(); setLinkBusy(true); setLinkError(null);
     try {
       const result = await createLinkedReview(demo
-        ? { mergeRequestUrl: "https://gitlab.com/miko-keng/data-science-ci-example/-/merge_requests/1", runId: "e9cf4088-1ebe-44c5-bdcf-9c79007cad1f", demoScenario: "iris-composite" }
-        : { mergeRequestUrl: mergeRequestUrl.trim(), runId: runId.trim() });
+        ? { mergeRequestUrl: "https://gitlab.com/miko-keng/data-science-ci-example/-/merge_requests/1", runId: "e9cf4088-1ebe-44c5-bdcf-9c79007cad1f", configFilePath: "experiment-guardian.json", demoScenario: "iris-composite" }
+        : { mergeRequestUrl: mergeRequestUrl.trim(), runId: runId.trim(), configFilePath: configFilePath.trim() });
       navigate(`/experiments/${result.experiment.id}`);
     } catch (error: any) { setLinkError(error.message || "Could not link the merge request and run"); }
     finally { setLinkBusy(false); }
@@ -70,12 +71,15 @@ export const DashboardPage: React.FC = () => {
 
       <form onSubmit={linkRun} className="mt-6 rounded-lg border border-slate-300 bg-white p-5 space-y-3 shadow-sm">
         <div><h2 className="font-bold text-slate-900">Review an existing ML run</h2>
-          <p className="text-sm text-slate-600">Paste a GitLab merge request and MLflow run ID. Guardian reads their evidence without moving your code or artifacts.</p></div>
+          <p className="text-sm text-slate-600">Paste a GitLab merge request, MLflow run ID, and repository-relative JSON config path. Guardian reads that file at the pinned commit without moving your code or artifacts.</p></div>
         <div className="grid gap-3 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_auto]">
           <input required type="url" aria-label="GitLab merge request URL" placeholder="https://gitlab.com/group/project/-/merge_requests/12" value={mergeRequestUrl} onChange={e => setMergeRequestUrl(e.target.value)} className="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
           <input required aria-label="MLflow run ID" placeholder="MLflow run ID" value={runId} onChange={e => setRunId(e.target.value)} className="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
           <button disabled={linkBusy} className="rounded-md bg-[#7759b8] px-4 py-2 text-sm font-bold text-white disabled:opacity-50">{linkBusy ? "Reading evidence…" : "Start review"}</button>
         </div>
+        <label className="block text-sm font-semibold text-slate-700" htmlFor="config-file-path">Training config file path (JSON, required)</label>
+        <input id="config-file-path" required aria-label="Training config file path" placeholder="experiment-guardian.json or configs/train.json" value={configFilePath} onChange={e => setConfigFilePath(e.target.value)} className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+        <p className="text-xs text-slate-500">Path inside the GitLab repository. Guardian reads it at the MR head commit and recognizes top-level randomSeed/seed and learningRate/learning_rate values.</p>
         <div className="border-t border-slate-200 pt-3 flex flex-wrap items-center gap-3">
           <button type="button" onClick={event => linkRun(event, true)} disabled={linkBusy} className="rounded-md border border-indigo-300 bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-800 hover:bg-indigo-100 disabled:opacity-50">Launch connected judge demo</button>
           <span className="text-xs text-slate-600">Loads the documented Iris MR and MLflow run with an intentionally inaccurate draft note for review.</span>

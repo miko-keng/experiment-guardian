@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-10-18T01:46:51.356Z",
+  "generatedAt": "2026-10-21T11:17:27.457Z",
   "inspector": "@modelcontextprotocol/inspector@2.5.0",
   "transport": "Streamable HTTP",
   "protocolEndpoint": "/mcp",
   "server": "experiment-guardian",
   "summary": {
-    "listed": 18,
-    "called": 18,
-    "passed": 18,
+    "listed": 19,
+    "called": 19,
+    "passed": 19,
     "failed": 0
   },
   "listedTools": [
@@ -21,6 +21,7 @@
     "finish_experiment_session",
     "create_experiment_from_transcript",
     "get_experiment",
+    "get_experiment_verification",
     "list_experiments",
     "audit_experiment",
     "generate_reproducibility_report",
@@ -38,19 +39,19 @@
         "sourceType": "demo",
         "sourceReference": "mcp-inspector://complete-tool-trace"
       },
-      "startedAt": "2026-10-18T01:46:42.033Z",
-      "completedAt": "2026-10-18T01:46:42.549Z",
+      "startedAt": "2026-10-21T11:17:04.252Z",
+      "completedAt": "2026-10-21T11:17:05.653Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"experiment\": {\n    \"id\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n    \"title\": \"ResNet-50 Evaluation\",\n    \"hypothesis\": null,\n    \"objective\": null,\n    \"status\": \"needs_review\",\n    \"model\": {\n      \"architecture\": \"Transformer / Neural Net\",\n      \"modelName\": \"ResNet-50\",\n      \"modelVersion\": null,\n      \"parameters\": {}\n    },\n    \"dataset\": {\n      \"datasetName\": null,\n      \"datasetVersion\": null,\n      \"datasetIdentifier\": null,\n      \"trainSplit\": \"80%\",\n      \"validationSplit\": null,\n      \"testSplit\": \"20%\",\n      \"preprocessing\": {}\n    },\n    \"training\": {\n      \"learningRate\": 0.001,\n      \"batchSize\": 32,\n      \"epochs\": 12,\n      \"optimizer\": null,\n      \"randomSeed\": null,\n      \"framework\": \"PyTorch\",\n      \"frameworkVersion\": null,\n      \"environment\": {},\n      \"otherParameters\": {}\n    },\n    \"evaluation\": {\n      \"metrics\": {},\n      \"evaluationProcedure\": null,\n      \"evaluationDatasetIdentifier\": null,\n      \"codeCommit\": null,\n      \"notes\": null\n    },\n    \"baselineExperimentId\": null,\n    \"source\": {\n      \"sourceType\": \"demo\",\n      \"sourceId\": null,\n      \"sourceReference\": \"mcp-inspector://complete-tool-trace\",\n      \"transcriptText\": \"We trained ResNet-50 on the Atlas Cells dataset with an 80/20 split, learning rate 0.001, batch size 32 for 12 epochs using PyTorch 2.4. Code commit abc1234 produced accuracy 0.87.\",\n      \"transcriptHash\": \"34abfa9efd49937031bf327e9ae37e60a18e2e5895fbc89e61d87b4a64be39d8\",\n      \"sourceTimestamp\": \"2026-10-18T01:46:42.532Z\"\n    },\n    \"extractedAt\": \"2026-10-18T01:46:42.532Z\",\n    \"createdAt\": \"2026-10-18T01:46:42.532Z\",\n    \"updatedAt\": \"2026-10-18T01:46:42.532Z\"\n  },\n  \"audit\": {\n    \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n    \"findings\": [\n      {\n        \"id\": \"46e2cc78-3c2e-4835-a3c4-d1de4bd277ce\",\n        \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n        \"ruleId\": \"MISSING_RANDOM_SEED\",\n        \"title\": \"Random seed is not recorded\",\n        \"description\": \"The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.\",\n        \"severity\": \"warning\",\n        \"status\": \"open\",\n        \"evidence\": [\n          {\n            \"type\": \"experiment_field\",\n            \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n            \"fieldPath\": \"training.randomSeed\",\n            \"description\": \"training.randomSeed is null\",\n            \"excerpt\": null,\n            \"previousValue\": null,\n            \"currentValue\": null,\n            \"sourceReference\": null\n          }\n        ],\n        \"recommendation\": \"Record the seed used for this run, or explicitly mark the run as having an unknown seed in experiment metadata.\",\n        \"resolutionNote\": null,\n        \"createdAt\": \"2026-10-18T01:46:42.533Z\",\n        \"updatedAt\": \"2026-10-18T01:46:42.533Z\"\n      },\n      {\n        \"id\": \"8261c5d0-bcaf-455e-bc5c-603e8a4a60e4\",\n        \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n        \"ruleId\": \"MISSING_DATASET_VERSION\",\n        \"title\": \"Dataset version or identifier missing\",\n        \"description\": \"The experiment record specifies neither a dataset version nor an immutable dataset identifier.\",\n        \"severity\": \"warning\",\n        \"status\": \"open\",\n        \"evidence\": [\n          {\n            \"type\": \"experiment_field\",\n            \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n            \"fieldPath\": \"dataset.datasetVersion\",\n            \"description\": \"Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded\",\n            \"excerpt\": null,\n            \"previousValue\": null,\n            \"currentValue\": null,\n            \"sourceReference\": null\n          }\n        ],\n        \"recommendation\": \"Record the dataset commit hash, version tag, or URI to guarantee data provenance.\",\n        \"resolutionNote\": null,\n        \"createdAt\": \"2026-10-18T01:46:42.533Z\",\n        \"updatedAt\": \"2026-10-18T01:46:42.533Z\"\n      }\n    ],\n    \"summary\": {\n      \"critical\": 0,\n      \"warning\": 2,\n      \"info\": 0,\n      \"open\": 2\n    },\n    \"auditVersion\": \"1.0.0\",\n    \"completedAt\": \"2026-10-18T01:46:42.533Z\"\n  }\n}"
+            "text": "{\n  \"experiment\": {\n    \"id\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n    \"title\": \"ResNet-50 Evaluation\",\n    \"hypothesis\": null,\n    \"objective\": null,\n    \"status\": \"needs_review\",\n    \"model\": {\n      \"architecture\": \"Transformer / Neural Net\",\n      \"modelName\": \"ResNet-50\",\n      \"modelVersion\": null,\n      \"parameters\": {}\n    },\n    \"dataset\": {\n      \"datasetName\": null,\n      \"datasetVersion\": null,\n      \"datasetIdentifier\": null,\n      \"trainSplit\": \"80%\",\n      \"validationSplit\": null,\n      \"testSplit\": \"20%\",\n      \"preprocessing\": {}\n    },\n    \"training\": {\n      \"learningRate\": 0.001,\n      \"batchSize\": 32,\n      \"epochs\": 12,\n      \"optimizer\": null,\n      \"randomSeed\": null,\n      \"framework\": \"PyTorch\",\n      \"frameworkVersion\": \"2.4\",\n      \"environment\": {},\n      \"otherParameters\": {}\n    },\n    \"evaluation\": {\n      \"metrics\": {},\n      \"evaluationProcedure\": null,\n      \"evaluationDatasetIdentifier\": null,\n      \"codeCommit\": \"abc1234\",\n      \"notes\": null\n    },\n    \"baselineExperimentId\": null,\n    \"source\": {\n      \"sourceType\": \"demo\",\n      \"sourceId\": null,\n      \"sourceReference\": \"mcp-inspector://complete-tool-trace\",\n      \"transcriptText\": \"We trained ResNet-50 on the Atlas Cells dataset with an 80/20 split, learning rate 0.001, batch size 32 for 12 epochs using PyTorch 2.4. Code commit abc1234 produced accuracy 0.87.\",\n      \"transcriptHash\": \"34abfa9efd49937031bf327e9ae37e60a18e2e5895fbc89e61d87b4a64be39d8\",\n      \"sourceTimestamp\": \"2026-10-21T11:17:05.638Z\"\n    },\n    \"extractedAt\": \"2026-10-21T11:17:05.638Z\",\n    \"createdAt\": \"2026-10-21T11:17:05.638Z\",\n    \"updatedAt\": \"2026-10-21T11:17:05.638Z\"\n  },\n  \"audit\": {\n    \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n    \"findings\": [\n      {\n        \"id\": \"bb3ee72e-1fa5-488b-b912-40a90b0cdad4\",\n        \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n        \"ruleId\": \"MISSING_RANDOM_SEED\",\n        \"title\": \"Random seed is not recorded\",\n        \"description\": \"The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.\",\n        \"severity\": \"warning\",\n        \"status\": \"open\",\n        \"evidence\": [\n          {\n            \"type\": \"experiment_field\",\n            \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n            \"fieldPath\": \"training.randomSeed\",\n            \"description\": \"training.randomSeed is null\",\n            \"excerpt\": null,\n            \"previousValue\": null,\n            \"currentValue\": null,\n            \"sourceReference\": null\n          }\n        ],\n        \"recommendation\": \"Record the seed used for this run, or explicitly mark the run as having an unknown seed in experiment metadata.\",\n        \"resolutionNote\": null,\n        \"createdAt\": \"2026-10-21T11:17:05.639Z\",\n        \"updatedAt\": \"2026-10-21T11:17:05.639Z\"\n      },\n      {\n        \"id\": \"717a8908-6d41-4040-947c-1bf34c687fd7\",\n        \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n        \"ruleId\": \"MISSING_DATASET_VERSION\",\n        \"title\": \"Dataset version or identifier missing\",\n        \"description\": \"The experiment record specifies neither a dataset version nor an immutable dataset identifier.\",\n        \"severity\": \"warning\",\n        \"status\": \"open\",\n        \"evidence\": [\n          {\n            \"type\": \"experiment_field\",\n            \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n            \"fieldPath\": \"dataset.datasetVersion\",\n            \"description\": \"Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded\",\n            \"excerpt\": null,\n            \"previousValue\": null,\n            \"currentValue\": null,\n            \"sourceReference\": null\n          }\n        ],\n        \"recommendation\": \"Record the dataset commit hash, version tag, or URI to guarantee data provenance.\",\n        \"resolutionNote\": null,\n        \"createdAt\": \"2026-10-21T11:17:05.639Z\",\n        \"updatedAt\": \"2026-10-21T11:17:05.639Z\"\n      }\n    ],\n    \"summary\": {\n      \"critical\": 0,\n      \"warning\": 2,\n      \"info\": 0,\n      \"open\": 2\n    },\n    \"auditVersion\": \"1.0.0\",\n    \"completedAt\": \"2026-10-21T11:17:05.639Z\"\n  }\n}"
           }
         ],
         "structuredContent": {
           "experiment": {
-            "id": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+            "id": "8e61eee6-c62c-48b6-b205-64041312124b",
             "title": "ResNet-50 Evaluation",
             "hypothesis": null,
             "objective": null,
@@ -77,7 +78,7 @@
               "optimizer": null,
               "randomSeed": null,
               "framework": "PyTorch",
-              "frameworkVersion": null,
+              "frameworkVersion": "2.4",
               "environment": {},
               "otherParameters": {}
             },
@@ -85,7 +86,7 @@
               "metrics": {},
               "evaluationProcedure": null,
               "evaluationDatasetIdentifier": null,
-              "codeCommit": null,
+              "codeCommit": "abc1234",
               "notes": null
             },
             "baselineExperimentId": null,
@@ -95,18 +96,18 @@
               "sourceReference": "mcp-inspector://complete-tool-trace",
               "transcriptText": "We trained ResNet-50 on the Atlas Cells dataset with an 80/20 split, learning rate 0.001, batch size 32 for 12 epochs using PyTorch 2.4. Code commit abc1234 produced accuracy 0.87.",
               "transcriptHash": "34abfa9efd49937031bf327e9ae37e60a18e2e5895fbc89e61d87b4a64be39d8",
-              "sourceTimestamp": "2026-10-18T01:46:42.532Z"
+              "sourceTimestamp": "2026-10-21T11:17:05.638Z"
             },
-            "extractedAt": "2026-10-18T01:46:42.532Z",
-            "createdAt": "2026-10-18T01:46:42.532Z",
-            "updatedAt": "2026-10-18T01:46:42.532Z"
+            "extractedAt": "2026-10-21T11:17:05.638Z",
+            "createdAt": "2026-10-21T11:17:05.638Z",
+            "updatedAt": "2026-10-21T11:17:05.638Z"
           },
           "audit": {
-            "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+            "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
             "findings": [
               {
-                "id": "46e2cc78-3c2e-4835-a3c4-d1de4bd277ce",
-                "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                "id": "bb3ee72e-1fa5-488b-b912-40a90b0cdad4",
+                "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                 "ruleId": "MISSING_RANDOM_SEED",
                 "title": "Random seed is not recorded",
                 "description": "The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.",
@@ -115,7 +116,7 @@
                 "evidence": [
                   {
                     "type": "experiment_field",
-                    "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                    "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                     "fieldPath": "training.randomSeed",
                     "description": "training.randomSeed is null",
                     "excerpt": null,
@@ -126,12 +127,12 @@
                 ],
                 "recommendation": "Record the seed used for this run, or explicitly mark the run as having an unknown seed in experiment metadata.",
                 "resolutionNote": null,
-                "createdAt": "2026-10-18T01:46:42.533Z",
-                "updatedAt": "2026-10-18T01:46:42.533Z"
+                "createdAt": "2026-10-21T11:17:05.639Z",
+                "updatedAt": "2026-10-21T11:17:05.639Z"
               },
               {
-                "id": "8261c5d0-bcaf-455e-bc5c-603e8a4a60e4",
-                "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                "id": "717a8908-6d41-4040-947c-1bf34c687fd7",
+                "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                 "ruleId": "MISSING_DATASET_VERSION",
                 "title": "Dataset version or identifier missing",
                 "description": "The experiment record specifies neither a dataset version nor an immutable dataset identifier.",
@@ -140,7 +141,7 @@
                 "evidence": [
                   {
                     "type": "experiment_field",
-                    "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                    "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                     "fieldPath": "dataset.datasetVersion",
                     "description": "Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded",
                     "excerpt": null,
@@ -151,8 +152,8 @@
                 ],
                 "recommendation": "Record the dataset commit hash, version tag, or URI to guarantee data provenance.",
                 "resolutionNote": null,
-                "createdAt": "2026-10-18T01:46:42.533Z",
-                "updatedAt": "2026-10-18T01:46:42.533Z"
+                "createdAt": "2026-10-21T11:17:05.639Z",
+                "updatedAt": "2026-10-21T11:17:05.639Z"
               }
             ],
             "summary": {
@@ -162,7 +163,7 @@
               "open": 2
             },
             "auditVersion": "1.0.0",
-            "completedAt": "2026-10-18T01:46:42.533Z"
+            "completedAt": "2026-10-21T11:17:05.639Z"
           }
         }
       }
@@ -173,8 +174,8 @@
         "limit": 10,
         "search": "Atlas"
       },
-      "startedAt": "2026-10-18T01:46:42.549Z",
-      "completedAt": "2026-10-18T01:46:43.155Z",
+      "startedAt": "2026-10-21T11:17:05.653Z",
+      "completedAt": "2026-10-21T11:17:06.840Z",
       "status": "passed",
       "response": {
         "content": [
@@ -192,21 +193,21 @@
     {
       "toolName": "get_experiment",
       "request": {
-        "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281"
+        "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b"
       },
-      "startedAt": "2026-10-18T01:46:43.155Z",
-      "completedAt": "2026-10-18T01:46:43.689Z",
+      "startedAt": "2026-10-21T11:17:06.840Z",
+      "completedAt": "2026-10-21T11:17:08.040Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"experiment\": {\n    \"id\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n    \"title\": \"ResNet-50 Evaluation\",\n    \"hypothesis\": null,\n    \"objective\": null,\n    \"status\": \"needs_review\",\n    \"model\": {\n      \"architecture\": \"Transformer / Neural Net\",\n      \"modelName\": \"ResNet-50\",\n      \"modelVersion\": null,\n      \"parameters\": {}\n    },\n    \"dataset\": {\n      \"datasetName\": null,\n      \"datasetVersion\": null,\n      \"datasetIdentifier\": null,\n      \"trainSplit\": \"80%\",\n      \"validationSplit\": null,\n      \"testSplit\": \"20%\",\n      \"preprocessing\": {}\n    },\n    \"training\": {\n      \"learningRate\": 0.001,\n      \"batchSize\": 32,\n      \"epochs\": 12,\n      \"optimizer\": null,\n      \"randomSeed\": null,\n      \"framework\": \"PyTorch\",\n      \"frameworkVersion\": null,\n      \"environment\": {},\n      \"otherParameters\": {}\n    },\n    \"evaluation\": {\n      \"metrics\": {},\n      \"evaluationProcedure\": null,\n      \"evaluationDatasetIdentifier\": null,\n      \"codeCommit\": null,\n      \"notes\": null\n    },\n    \"baselineExperimentId\": null,\n    \"source\": {\n      \"sourceType\": \"demo\",\n      \"sourceId\": null,\n      \"sourceReference\": \"mcp-inspector://complete-tool-trace\",\n      \"transcriptText\": \"We trained ResNet-50 on the Atlas Cells dataset with an 80/20 split, learning rate 0.001, batch size 32 for 12 epochs using PyTorch 2.4. Code commit abc1234 produced accuracy 0.87.\",\n      \"transcriptHash\": \"34abfa9efd49937031bf327e9ae37e60a18e2e5895fbc89e61d87b4a64be39d8\",\n      \"sourceTimestamp\": \"2026-10-18T01:46:42.532Z\"\n    },\n    \"extractedAt\": \"2026-10-18T01:46:42.532Z\",\n    \"createdAt\": \"2026-10-18T01:46:42.532Z\",\n    \"updatedAt\": \"2026-10-18T01:46:42.533Z\"\n  },\n  \"findings\": [\n    {\n      \"id\": \"46e2cc78-3c2e-4835-a3c4-d1de4bd277ce\",\n      \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n      \"ruleId\": \"MISSING_RANDOM_SEED\",\n      \"title\": \"Random seed is not recorded\",\n      \"description\": \"The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.\",\n      \"severity\": \"warning\",\n      \"status\": \"open\",\n      \"evidence\": [\n        {\n          \"type\": \"experiment_field\",\n          \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n          \"fieldPath\": \"training.randomSeed\",\n          \"description\": \"training.randomSeed is null\",\n          \"excerpt\": null,\n          \"previousValue\": null,\n          \"currentValue\": null,\n          \"sourceReference\": null\n        }\n      ],\n      \"recommendation\": \"Record the seed used for this run, or explicitly mark the run as having an unknown seed in experiment metadata.\",\n      \"resolutionNote\": null,\n      \"createdAt\": \"2026-10-18T01:46:42.533Z\",\n      \"updatedAt\": \"2026-10-18T01:46:42.533Z\",\n      \"auditRunId\": \"2489852b-1957-4d92-be20-767439a32211\"\n    },\n    {\n      \"id\": \"8261c5d0-bcaf-455e-bc5c-603e8a4a60e4\",\n      \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n      \"ruleId\": \"MISSING_DATASET_VERSION\",\n      \"title\": \"Dataset version or identifier missing\",\n      \"description\": \"The experiment record specifies neither a dataset version nor an immutable dataset identifier.\",\n      \"severity\": \"warning\",\n      \"status\": \"open\",\n      \"evidence\": [\n        {\n          \"type\": \"experiment_field\",\n          \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n          \"fieldPath\": \"dataset.datasetVersion\",\n          \"description\": \"Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded\",\n          \"excerpt\": null,\n          \"previousValue\": null,\n          \"currentValue\": null,\n          \"sourceReference\": null\n        }\n      ],\n      \"recommendation\": \"Record the dataset commit hash, version tag, or URI to guarantee data provenance.\",\n      \"resolutionNote\": null,\n      \"createdAt\": \"2026-10-18T01:46:42.533Z\",\n      \"updatedAt\": \"2026-10-18T01:46:42.533Z\",\n      \"auditRunId\": \"2489852b-1957-4d92-be20-767439a32211\"\n    }\n  ],\n  \"findingHistory\": [\n    {\n      \"id\": \"46e2cc78-3c2e-4835-a3c4-d1de4bd277ce\",\n      \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n      \"ruleId\": \"MISSING_RANDOM_SEED\",\n      \"title\": \"Random seed is not recorded\",\n      \"description\": \"The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.\",\n      \"severity\": \"warning\",\n      \"status\": \"open\",\n      \"evidence\": [\n        {\n          \"type\": \"experiment_field\",\n          \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n          \"fieldPath\": \"training.randomSeed\",\n          \"description\": \"training.randomSeed is null\",\n          \"excerpt\": null,\n          \"previousValue\": null,\n          \"currentValue\": null,\n          \"sourceReference\": null\n        }\n      ],\n      \"recommendation\": \"Record the seed used for this run, or explicitly mark the run as having an unknown seed in experiment metadata.\",\n      \"resolutionNote\": null,\n      \"createdAt\": \"2026-10-18T01:46:42.533Z\",\n      \"updatedAt\": \"2026-10-18T01:46:42.533Z\",\n      \"auditRunId\": \"2489852b-1957-4d92-be20-767439a32211\"\n    },\n    {\n      \"id\": \"8261c5d0-bcaf-455e-bc5c-603e8a4a60e4\",\n      \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n      \"ruleId\": \"MISSING_DATASET_VERSION\",\n      \"title\": \"Dataset version or identifier missing\",\n      \"description\": \"The experiment record specifies neither a dataset version nor an immutable dataset identifier.\",\n      \"severity\": \"warning\",\n      \"status\": \"open\",\n      \"evidence\": [\n        {\n          \"type\": \"experiment_field\",\n          \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n          \"fieldPath\": \"dataset.datasetVersion\",\n          \"description\": \"Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded\",\n          \"excerpt\": null,\n          \"previousValue\": null,\n          \"currentValue\": null,\n          \"sourceReference\": null\n        }\n      ],\n      \"recommendation\": \"Record the dataset commit hash, version tag, or URI to guarantee data provenance.\",\n      \"resolutionNote\": null,\n      \"createdAt\": \"2026-10-18T01:46:42.533Z\",\n      \"updatedAt\": \"2026-10-18T01:46:42.533Z\",\n      \"auditRunId\": \"2489852b-1957-4d92-be20-767439a32211\"\n    }\n  ],\n  \"auditHistory\": [\n    {\n      \"id\": \"2489852b-1957-4d92-be20-767439a32211\",\n      \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n      \"revisionId\": null,\n      \"auditVersion\": \"1.0.0\",\n      \"summary\": {\n        \"critical\": 0,\n        \"warning\": 2,\n        \"info\": 0,\n        \"open\": 2\n      },\n      \"completedAt\": \"2026-10-18T01:46:42.533Z\"\n    }\n  ]\n}"
+            "text": "{\n  \"experiment\": {\n    \"id\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n    \"title\": \"ResNet-50 Evaluation\",\n    \"hypothesis\": null,\n    \"objective\": null,\n    \"status\": \"needs_review\",\n    \"model\": {\n      \"architecture\": \"Transformer / Neural Net\",\n      \"modelName\": \"ResNet-50\",\n      \"modelVersion\": null,\n      \"parameters\": {}\n    },\n    \"dataset\": {\n      \"datasetName\": null,\n      \"datasetVersion\": null,\n      \"datasetIdentifier\": null,\n      \"trainSplit\": \"80%\",\n      \"validationSplit\": null,\n      \"testSplit\": \"20%\",\n      \"preprocessing\": {}\n    },\n    \"training\": {\n      \"learningRate\": 0.001,\n      \"batchSize\": 32,\n      \"epochs\": 12,\n      \"optimizer\": null,\n      \"randomSeed\": null,\n      \"framework\": \"PyTorch\",\n      \"frameworkVersion\": \"2.4\",\n      \"environment\": {},\n      \"otherParameters\": {}\n    },\n    \"evaluation\": {\n      \"metrics\": {},\n      \"evaluationProcedure\": null,\n      \"evaluationDatasetIdentifier\": null,\n      \"codeCommit\": \"abc1234\",\n      \"notes\": null\n    },\n    \"baselineExperimentId\": null,\n    \"source\": {\n      \"sourceType\": \"demo\",\n      \"sourceId\": null,\n      \"sourceReference\": \"mcp-inspector://complete-tool-trace\",\n      \"transcriptText\": \"We trained ResNet-50 on the Atlas Cells dataset with an 80/20 split, learning rate 0.001, batch size 32 for 12 epochs using PyTorch 2.4. Code commit abc1234 produced accuracy 0.87.\",\n      \"transcriptHash\": \"34abfa9efd49937031bf327e9ae37e60a18e2e5895fbc89e61d87b4a64be39d8\",\n      \"sourceTimestamp\": \"2026-10-21T11:17:05.638Z\"\n    },\n    \"extractedAt\": \"2026-10-21T11:17:05.638Z\",\n    \"createdAt\": \"2026-10-21T11:17:05.638Z\",\n    \"updatedAt\": \"2026-10-21T11:17:05.639Z\"\n  },\n  \"findings\": [\n    {\n      \"id\": \"bb3ee72e-1fa5-488b-b912-40a90b0cdad4\",\n      \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n      \"ruleId\": \"MISSING_RANDOM_SEED\",\n      \"title\": \"Random seed is not recorded\",\n      \"description\": \"The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.\",\n      \"severity\": \"warning\",\n      \"status\": \"open\",\n      \"evidence\": [\n        {\n          \"type\": \"experiment_field\",\n          \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n          \"fieldPath\": \"training.randomSeed\",\n          \"description\": \"training.randomSeed is null\",\n          \"excerpt\": null,\n          \"previousValue\": null,\n          \"currentValue\": null,\n          \"sourceReference\": null\n        }\n      ],\n      \"recommendation\": \"Record the seed used for this run, or explicitly mark the run as having an unknown seed in experiment metadata.\",\n      \"resolutionNote\": null,\n      \"createdAt\": \"2026-10-21T11:17:05.639Z\",\n      \"updatedAt\": \"2026-10-21T11:17:05.639Z\",\n      \"auditRunId\": \"04a18d79-e382-4952-bddf-64424214d3aa\"\n    },\n    {\n      \"id\": \"717a8908-6d41-4040-947c-1bf34c687fd7\",\n      \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n      \"ruleId\": \"MISSING_DATASET_VERSION\",\n      \"title\": \"Dataset version or identifier missing\",\n      \"description\": \"The experiment record specifies neither a dataset version nor an immutable dataset identifier.\",\n      \"severity\": \"warning\",\n      \"status\": \"open\",\n      \"evidence\": [\n        {\n          \"type\": \"experiment_field\",\n          \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n          \"fieldPath\": \"dataset.datasetVersion\",\n          \"description\": \"Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded\",\n          \"excerpt\": null,\n          \"previousValue\": null,\n          \"currentValue\": null,\n          \"sourceReference\": null\n        }\n      ],\n      \"recommendation\": \"Record the dataset commit hash, version tag, or URI to guarantee data provenance.\",\n      \"resolutionNote\": null,\n      \"createdAt\": \"2026-10-21T11:17:05.639Z\",\n      \"updatedAt\": \"2026-10-21T11:17:05.639Z\",\n      \"auditRunId\": \"04a18d79-e382-4952-bddf-64424214d3aa\"\n    }\n  ],\n  \"findingHistory\": [\n    {\n      \"id\": \"bb3ee72e-1fa5-488b-b912-40a90b0cdad4\",\n      \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n      \"ruleId\": \"MISSING_RANDOM_SEED\",\n      \"title\": \"Random seed is not recorded\",\n      \"description\": \"The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.\",\n      \"severity\": \"warning\",\n      \"status\": \"open\",\n      \"evidence\": [\n        {\n          \"type\": \"experiment_field\",\n          \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n          \"fieldPath\": \"training.randomSeed\",\n          \"description\": \"training.randomSeed is null\",\n          \"excerpt\": null,\n          \"previousValue\": null,\n          \"currentValue\": null,\n          \"sourceReference\": null\n        }\n      ],\n      \"recommendation\": \"Record the seed used for this run, or explicitly mark the run as having an unknown seed in experiment metadata.\",\n      \"resolutionNote\": null,\n      \"createdAt\": \"2026-10-21T11:17:05.639Z\",\n      \"updatedAt\": \"2026-10-21T11:17:05.639Z\",\n      \"auditRunId\": \"04a18d79-e382-4952-bddf-64424214d3aa\"\n    },\n    {\n      \"id\": \"717a8908-6d41-4040-947c-1bf34c687fd7\",\n      \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n      \"ruleId\": \"MISSING_DATASET_VERSION\",\n      \"title\": \"Dataset version or identifier missing\",\n      \"description\": \"The experiment record specifies neither a dataset version nor an immutable dataset identifier.\",\n      \"severity\": \"warning\",\n      \"status\": \"open\",\n      \"evidence\": [\n        {\n          \"type\": \"experiment_field\",\n          \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n          \"fieldPath\": \"dataset.datasetVersion\",\n          \"description\": \"Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded\",\n          \"excerpt\": null,\n          \"previousValue\": null,\n          \"currentValue\": null,\n          \"sourceReference\": null\n        }\n      ],\n      \"recommendation\": \"Record the dataset commit hash, version tag, or URI to guarantee data provenance.\",\n      \"resolutionNote\": null,\n      \"createdAt\": \"2026-10-21T11:17:05.639Z\",\n      \"updatedAt\": \"2026-10-21T11:17:05.639Z\",\n      \"auditRunId\": \"04a18d79-e382-4952-bddf-64424214d3aa\"\n    }\n  ],\n  \"auditHistory\": [\n    {\n      \"id\": \"04a18d79-e382-4952-bddf-64424214d3aa\",\n      \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n      \"revisionId\": null,\n      \"auditVersion\": \"1.0.0\",\n      \"summary\": {\n        \"critical\": 0,\n        \"warning\": 2,\n        \"info\": 0,\n        \"open\": 2\n      },\n      \"completedAt\": \"2026-10-21T11:17:05.639Z\"\n    }\n  ],\n  \"verification\": {\n    \"policyId\": null,\n    \"fieldStates\": {},\n    \"artifacts\": [],\n    \"qualityGate\": {\n      \"decision\": \"not_configured\",\n      \"auditRunId\": \"04a18d79-e382-4952-bddf-64424214d3aa\",\n      \"blockingRuleIds\": [],\n      \"warningRuleIds\": [\n        \"MISSING_RANDOM_SEED\",\n        \"MISSING_DATASET_VERSION\"\n      ],\n      \"unverifiedFieldPaths\": [],\n      \"linkedReview\": null,\n      \"note\": null\n    }\n  }\n}"
           }
         ],
         "structuredContent": {
           "experiment": {
-            "id": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+            "id": "8e61eee6-c62c-48b6-b205-64041312124b",
             "title": "ResNet-50 Evaluation",
             "hypothesis": null,
             "objective": null,
@@ -233,7 +234,7 @@
               "optimizer": null,
               "randomSeed": null,
               "framework": "PyTorch",
-              "frameworkVersion": null,
+              "frameworkVersion": "2.4",
               "environment": {},
               "otherParameters": {}
             },
@@ -241,7 +242,7 @@
               "metrics": {},
               "evaluationProcedure": null,
               "evaluationDatasetIdentifier": null,
-              "codeCommit": null,
+              "codeCommit": "abc1234",
               "notes": null
             },
             "baselineExperimentId": null,
@@ -251,16 +252,16 @@
               "sourceReference": "mcp-inspector://complete-tool-trace",
               "transcriptText": "We trained ResNet-50 on the Atlas Cells dataset with an 80/20 split, learning rate 0.001, batch size 32 for 12 epochs using PyTorch 2.4. Code commit abc1234 produced accuracy 0.87.",
               "transcriptHash": "34abfa9efd49937031bf327e9ae37e60a18e2e5895fbc89e61d87b4a64be39d8",
-              "sourceTimestamp": "2026-10-18T01:46:42.532Z"
+              "sourceTimestamp": "2026-10-21T11:17:05.638Z"
             },
-            "extractedAt": "2026-10-18T01:46:42.532Z",
-            "createdAt": "2026-10-18T01:46:42.532Z",
-            "updatedAt": "2026-10-18T01:46:42.533Z"
+            "extractedAt": "2026-10-21T11:17:05.638Z",
+            "createdAt": "2026-10-21T11:17:05.638Z",
+            "updatedAt": "2026-10-21T11:17:05.639Z"
           },
           "findings": [
             {
-              "id": "46e2cc78-3c2e-4835-a3c4-d1de4bd277ce",
-              "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+              "id": "bb3ee72e-1fa5-488b-b912-40a90b0cdad4",
+              "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
               "ruleId": "MISSING_RANDOM_SEED",
               "title": "Random seed is not recorded",
               "description": "The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.",
@@ -269,7 +270,7 @@
               "evidence": [
                 {
                   "type": "experiment_field",
-                  "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                  "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                   "fieldPath": "training.randomSeed",
                   "description": "training.randomSeed is null",
                   "excerpt": null,
@@ -280,13 +281,13 @@
               ],
               "recommendation": "Record the seed used for this run, or explicitly mark the run as having an unknown seed in experiment metadata.",
               "resolutionNote": null,
-              "createdAt": "2026-10-18T01:46:42.533Z",
-              "updatedAt": "2026-10-18T01:46:42.533Z",
-              "auditRunId": "2489852b-1957-4d92-be20-767439a32211"
+              "createdAt": "2026-10-21T11:17:05.639Z",
+              "updatedAt": "2026-10-21T11:17:05.639Z",
+              "auditRunId": "04a18d79-e382-4952-bddf-64424214d3aa"
             },
             {
-              "id": "8261c5d0-bcaf-455e-bc5c-603e8a4a60e4",
-              "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+              "id": "717a8908-6d41-4040-947c-1bf34c687fd7",
+              "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
               "ruleId": "MISSING_DATASET_VERSION",
               "title": "Dataset version or identifier missing",
               "description": "The experiment record specifies neither a dataset version nor an immutable dataset identifier.",
@@ -295,7 +296,7 @@
               "evidence": [
                 {
                   "type": "experiment_field",
-                  "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                  "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                   "fieldPath": "dataset.datasetVersion",
                   "description": "Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded",
                   "excerpt": null,
@@ -306,15 +307,15 @@
               ],
               "recommendation": "Record the dataset commit hash, version tag, or URI to guarantee data provenance.",
               "resolutionNote": null,
-              "createdAt": "2026-10-18T01:46:42.533Z",
-              "updatedAt": "2026-10-18T01:46:42.533Z",
-              "auditRunId": "2489852b-1957-4d92-be20-767439a32211"
+              "createdAt": "2026-10-21T11:17:05.639Z",
+              "updatedAt": "2026-10-21T11:17:05.639Z",
+              "auditRunId": "04a18d79-e382-4952-bddf-64424214d3aa"
             }
           ],
           "findingHistory": [
             {
-              "id": "46e2cc78-3c2e-4835-a3c4-d1de4bd277ce",
-              "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+              "id": "bb3ee72e-1fa5-488b-b912-40a90b0cdad4",
+              "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
               "ruleId": "MISSING_RANDOM_SEED",
               "title": "Random seed is not recorded",
               "description": "The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.",
@@ -323,7 +324,7 @@
               "evidence": [
                 {
                   "type": "experiment_field",
-                  "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                  "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                   "fieldPath": "training.randomSeed",
                   "description": "training.randomSeed is null",
                   "excerpt": null,
@@ -334,13 +335,13 @@
               ],
               "recommendation": "Record the seed used for this run, or explicitly mark the run as having an unknown seed in experiment metadata.",
               "resolutionNote": null,
-              "createdAt": "2026-10-18T01:46:42.533Z",
-              "updatedAt": "2026-10-18T01:46:42.533Z",
-              "auditRunId": "2489852b-1957-4d92-be20-767439a32211"
+              "createdAt": "2026-10-21T11:17:05.639Z",
+              "updatedAt": "2026-10-21T11:17:05.639Z",
+              "auditRunId": "04a18d79-e382-4952-bddf-64424214d3aa"
             },
             {
-              "id": "8261c5d0-bcaf-455e-bc5c-603e8a4a60e4",
-              "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+              "id": "717a8908-6d41-4040-947c-1bf34c687fd7",
+              "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
               "ruleId": "MISSING_DATASET_VERSION",
               "title": "Dataset version or identifier missing",
               "description": "The experiment record specifies neither a dataset version nor an immutable dataset identifier.",
@@ -349,7 +350,7 @@
               "evidence": [
                 {
                   "type": "experiment_field",
-                  "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                  "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                   "fieldPath": "dataset.datasetVersion",
                   "description": "Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded",
                   "excerpt": null,
@@ -360,15 +361,15 @@
               ],
               "recommendation": "Record the dataset commit hash, version tag, or URI to guarantee data provenance.",
               "resolutionNote": null,
-              "createdAt": "2026-10-18T01:46:42.533Z",
-              "updatedAt": "2026-10-18T01:46:42.533Z",
-              "auditRunId": "2489852b-1957-4d92-be20-767439a32211"
+              "createdAt": "2026-10-21T11:17:05.639Z",
+              "updatedAt": "2026-10-21T11:17:05.639Z",
+              "auditRunId": "04a18d79-e382-4952-bddf-64424214d3aa"
             }
           ],
           "auditHistory": [
             {
-              "id": "2489852b-1957-4d92-be20-767439a32211",
-              "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+              "id": "04a18d79-e382-4952-bddf-64424214d3aa",
+              "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
               "revisionId": null,
               "auditVersion": "1.0.0",
               "summary": {
@@ -377,33 +378,84 @@
                 "info": 0,
                 "open": 2
               },
-              "completedAt": "2026-10-18T01:46:42.533Z"
+              "completedAt": "2026-10-21T11:17:05.639Z"
             }
-          ]
+          ],
+          "verification": {
+            "policyId": null,
+            "fieldStates": {},
+            "artifacts": [],
+            "qualityGate": {
+              "decision": "not_configured",
+              "auditRunId": "04a18d79-e382-4952-bddf-64424214d3aa",
+              "blockingRuleIds": [],
+              "warningRuleIds": [
+                "MISSING_RANDOM_SEED",
+                "MISSING_DATASET_VERSION"
+              ],
+              "unverifiedFieldPaths": [],
+              "linkedReview": null,
+              "note": null
+            }
+          }
+        }
+      }
+    },
+    {
+      "toolName": "get_experiment_verification",
+      "request": {
+        "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b"
+      },
+      "startedAt": "2026-10-21T11:17:08.040Z",
+      "completedAt": "2026-10-21T11:17:09.330Z",
+      "status": "passed",
+      "response": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"policyId\": null,\n  \"fieldStates\": {},\n  \"artifacts\": [],\n  \"qualityGate\": {\n    \"decision\": \"not_configured\",\n    \"auditRunId\": \"04a18d79-e382-4952-bddf-64424214d3aa\",\n    \"blockingRuleIds\": [],\n    \"warningRuleIds\": [\n      \"MISSING_RANDOM_SEED\",\n      \"MISSING_DATASET_VERSION\"\n    ],\n    \"unverifiedFieldPaths\": [],\n    \"linkedReview\": null,\n    \"note\": null\n  }\n}"
+          }
+        ],
+        "structuredContent": {
+          "policyId": null,
+          "fieldStates": {},
+          "artifacts": [],
+          "qualityGate": {
+            "decision": "not_configured",
+            "auditRunId": "04a18d79-e382-4952-bddf-64424214d3aa",
+            "blockingRuleIds": [],
+            "warningRuleIds": [
+              "MISSING_RANDOM_SEED",
+              "MISSING_DATASET_VERSION"
+            ],
+            "unverifiedFieldPaths": [],
+            "linkedReview": null,
+            "note": null
+          }
         }
       }
     },
     {
       "toolName": "audit_experiment",
       "request": {
-        "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281"
+        "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b"
       },
-      "startedAt": "2026-10-18T01:46:43.689Z",
-      "completedAt": "2026-10-18T01:46:44.202Z",
+      "startedAt": "2026-10-21T11:17:09.330Z",
+      "completedAt": "2026-10-21T11:17:10.581Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n  \"findings\": [\n    {\n      \"id\": \"5a99a969-8c2e-4617-9c37-adb15682fd90\",\n      \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n      \"ruleId\": \"MISSING_RANDOM_SEED\",\n      \"title\": \"Random seed is not recorded\",\n      \"description\": \"The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.\",\n      \"severity\": \"warning\",\n      \"status\": \"open\",\n      \"evidence\": [\n        {\n          \"type\": \"experiment_field\",\n          \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n          \"fieldPath\": \"training.randomSeed\",\n          \"description\": \"training.randomSeed is null\",\n          \"excerpt\": null,\n          \"previousValue\": null,\n          \"currentValue\": null,\n          \"sourceReference\": null\n        }\n      ],\n      \"recommendation\": \"Record the seed used for this run, or explicitly mark the run as having an unknown seed in experiment metadata.\",\n      \"resolutionNote\": null,\n      \"createdAt\": \"2026-10-18T01:46:44.184Z\",\n      \"updatedAt\": \"2026-10-18T01:46:44.184Z\"\n    },\n    {\n      \"id\": \"18dbadbc-6577-44eb-a3e6-6fc49ae111e1\",\n      \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n      \"ruleId\": \"MISSING_DATASET_VERSION\",\n      \"title\": \"Dataset version or identifier missing\",\n      \"description\": \"The experiment record specifies neither a dataset version nor an immutable dataset identifier.\",\n      \"severity\": \"warning\",\n      \"status\": \"open\",\n      \"evidence\": [\n        {\n          \"type\": \"experiment_field\",\n          \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n          \"fieldPath\": \"dataset.datasetVersion\",\n          \"description\": \"Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded\",\n          \"excerpt\": null,\n          \"previousValue\": null,\n          \"currentValue\": null,\n          \"sourceReference\": null\n        }\n      ],\n      \"recommendation\": \"Record the dataset commit hash, version tag, or URI to guarantee data provenance.\",\n      \"resolutionNote\": null,\n      \"createdAt\": \"2026-10-18T01:46:44.184Z\",\n      \"updatedAt\": \"2026-10-18T01:46:44.184Z\"\n    }\n  ],\n  \"summary\": {\n    \"critical\": 0,\n    \"warning\": 2,\n    \"info\": 0,\n    \"open\": 2\n  },\n  \"auditVersion\": \"1.0.0\",\n  \"completedAt\": \"2026-10-18T01:46:44.184Z\"\n}"
+            "text": "{\n  \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n  \"findings\": [\n    {\n      \"id\": \"af8ba4dd-c846-491e-82d5-5103f9ca03dd\",\n      \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n      \"ruleId\": \"MISSING_RANDOM_SEED\",\n      \"title\": \"Random seed is not recorded\",\n      \"description\": \"The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.\",\n      \"severity\": \"warning\",\n      \"status\": \"open\",\n      \"evidence\": [\n        {\n          \"type\": \"experiment_field\",\n          \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n          \"fieldPath\": \"training.randomSeed\",\n          \"description\": \"training.randomSeed is null\",\n          \"excerpt\": null,\n          \"previousValue\": null,\n          \"currentValue\": null,\n          \"sourceReference\": null\n        }\n      ],\n      \"recommendation\": \"Record the seed used for this run, or explicitly mark the run as having an unknown seed in experiment metadata.\",\n      \"resolutionNote\": null,\n      \"createdAt\": \"2026-10-21T11:17:10.564Z\",\n      \"updatedAt\": \"2026-10-21T11:17:10.564Z\"\n    },\n    {\n      \"id\": \"42c04e58-8414-422f-95d8-ed9e421701fa\",\n      \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n      \"ruleId\": \"MISSING_DATASET_VERSION\",\n      \"title\": \"Dataset version or identifier missing\",\n      \"description\": \"The experiment record specifies neither a dataset version nor an immutable dataset identifier.\",\n      \"severity\": \"warning\",\n      \"status\": \"open\",\n      \"evidence\": [\n        {\n          \"type\": \"experiment_field\",\n          \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n          \"fieldPath\": \"dataset.datasetVersion\",\n          \"description\": \"Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded\",\n          \"excerpt\": null,\n          \"previousValue\": null,\n          \"currentValue\": null,\n          \"sourceReference\": null\n        }\n      ],\n      \"recommendation\": \"Record the dataset commit hash, version tag, or URI to guarantee data provenance.\",\n      \"resolutionNote\": null,\n      \"createdAt\": \"2026-10-21T11:17:10.564Z\",\n      \"updatedAt\": \"2026-10-21T11:17:10.564Z\"\n    }\n  ],\n  \"summary\": {\n    \"critical\": 0,\n    \"warning\": 2,\n    \"info\": 0,\n    \"open\": 2\n  },\n  \"auditVersion\": \"1.0.0\",\n  \"completedAt\": \"2026-10-21T11:17:10.564Z\"\n}"
           }
         ],
         "structuredContent": {
-          "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+          "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
           "findings": [
             {
-              "id": "5a99a969-8c2e-4617-9c37-adb15682fd90",
-              "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+              "id": "af8ba4dd-c846-491e-82d5-5103f9ca03dd",
+              "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
               "ruleId": "MISSING_RANDOM_SEED",
               "title": "Random seed is not recorded",
               "description": "The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.",
@@ -412,7 +464,7 @@
               "evidence": [
                 {
                   "type": "experiment_field",
-                  "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                  "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                   "fieldPath": "training.randomSeed",
                   "description": "training.randomSeed is null",
                   "excerpt": null,
@@ -423,12 +475,12 @@
               ],
               "recommendation": "Record the seed used for this run, or explicitly mark the run as having an unknown seed in experiment metadata.",
               "resolutionNote": null,
-              "createdAt": "2026-10-18T01:46:44.184Z",
-              "updatedAt": "2026-10-18T01:46:44.184Z"
+              "createdAt": "2026-10-21T11:17:10.564Z",
+              "updatedAt": "2026-10-21T11:17:10.564Z"
             },
             {
-              "id": "18dbadbc-6577-44eb-a3e6-6fc49ae111e1",
-              "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+              "id": "42c04e58-8414-422f-95d8-ed9e421701fa",
+              "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
               "ruleId": "MISSING_DATASET_VERSION",
               "title": "Dataset version or identifier missing",
               "description": "The experiment record specifies neither a dataset version nor an immutable dataset identifier.",
@@ -437,7 +489,7 @@
               "evidence": [
                 {
                   "type": "experiment_field",
-                  "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                  "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                   "fieldPath": "dataset.datasetVersion",
                   "description": "Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded",
                   "excerpt": null,
@@ -448,8 +500,8 @@
               ],
               "recommendation": "Record the dataset commit hash, version tag, or URI to guarantee data provenance.",
               "resolutionNote": null,
-              "createdAt": "2026-10-18T01:46:44.184Z",
-              "updatedAt": "2026-10-18T01:46:44.184Z"
+              "createdAt": "2026-10-21T11:17:10.564Z",
+              "updatedAt": "2026-10-21T11:17:10.564Z"
             }
           ],
           "summary": {
@@ -459,33 +511,33 @@
             "open": 2
           },
           "auditVersion": "1.0.0",
-          "completedAt": "2026-10-18T01:46:44.184Z"
+          "completedAt": "2026-10-21T11:17:10.564Z"
         }
       }
     },
     {
       "toolName": "generate_reproducibility_report",
       "request": {
-        "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+        "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
         "format": "markdown"
       },
-      "startedAt": "2026-10-18T01:46:44.202Z",
-      "completedAt": "2026-10-18T01:46:44.769Z",
+      "startedAt": "2026-10-21T11:17:10.581Z",
+      "completedAt": "2026-10-21T11:17:11.979Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n  \"auditRunId\": \"58cf8eee-85a3-4222-9dd0-622448a52f73\",\n  \"format\": \"markdown\",\n  \"content\": \"# Reproducibility Report: ResNet-50 Evaluation\\n\\nGenerated: 2026-10-18T01:46:44.753Z\\n\\n## Experiment\\n\\n- Model: ResNet-50\\n- Dataset: Not recorded\\n- Learning rate: 0.001\\n- Random seed: Not recorded\\n- Code commit: Not recorded\\n\\n## Audit\\n\\n- Open findings: 2\\n- **Random seed is not recorded** (warning): The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.\\n- **Dataset version or identifier missing** (warning): The experiment record specifies neither a dataset version nor an immutable dataset identifier.\\n\\n## Revisions\\n\\n- None\\n\\n## Decisions\\n\\n- None\\n\",\n  \"id\": \"beb098a5-ad8c-4270-a4aa-d43d9067df87\",\n  \"createdAt\": \"2026-10-18T01:46:44.753Z\"\n}"
+            "text": "{\n  \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n  \"auditRunId\": \"c4261cac-65cc-4ba4-ae28-e3583dae9a08\",\n  \"format\": \"markdown\",\n  \"content\": \"# Reproducibility Report: ResNet-50 Evaluation\\n\\nGenerated: 2026-10-21T11:17:11.962Z\\n\\n## Experiment claims\\n\\n- Model: ResNet-50\\n- Dataset: Not recorded \\n- Learning rate: 0.001\\n- Random seed: Not recorded\\n- Claimed accuracy: Not recorded\\n- Code commit: abc1234\\n\\n## Verification and policy\\n\\n- Policy: No artifact policy configured\\n- Quality gate: not_configured\\n- Audit run: c4261cac-65cc-4ba4-ae28-e3583dae9a08\\n- No artifact verification states\\n\\n### Linked source snapshot\\n\\n- No GitLab or MLflow source linked\\n\\n### Imported research documents\\n\\n- None\\n\\n### Stored artifact metadata\\n\\n- None\\n\\nDemo fixtures and typed metadata are labelled user_confirmed. Uploaded file bytes are retained and checked against their stored SHA-256 hash. This verifies the attached evidence file, not the scientific validity of the experiment.\\n\\n## Audit\\n\\n- Open findings: 2\\n- **Random seed is not recorded** [MISSING_RANDOM_SEED, warning]: The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.\\n- **Dataset version or identifier missing** [MISSING_DATASET_VERSION, warning]: The experiment record specifies neither a dataset version nor an immutable dataset identifier.\\n\\n## Revisions\\n\\n- None\\n\\n## Decisions\\n\\n- None\\n\",\n  \"id\": \"4ca5b8f3-d663-4d37-b22f-a6db43e88aa2\",\n  \"createdAt\": \"2026-10-21T11:17:11.962Z\"\n}"
           }
         ],
         "structuredContent": {
-          "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
-          "auditRunId": "58cf8eee-85a3-4222-9dd0-622448a52f73",
+          "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
+          "auditRunId": "c4261cac-65cc-4ba4-ae28-e3583dae9a08",
           "format": "markdown",
-          "content": "# Reproducibility Report: ResNet-50 Evaluation\n\nGenerated: 2026-10-18T01:46:44.753Z\n\n## Experiment\n\n- Model: ResNet-50\n- Dataset: Not recorded\n- Learning rate: 0.001\n- Random seed: Not recorded\n- Code commit: Not recorded\n\n## Audit\n\n- Open findings: 2\n- **Random seed is not recorded** (warning): The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.\n- **Dataset version or identifier missing** (warning): The experiment record specifies neither a dataset version nor an immutable dataset identifier.\n\n## Revisions\n\n- None\n\n## Decisions\n\n- None\n",
-          "id": "beb098a5-ad8c-4270-a4aa-d43d9067df87",
-          "createdAt": "2026-10-18T01:46:44.753Z"
+          "content": "# Reproducibility Report: ResNet-50 Evaluation\n\nGenerated: 2026-10-21T11:17:11.962Z\n\n## Experiment claims\n\n- Model: ResNet-50\n- Dataset: Not recorded \n- Learning rate: 0.001\n- Random seed: Not recorded\n- Claimed accuracy: Not recorded\n- Code commit: abc1234\n\n## Verification and policy\n\n- Policy: No artifact policy configured\n- Quality gate: not_configured\n- Audit run: c4261cac-65cc-4ba4-ae28-e3583dae9a08\n- No artifact verification states\n\n### Linked source snapshot\n\n- No GitLab or MLflow source linked\n\n### Imported research documents\n\n- None\n\n### Stored artifact metadata\n\n- None\n\nDemo fixtures and typed metadata are labelled user_confirmed. Uploaded file bytes are retained and checked against their stored SHA-256 hash. This verifies the attached evidence file, not the scientific validity of the experiment.\n\n## Audit\n\n- Open findings: 2\n- **Random seed is not recorded** [MISSING_RANDOM_SEED, warning]: The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.\n- **Dataset version or identifier missing** [MISSING_DATASET_VERSION, warning]: The experiment record specifies neither a dataset version nor an immutable dataset identifier.\n\n## Revisions\n\n- None\n\n## Decisions\n\n- None\n",
+          "id": "4ca5b8f3-d663-4d37-b22f-a6db43e88aa2",
+          "createdAt": "2026-10-21T11:17:11.962Z"
         }
       }
     },
@@ -493,30 +545,30 @@
       "toolName": "start_experiment_session",
       "request": {
         "title": "Inspector complete tool trace",
-        "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281"
+        "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b"
       },
-      "startedAt": "2026-10-18T01:46:44.769Z",
-      "completedAt": "2026-10-18T01:46:45.261Z",
+      "startedAt": "2026-10-21T11:17:11.979Z",
+      "completedAt": "2026-10-21T11:17:13.304Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"data\": {\n    \"id\": \"7cf01a43-65d3-4179-bb7a-e4f52fe7a260\",\n    \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n    \"sourceId\": null,\n    \"title\": \"Inspector complete tool trace\",\n    \"status\": \"active\",\n    \"unresolvedFindingId\": null,\n    \"pendingApprovalId\": null,\n    \"lastToolName\": null,\n    \"createdAt\": \"2026-10-18T01:46:45.245Z\",\n    \"updatedAt\": \"2026-10-18T01:46:45.245Z\"\n  },\n  \"speech\": {\n    \"text\": \"I started Inspector complete tool trace. Tell me what you are testing.\",\n    \"shouldListen\": true,\n    \"confirmationRequired\": false\n  },\n  \"visual\": {\n    \"view\": \"session\",\n    \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\"\n  },\n  \"nextAction\": \"listen\"\n}"
+            "text": "{\n  \"data\": {\n    \"id\": \"697253ca-64c5-468d-822a-4e129d24e6b0\",\n    \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n    \"sourceId\": null,\n    \"title\": \"Inspector complete tool trace\",\n    \"status\": \"active\",\n    \"unresolvedFindingId\": null,\n    \"pendingApprovalId\": null,\n    \"lastToolName\": null,\n    \"createdAt\": \"2026-10-21T11:17:13.288Z\",\n    \"updatedAt\": \"2026-10-21T11:17:13.288Z\"\n  },\n  \"speech\": {\n    \"text\": \"I started Inspector complete tool trace. Tell me what you are testing.\",\n    \"shouldListen\": true,\n    \"confirmationRequired\": false\n  },\n  \"visual\": {\n    \"view\": \"session\",\n    \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\"\n  },\n  \"nextAction\": \"listen\"\n}"
           }
         ],
         "structuredContent": {
           "data": {
-            "id": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
-            "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+            "id": "697253ca-64c5-468d-822a-4e129d24e6b0",
+            "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
             "sourceId": null,
             "title": "Inspector complete tool trace",
             "status": "active",
             "unresolvedFindingId": null,
             "pendingApprovalId": null,
             "lastToolName": null,
-            "createdAt": "2026-10-18T01:46:45.245Z",
-            "updatedAt": "2026-10-18T01:46:45.245Z"
+            "createdAt": "2026-10-21T11:17:13.288Z",
+            "updatedAt": "2026-10-21T11:17:13.288Z"
           },
           "speech": {
             "text": "I started Inspector complete tool trace. Tell me what you are testing.",
@@ -525,7 +577,7 @@
           },
           "visual": {
             "view": "session",
-            "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281"
+            "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b"
           },
           "nextAction": "listen"
         }
@@ -534,43 +586,43 @@
     {
       "toolName": "get_active_experiment",
       "request": {
-        "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260"
+        "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0"
       },
-      "startedAt": "2026-10-18T01:46:45.261Z",
-      "completedAt": "2026-10-18T01:46:45.820Z",
+      "startedAt": "2026-10-21T11:17:13.304Z",
+      "completedAt": "2026-10-21T11:17:14.712Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"session\": {\n    \"id\": \"7cf01a43-65d3-4179-bb7a-e4f52fe7a260\",\n    \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n    \"sourceId\": null,\n    \"title\": \"Inspector complete tool trace\",\n    \"status\": \"active\",\n    \"unresolvedFindingId\": null,\n    \"pendingApprovalId\": null,\n    \"lastToolName\": null,\n    \"createdAt\": \"2026-10-18T01:46:45.245Z\",\n    \"updatedAt\": \"2026-10-18T01:46:45.245Z\"\n  },\n  \"messages\": [],\n  \"tools\": [\n    {\n      \"id\": \"04816b7f-229f-41f0-a98d-07ce0d377cee\",\n      \"sessionId\": \"7cf01a43-65d3-4179-bb7a-e4f52fe7a260\",\n      \"messageId\": null,\n      \"toolName\": \"start_experiment_session\",\n      \"input\": {\n        \"transport\": \"streamable-http\",\n        \"arguments\": {\n          \"title\": \"Inspector complete tool trace\",\n          \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\"\n        }\n      },\n      \"output\": {\n        \"transport\": \"streamable-http\",\n        \"protocol\": \"MCP\",\n        \"status\": \"session_started\"\n      },\n      \"status\": \"completed\",\n      \"durationMs\": 0,\n      \"errorCode\": null,\n      \"createdAt\": \"2026-10-18T01:46:45.245Z\",\n      \"completedAt\": \"2026-10-18T01:46:45.245Z\"\n    },\n    {\n      \"id\": \"ddab5683-69fd-473d-932c-054637b66238\",\n      \"sessionId\": \"7cf01a43-65d3-4179-bb7a-e4f52fe7a260\",\n      \"messageId\": null,\n      \"toolName\": \"get_active_experiment\",\n      \"input\": {\n        \"transport\": \"streamable-http\",\n        \"arguments\": {\n          \"sessionId\": \"7cf01a43-65d3-4179-bb7a-e4f52fe7a260\"\n        }\n      },\n      \"output\": null,\n      \"status\": \"running\",\n      \"durationMs\": null,\n      \"errorCode\": null,\n      \"createdAt\": \"2026-10-18T01:46:45.803Z\",\n      \"completedAt\": null\n    }\n  ],\n  \"approvals\": [],\n  \"events\": [\n    {\n      \"sequence\": 1,\n      \"id\": \"17a33419-79d0-404f-a32f-2aa167c8b02c\",\n      \"sessionId\": \"7cf01a43-65d3-4179-bb7a-e4f52fe7a260\",\n      \"type\": \"session.started\",\n      \"payload\": {\n        \"label\": \"Alexa+ lab session started\"\n      },\n      \"createdAt\": \"2026-10-18T01:46:45.245Z\"\n    },\n    {\n      \"sequence\": 2,\n      \"id\": \"3e67a268-51cd-46e7-b165-e159621caabb\",\n      \"sessionId\": \"7cf01a43-65d3-4179-bb7a-e4f52fe7a260\",\n      \"type\": \"tool.completed\",\n      \"payload\": {\n        \"toolName\": \"start_experiment_session\",\n        \"label\": \"MCP started research session\",\n        \"transport\": \"streamable-http\"\n      },\n      \"createdAt\": \"2026-10-18T01:46:45.245Z\"\n    },\n    {\n      \"sequence\": 3,\n      \"id\": \"7dbe2496-0a34-4f21-85e3-476954dd1bad\",\n      \"sessionId\": \"7cf01a43-65d3-4179-bb7a-e4f52fe7a260\",\n      \"type\": \"tool.started\",\n      \"payload\": {\n        \"toolName\": \"get_active_experiment\",\n        \"label\": \"MCP called get_active_experiment\",\n        \"transport\": \"streamable-http\"\n      },\n      \"createdAt\": \"2026-10-18T01:46:45.803Z\"\n    }\n  ]\n}"
+            "text": "{\n  \"session\": {\n    \"id\": \"697253ca-64c5-468d-822a-4e129d24e6b0\",\n    \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n    \"sourceId\": null,\n    \"title\": \"Inspector complete tool trace\",\n    \"status\": \"active\",\n    \"unresolvedFindingId\": null,\n    \"pendingApprovalId\": null,\n    \"lastToolName\": null,\n    \"createdAt\": \"2026-10-21T11:17:13.288Z\",\n    \"updatedAt\": \"2026-10-21T11:17:13.288Z\"\n  },\n  \"messages\": [],\n  \"tools\": [\n    {\n      \"id\": \"b5c1f977-a890-4903-a95d-51b9883b3b75\",\n      \"sessionId\": \"697253ca-64c5-468d-822a-4e129d24e6b0\",\n      \"messageId\": null,\n      \"toolName\": \"start_experiment_session\",\n      \"input\": {\n        \"transport\": \"streamable-http\",\n        \"arguments\": {\n          \"title\": \"Inspector complete tool trace\",\n          \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\"\n        }\n      },\n      \"output\": {\n        \"transport\": \"streamable-http\",\n        \"protocol\": \"MCP\",\n        \"status\": \"session_started\"\n      },\n      \"status\": \"completed\",\n      \"durationMs\": 0,\n      \"errorCode\": null,\n      \"createdAt\": \"2026-10-21T11:17:13.288Z\",\n      \"completedAt\": \"2026-10-21T11:17:13.288Z\"\n    },\n    {\n      \"id\": \"f67d10dc-4498-4823-95fe-3d8cde9b759e\",\n      \"sessionId\": \"697253ca-64c5-468d-822a-4e129d24e6b0\",\n      \"messageId\": null,\n      \"toolName\": \"get_active_experiment\",\n      \"input\": {\n        \"transport\": \"streamable-http\",\n        \"arguments\": {\n          \"sessionId\": \"697253ca-64c5-468d-822a-4e129d24e6b0\"\n        }\n      },\n      \"output\": null,\n      \"status\": \"running\",\n      \"durationMs\": null,\n      \"errorCode\": null,\n      \"createdAt\": \"2026-10-21T11:17:14.695Z\",\n      \"completedAt\": null\n    }\n  ],\n  \"approvals\": [],\n  \"events\": [\n    {\n      \"sequence\": 1,\n      \"id\": \"595945b6-522d-4b98-b721-0ef12a98f0e2\",\n      \"sessionId\": \"697253ca-64c5-468d-822a-4e129d24e6b0\",\n      \"type\": \"session.started\",\n      \"payload\": {\n        \"label\": \"Alexa+ lab session started\"\n      },\n      \"createdAt\": \"2026-10-21T11:17:13.288Z\"\n    },\n    {\n      \"sequence\": 2,\n      \"id\": \"73e66d41-4571-4132-ba3f-00d200fa3000\",\n      \"sessionId\": \"697253ca-64c5-468d-822a-4e129d24e6b0\",\n      \"type\": \"tool.completed\",\n      \"payload\": {\n        \"toolName\": \"start_experiment_session\",\n        \"label\": \"MCP started research session\",\n        \"transport\": \"streamable-http\"\n      },\n      \"createdAt\": \"2026-10-21T11:17:13.288Z\"\n    },\n    {\n      \"sequence\": 3,\n      \"id\": \"7c771b5e-6ef6-49dc-9d1b-fd1e1fcb225f\",\n      \"sessionId\": \"697253ca-64c5-468d-822a-4e129d24e6b0\",\n      \"type\": \"tool.started\",\n      \"payload\": {\n        \"toolName\": \"get_active_experiment\",\n        \"label\": \"MCP called get_active_experiment\",\n        \"transport\": \"streamable-http\"\n      },\n      \"createdAt\": \"2026-10-21T11:17:14.695Z\"\n    }\n  ]\n}"
           }
         ],
         "structuredContent": {
           "session": {
-            "id": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
-            "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+            "id": "697253ca-64c5-468d-822a-4e129d24e6b0",
+            "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
             "sourceId": null,
             "title": "Inspector complete tool trace",
             "status": "active",
             "unresolvedFindingId": null,
             "pendingApprovalId": null,
             "lastToolName": null,
-            "createdAt": "2026-10-18T01:46:45.245Z",
-            "updatedAt": "2026-10-18T01:46:45.245Z"
+            "createdAt": "2026-10-21T11:17:13.288Z",
+            "updatedAt": "2026-10-21T11:17:13.288Z"
           },
           "messages": [],
           "tools": [
             {
-              "id": "04816b7f-229f-41f0-a98d-07ce0d377cee",
-              "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
+              "id": "b5c1f977-a890-4903-a95d-51b9883b3b75",
+              "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0",
               "messageId": null,
               "toolName": "start_experiment_session",
               "input": {
                 "transport": "streamable-http",
                 "arguments": {
                   "title": "Inspector complete tool trace",
-                  "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281"
+                  "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b"
                 }
               },
               "output": {
@@ -581,25 +633,25 @@
               "status": "completed",
               "durationMs": 0,
               "errorCode": null,
-              "createdAt": "2026-10-18T01:46:45.245Z",
-              "completedAt": "2026-10-18T01:46:45.245Z"
+              "createdAt": "2026-10-21T11:17:13.288Z",
+              "completedAt": "2026-10-21T11:17:13.288Z"
             },
             {
-              "id": "ddab5683-69fd-473d-932c-054637b66238",
-              "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
+              "id": "f67d10dc-4498-4823-95fe-3d8cde9b759e",
+              "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0",
               "messageId": null,
               "toolName": "get_active_experiment",
               "input": {
                 "transport": "streamable-http",
                 "arguments": {
-                  "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260"
+                  "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0"
                 }
               },
               "output": null,
               "status": "running",
               "durationMs": null,
               "errorCode": null,
-              "createdAt": "2026-10-18T01:46:45.803Z",
+              "createdAt": "2026-10-21T11:17:14.695Z",
               "completedAt": null
             }
           ],
@@ -607,37 +659,37 @@
           "events": [
             {
               "sequence": 1,
-              "id": "17a33419-79d0-404f-a32f-2aa167c8b02c",
-              "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
+              "id": "595945b6-522d-4b98-b721-0ef12a98f0e2",
+              "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0",
               "type": "session.started",
               "payload": {
                 "label": "Alexa+ lab session started"
               },
-              "createdAt": "2026-10-18T01:46:45.245Z"
+              "createdAt": "2026-10-21T11:17:13.288Z"
             },
             {
               "sequence": 2,
-              "id": "3e67a268-51cd-46e7-b165-e159621caabb",
-              "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
+              "id": "73e66d41-4571-4132-ba3f-00d200fa3000",
+              "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0",
               "type": "tool.completed",
               "payload": {
                 "toolName": "start_experiment_session",
                 "label": "MCP started research session",
                 "transport": "streamable-http"
               },
-              "createdAt": "2026-10-18T01:46:45.245Z"
+              "createdAt": "2026-10-21T11:17:13.288Z"
             },
             {
               "sequence": 3,
-              "id": "7dbe2496-0a34-4f21-85e3-476954dd1bad",
-              "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
+              "id": "7c771b5e-6ef6-49dc-9d1b-fd1e1fcb225f",
+              "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0",
               "type": "tool.started",
               "payload": {
                 "toolName": "get_active_experiment",
                 "label": "MCP called get_active_experiment",
                 "transport": "streamable-http"
               },
-              "createdAt": "2026-10-18T01:46:45.803Z"
+              "createdAt": "2026-10-21T11:17:14.695Z"
             }
           ]
         }
@@ -646,21 +698,21 @@
     {
       "toolName": "ask_next_reproducibility_question",
       "request": {
-        "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260"
+        "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0"
       },
-      "startedAt": "2026-10-18T01:46:45.820Z",
-      "completedAt": "2026-10-18T01:46:46.293Z",
+      "startedAt": "2026-10-21T11:17:14.712Z",
+      "completedAt": "2026-10-21T11:17:15.597Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"data\": {\n    \"findingId\": \"5a99a969-8c2e-4617-9c37-adb15682fd90\",\n    \"question\": \"What random seed did you use? Without it, another training run may differ.\",\n    \"reason\": \"The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.\",\n    \"severity\": \"warning\",\n    \"expectedFieldPaths\": [\n      \"training.randomSeed\"\n    ]\n  },\n  \"speech\": {\n    \"text\": \"What random seed did you use? Without it, another training run may differ.\",\n    \"shouldListen\": true,\n    \"confirmationRequired\": false\n  },\n  \"visual\": {\n    \"view\": \"audit\",\n    \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n    \"findingId\": \"5a99a969-8c2e-4617-9c37-adb15682fd90\"\n  },\n  \"nextAction\": \"ask_follow_up\"\n}"
+            "text": "{\n  \"data\": {\n    \"findingId\": \"af8ba4dd-c846-491e-82d5-5103f9ca03dd\",\n    \"question\": \"What random seed did you use? Without it, another training run may differ.\",\n    \"reason\": \"The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.\",\n    \"severity\": \"warning\",\n    \"expectedFieldPaths\": [\n      \"training.randomSeed\"\n    ]\n  },\n  \"speech\": {\n    \"text\": \"What random seed did you use? Without it, another training run may differ.\",\n    \"shouldListen\": true,\n    \"confirmationRequired\": false\n  },\n  \"visual\": {\n    \"view\": \"audit\",\n    \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n    \"findingId\": \"af8ba4dd-c846-491e-82d5-5103f9ca03dd\"\n  },\n  \"nextAction\": \"ask_follow_up\"\n}"
           }
         ],
         "structuredContent": {
           "data": {
-            "findingId": "5a99a969-8c2e-4617-9c37-adb15682fd90",
+            "findingId": "af8ba4dd-c846-491e-82d5-5103f9ca03dd",
             "question": "What random seed did you use? Without it, another training run may differ.",
             "reason": "The experiment record does not contain a confirmed random seed. Variations across runs cannot be controlled or reproduced deterministically.",
             "severity": "warning",
@@ -675,8 +727,8 @@
           },
           "visual": {
             "view": "audit",
-            "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
-            "findingId": "5a99a969-8c2e-4617-9c37-adb15682fd90"
+            "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
+            "findingId": "af8ba4dd-c846-491e-82d5-5103f9ca03dd"
           },
           "nextAction": "ask_follow_up"
         }
@@ -685,26 +737,26 @@
     {
       "toolName": "add_experiment_observation",
       "request": {
-        "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
+        "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0",
         "text": "The random seed was 42 in the training script.",
         "clientObservationId": "inspector-seed-42"
       },
-      "startedAt": "2026-10-18T01:46:46.293Z",
-      "completedAt": "2026-10-18T01:46:46.795Z",
+      "startedAt": "2026-10-21T11:17:15.597Z",
+      "completedAt": "2026-10-21T11:17:16.853Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"data\": {\n    \"revisions\": [\n      {\n        \"id\": \"2a99b713-e449-4431-be61-ae0f80f3875e\",\n        \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n        \"fieldPath\": \"training.randomSeed\",\n        \"previousValue\": null,\n        \"proposedValue\": 42,\n        \"status\": \"proposed\",\n        \"reason\": \"Provided during the active Alexa+ research session.\",\n        \"evidence\": [\n          {\n            \"type\": \"transcript\",\n            \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n            \"fieldPath\": \"training.randomSeed\",\n            \"description\": \"Alexa+ session observation\",\n            \"excerpt\": \"The random seed was 42 in the training script.\",\n            \"previousValue\": null,\n            \"currentValue\": 42,\n            \"sourceReference\": \"alexa://session/7cf01a43-65d3-4179-bb7a-e4f52fe7a260\"\n          }\n        ],\n        \"proposedBy\": \"user\",\n        \"reviewedAt\": null,\n        \"createdAt\": \"2026-10-18T01:46:46.777Z\"\n      }\n    ],\n    \"approval\": {\n      \"id\": \"213686b0-f3ad-4641-b908-78bd8e525939\",\n      \"sessionId\": \"7cf01a43-65d3-4179-bb7a-e4f52fe7a260\",\n      \"revisionIds\": [\n        \"2a99b713-e449-4431-be61-ae0f80f3875e\"\n      ],\n      \"summary\": \"training.randomSeed: null to 42\",\n      \"status\": \"pending\",\n      \"requestedAt\": \"2026-10-18T01:46:46.778Z\",\n      \"expiresAt\": \"2026-10-18T01:56:46.778Z\",\n      \"resolvedAt\": null,\n      \"resolvedBy\": null\n    }\n  },\n  \"speech\": {\n    \"text\": \"I captured training.randomSeed: null to 42. Should I apply this change and rerun the audit?\",\n    \"shouldListen\": true,\n    \"confirmationRequired\": true\n  },\n  \"visual\": {\n    \"view\": \"approval\",\n    \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n    \"approvalRequestId\": \"213686b0-f3ad-4641-b908-78bd8e525939\"\n  },\n  \"nextAction\": \"request_confirmation\"\n}"
+            "text": "{\n  \"data\": {\n    \"revisions\": [\n      {\n        \"id\": \"dd08214a-1cba-473a-97f7-0ba872c1a7fe\",\n        \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n        \"fieldPath\": \"training.randomSeed\",\n        \"previousValue\": null,\n        \"proposedValue\": 42,\n        \"status\": \"proposed\",\n        \"reason\": \"Provided during the active Alexa+ research session.\",\n        \"evidence\": [\n          {\n            \"type\": \"transcript\",\n            \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n            \"fieldPath\": \"training.randomSeed\",\n            \"description\": \"Alexa+ session observation\",\n            \"excerpt\": \"The random seed was 42 in the training script.\",\n            \"previousValue\": null,\n            \"currentValue\": 42,\n            \"sourceReference\": \"alexa://session/697253ca-64c5-468d-822a-4e129d24e6b0\"\n          }\n        ],\n        \"proposedBy\": \"user\",\n        \"reviewedAt\": null,\n        \"createdAt\": \"2026-10-21T11:17:16.838Z\"\n      }\n    ],\n    \"approval\": {\n      \"id\": \"84628e29-885b-472c-b30e-fe6ee7320f0d\",\n      \"sessionId\": \"697253ca-64c5-468d-822a-4e129d24e6b0\",\n      \"revisionIds\": [\n        \"dd08214a-1cba-473a-97f7-0ba872c1a7fe\"\n      ],\n      \"summary\": \"training.randomSeed: null to 42\",\n      \"status\": \"pending\",\n      \"requestedAt\": \"2026-10-21T11:17:16.838Z\",\n      \"expiresAt\": \"2026-10-21T11:27:16.838Z\",\n      \"resolvedAt\": null,\n      \"resolvedBy\": null\n    }\n  },\n  \"speech\": {\n    \"text\": \"I captured training.randomSeed: null to 42. Should I apply this change and rerun the audit?\",\n    \"shouldListen\": true,\n    \"confirmationRequired\": true\n  },\n  \"visual\": {\n    \"view\": \"approval\",\n    \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n    \"approvalRequestId\": \"84628e29-885b-472c-b30e-fe6ee7320f0d\"\n  },\n  \"nextAction\": \"request_confirmation\"\n}"
           }
         ],
         "structuredContent": {
           "data": {
             "revisions": [
               {
-                "id": "2a99b713-e449-4431-be61-ae0f80f3875e",
-                "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                "id": "dd08214a-1cba-473a-97f7-0ba872c1a7fe",
+                "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                 "fieldPath": "training.randomSeed",
                 "previousValue": null,
                 "proposedValue": 42,
@@ -713,30 +765,30 @@
                 "evidence": [
                   {
                     "type": "transcript",
-                    "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                    "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                     "fieldPath": "training.randomSeed",
                     "description": "Alexa+ session observation",
                     "excerpt": "The random seed was 42 in the training script.",
                     "previousValue": null,
                     "currentValue": 42,
-                    "sourceReference": "alexa://session/7cf01a43-65d3-4179-bb7a-e4f52fe7a260"
+                    "sourceReference": "alexa://session/697253ca-64c5-468d-822a-4e129d24e6b0"
                   }
                 ],
                 "proposedBy": "user",
                 "reviewedAt": null,
-                "createdAt": "2026-10-18T01:46:46.777Z"
+                "createdAt": "2026-10-21T11:17:16.838Z"
               }
             ],
             "approval": {
-              "id": "213686b0-f3ad-4641-b908-78bd8e525939",
-              "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
+              "id": "84628e29-885b-472c-b30e-fe6ee7320f0d",
+              "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0",
               "revisionIds": [
-                "2a99b713-e449-4431-be61-ae0f80f3875e"
+                "dd08214a-1cba-473a-97f7-0ba872c1a7fe"
               ],
               "summary": "training.randomSeed: null to 42",
               "status": "pending",
-              "requestedAt": "2026-10-18T01:46:46.778Z",
-              "expiresAt": "2026-10-18T01:56:46.778Z",
+              "requestedAt": "2026-10-21T11:17:16.838Z",
+              "expiresAt": "2026-10-21T11:27:16.838Z",
               "resolvedAt": null,
               "resolvedBy": null
             }
@@ -748,8 +800,8 @@
           },
           "visual": {
             "view": "approval",
-            "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
-            "approvalRequestId": "213686b0-f3ad-4641-b908-78bd8e525939"
+            "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
+            "approvalRequestId": "84628e29-885b-472c-b30e-fe6ee7320f0d"
           },
           "nextAction": "request_confirmation"
         }
@@ -758,30 +810,30 @@
     {
       "toolName": "get_pending_experiment_action",
       "request": {
-        "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260"
+        "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0"
       },
-      "startedAt": "2026-10-18T01:46:46.795Z",
-      "completedAt": "2026-10-18T01:46:47.340Z",
+      "startedAt": "2026-10-21T11:17:16.853Z",
+      "completedAt": "2026-10-21T11:17:18.020Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"sessionId\": \"7cf01a43-65d3-4179-bb7a-e4f52fe7a260\",\n  \"pending\": {\n    \"id\": \"213686b0-f3ad-4641-b908-78bd8e525939\",\n    \"sessionId\": \"7cf01a43-65d3-4179-bb7a-e4f52fe7a260\",\n    \"revisionIds\": [\n      \"2a99b713-e449-4431-be61-ae0f80f3875e\"\n    ],\n    \"summary\": \"training.randomSeed: null to 42\",\n    \"status\": \"pending\",\n    \"expiresAt\": \"2026-10-18T01:56:46.778Z\",\n    \"requestedAt\": \"2026-10-18T01:46:46.778Z\",\n    \"resolvedAt\": null,\n    \"resolvedBy\": null\n  },\n  \"confirmationRequired\": true\n}"
+            "text": "{\n  \"sessionId\": \"697253ca-64c5-468d-822a-4e129d24e6b0\",\n  \"pending\": {\n    \"id\": \"84628e29-885b-472c-b30e-fe6ee7320f0d\",\n    \"sessionId\": \"697253ca-64c5-468d-822a-4e129d24e6b0\",\n    \"revisionIds\": [\n      \"dd08214a-1cba-473a-97f7-0ba872c1a7fe\"\n    ],\n    \"summary\": \"training.randomSeed: null to 42\",\n    \"status\": \"pending\",\n    \"expiresAt\": \"2026-10-21T11:27:16.838Z\",\n    \"requestedAt\": \"2026-10-21T11:17:16.838Z\",\n    \"resolvedAt\": null,\n    \"resolvedBy\": null\n  },\n  \"confirmationRequired\": true\n}"
           }
         ],
         "structuredContent": {
-          "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
+          "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0",
           "pending": {
-            "id": "213686b0-f3ad-4641-b908-78bd8e525939",
-            "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
+            "id": "84628e29-885b-472c-b30e-fe6ee7320f0d",
+            "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0",
             "revisionIds": [
-              "2a99b713-e449-4431-be61-ae0f80f3875e"
+              "dd08214a-1cba-473a-97f7-0ba872c1a7fe"
             ],
             "summary": "training.randomSeed: null to 42",
             "status": "pending",
-            "expiresAt": "2026-10-18T01:56:46.778Z",
-            "requestedAt": "2026-10-18T01:46:46.778Z",
+            "expiresAt": "2026-10-21T11:27:16.838Z",
+            "requestedAt": "2026-10-21T11:17:16.838Z",
             "resolvedAt": null,
             "resolvedBy": null
           },
@@ -792,39 +844,39 @@
     {
       "toolName": "confirm_experiment_action",
       "request": {
-        "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
-        "approvalRequestId": "213686b0-f3ad-4641-b908-78bd8e525939",
+        "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0",
+        "approvalRequestId": "84628e29-885b-472c-b30e-fe6ee7320f0d",
         "decision": "approve"
       },
-      "startedAt": "2026-10-18T01:46:47.340Z",
-      "completedAt": "2026-10-18T01:46:47.853Z",
+      "startedAt": "2026-10-21T11:17:18.020Z",
+      "completedAt": "2026-10-21T11:17:19.224Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"data\": {\n    \"approval\": {\n      \"id\": \"213686b0-f3ad-4641-b908-78bd8e525939\",\n      \"sessionId\": \"7cf01a43-65d3-4179-bb7a-e4f52fe7a260\",\n      \"revisionIds\": [\n        \"2a99b713-e449-4431-be61-ae0f80f3875e\"\n      ],\n      \"summary\": \"training.randomSeed: null to 42\",\n      \"status\": \"approved\",\n      \"expiresAt\": \"2026-10-18T01:56:46.778Z\",\n      \"requestedAt\": \"2026-10-18T01:46:46.778Z\",\n      \"resolvedAt\": \"2026-10-18T01:46:47.837Z\",\n      \"resolvedBy\": \"researcher\"\n    },\n    \"result\": {\n      \"revision\": {\n        \"id\": \"2a99b713-e449-4431-be61-ae0f80f3875e\",\n        \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n        \"fieldPath\": \"training.randomSeed\",\n        \"previousValue\": null,\n        \"proposedValue\": 42,\n        \"status\": \"applied\",\n        \"reason\": \"Provided during the active Alexa+ research session.\",\n        \"evidence\": [\n          {\n            \"type\": \"transcript\",\n            \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n            \"fieldPath\": \"training.randomSeed\",\n            \"description\": \"Alexa+ session observation\",\n            \"excerpt\": \"The random seed was 42 in the training script.\",\n            \"previousValue\": null,\n            \"currentValue\": 42,\n            \"sourceReference\": \"alexa://session/7cf01a43-65d3-4179-bb7a-e4f52fe7a260\"\n          }\n        ],\n        \"proposedBy\": \"user\",\n        \"reviewedAt\": \"2026-10-18T01:46:47.837Z\",\n        \"createdAt\": \"2026-10-18T01:46:46.777Z\"\n      },\n      \"experiment\": {\n        \"id\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n        \"title\": \"ResNet-50 Evaluation\",\n        \"hypothesis\": null,\n        \"objective\": null,\n        \"status\": \"needs_review\",\n        \"model\": {\n          \"architecture\": \"Transformer / Neural Net\",\n          \"modelName\": \"ResNet-50\",\n          \"modelVersion\": null,\n          \"parameters\": {}\n        },\n        \"dataset\": {\n          \"datasetName\": null,\n          \"datasetVersion\": null,\n          \"datasetIdentifier\": null,\n          \"trainSplit\": \"80%\",\n          \"validationSplit\": null,\n          \"testSplit\": \"20%\",\n          \"preprocessing\": {}\n        },\n        \"training\": {\n          \"learningRate\": 0.001,\n          \"batchSize\": 32,\n          \"epochs\": 12,\n          \"optimizer\": null,\n          \"randomSeed\": 42,\n          \"framework\": \"PyTorch\",\n          \"frameworkVersion\": null,\n          \"environment\": {},\n          \"otherParameters\": {}\n        },\n        \"evaluation\": {\n          \"metrics\": {},\n          \"evaluationProcedure\": null,\n          \"evaluationDatasetIdentifier\": null,\n          \"codeCommit\": null,\n          \"notes\": null\n        },\n        \"baselineExperimentId\": null,\n        \"source\": {\n          \"sourceType\": \"demo\",\n          \"sourceId\": null,\n          \"sourceReference\": \"mcp-inspector://complete-tool-trace\",\n          \"transcriptText\": \"We trained ResNet-50 on the Atlas Cells dataset with an 80/20 split, learning rate 0.001, batch size 32 for 12 epochs using PyTorch 2.4. Code commit abc1234 produced accuracy 0.87.\",\n          \"transcriptHash\": \"34abfa9efd49937031bf327e9ae37e60a18e2e5895fbc89e61d87b4a64be39d8\",\n          \"sourceTimestamp\": \"2026-10-18T01:46:42.532Z\"\n        },\n        \"extractedAt\": \"2026-10-18T01:46:42.532Z\",\n        \"createdAt\": \"2026-10-18T01:46:42.532Z\",\n        \"updatedAt\": \"2026-10-18T01:46:47.837Z\"\n      },\n      \"audit\": {\n        \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n        \"findings\": [\n          {\n            \"id\": \"463e13bc-ece3-43dc-9c77-fc4f57253bdf\",\n            \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n            \"ruleId\": \"MISSING_DATASET_VERSION\",\n            \"title\": \"Dataset version or identifier missing\",\n            \"description\": \"The experiment record specifies neither a dataset version nor an immutable dataset identifier.\",\n            \"severity\": \"warning\",\n            \"status\": \"open\",\n            \"evidence\": [\n              {\n                \"type\": \"experiment_field\",\n                \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n                \"fieldPath\": \"dataset.datasetVersion\",\n                \"description\": \"Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded\",\n                \"excerpt\": null,\n                \"previousValue\": null,\n                \"currentValue\": null,\n                \"sourceReference\": null\n              }\n            ],\n            \"recommendation\": \"Record the dataset commit hash, version tag, or URI to guarantee data provenance.\",\n            \"resolutionNote\": null,\n            \"createdAt\": \"2026-10-18T01:46:47.837Z\",\n            \"updatedAt\": \"2026-10-18T01:46:47.837Z\"\n          }\n        ],\n        \"summary\": {\n          \"critical\": 0,\n          \"warning\": 1,\n          \"info\": 0,\n          \"open\": 1\n        },\n        \"auditVersion\": \"1.0.0\",\n        \"completedAt\": \"2026-10-18T01:46:47.837Z\"\n      }\n    }\n  },\n  \"speech\": {\n    \"text\": \"I applied the approved changes and reran the deterministic audit.\",\n    \"shouldListen\": true,\n    \"confirmationRequired\": false\n  },\n  \"visual\": {\n    \"view\": \"audit\",\n    \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\"\n  },\n  \"nextAction\": \"listen\"\n}"
+            "text": "{\n  \"data\": {\n    \"approval\": {\n      \"id\": \"84628e29-885b-472c-b30e-fe6ee7320f0d\",\n      \"sessionId\": \"697253ca-64c5-468d-822a-4e129d24e6b0\",\n      \"revisionIds\": [\n        \"dd08214a-1cba-473a-97f7-0ba872c1a7fe\"\n      ],\n      \"summary\": \"training.randomSeed: null to 42\",\n      \"status\": \"approved\",\n      \"expiresAt\": \"2026-10-21T11:27:16.838Z\",\n      \"requestedAt\": \"2026-10-21T11:17:16.838Z\",\n      \"resolvedAt\": \"2026-10-21T11:17:19.209Z\",\n      \"resolvedBy\": \"researcher\"\n    },\n    \"result\": {\n      \"revision\": {\n        \"id\": \"dd08214a-1cba-473a-97f7-0ba872c1a7fe\",\n        \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n        \"fieldPath\": \"training.randomSeed\",\n        \"previousValue\": null,\n        \"proposedValue\": 42,\n        \"status\": \"applied\",\n        \"reason\": \"Provided during the active Alexa+ research session.\",\n        \"evidence\": [\n          {\n            \"type\": \"transcript\",\n            \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n            \"fieldPath\": \"training.randomSeed\",\n            \"description\": \"Alexa+ session observation\",\n            \"excerpt\": \"The random seed was 42 in the training script.\",\n            \"previousValue\": null,\n            \"currentValue\": 42,\n            \"sourceReference\": \"alexa://session/697253ca-64c5-468d-822a-4e129d24e6b0\"\n          }\n        ],\n        \"proposedBy\": \"user\",\n        \"reviewedAt\": \"2026-10-21T11:17:19.209Z\",\n        \"createdAt\": \"2026-10-21T11:17:16.838Z\"\n      },\n      \"experiment\": {\n        \"id\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n        \"title\": \"ResNet-50 Evaluation\",\n        \"hypothesis\": null,\n        \"objective\": null,\n        \"status\": \"needs_review\",\n        \"model\": {\n          \"architecture\": \"Transformer / Neural Net\",\n          \"modelName\": \"ResNet-50\",\n          \"modelVersion\": null,\n          \"parameters\": {}\n        },\n        \"dataset\": {\n          \"datasetName\": null,\n          \"datasetVersion\": null,\n          \"datasetIdentifier\": null,\n          \"trainSplit\": \"80%\",\n          \"validationSplit\": null,\n          \"testSplit\": \"20%\",\n          \"preprocessing\": {}\n        },\n        \"training\": {\n          \"learningRate\": 0.001,\n          \"batchSize\": 32,\n          \"epochs\": 12,\n          \"optimizer\": null,\n          \"randomSeed\": 42,\n          \"framework\": \"PyTorch\",\n          \"frameworkVersion\": \"2.4\",\n          \"environment\": {},\n          \"otherParameters\": {}\n        },\n        \"evaluation\": {\n          \"metrics\": {},\n          \"evaluationProcedure\": null,\n          \"evaluationDatasetIdentifier\": null,\n          \"codeCommit\": \"abc1234\",\n          \"notes\": null\n        },\n        \"baselineExperimentId\": null,\n        \"source\": {\n          \"sourceType\": \"demo\",\n          \"sourceId\": null,\n          \"sourceReference\": \"mcp-inspector://complete-tool-trace\",\n          \"transcriptText\": \"We trained ResNet-50 on the Atlas Cells dataset with an 80/20 split, learning rate 0.001, batch size 32 for 12 epochs using PyTorch 2.4. Code commit abc1234 produced accuracy 0.87.\",\n          \"transcriptHash\": \"34abfa9efd49937031bf327e9ae37e60a18e2e5895fbc89e61d87b4a64be39d8\",\n          \"sourceTimestamp\": \"2026-10-21T11:17:05.638Z\"\n        },\n        \"extractedAt\": \"2026-10-21T11:17:05.638Z\",\n        \"createdAt\": \"2026-10-21T11:17:05.638Z\",\n        \"updatedAt\": \"2026-10-21T11:17:19.209Z\"\n      },\n      \"audit\": {\n        \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n        \"findings\": [\n          {\n            \"id\": \"1ac2c09e-3814-4d6e-96cb-b695c1d8b352\",\n            \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n            \"ruleId\": \"MISSING_DATASET_VERSION\",\n            \"title\": \"Dataset version or identifier missing\",\n            \"description\": \"The experiment record specifies neither a dataset version nor an immutable dataset identifier.\",\n            \"severity\": \"warning\",\n            \"status\": \"open\",\n            \"evidence\": [\n              {\n                \"type\": \"experiment_field\",\n                \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n                \"fieldPath\": \"dataset.datasetVersion\",\n                \"description\": \"Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded\",\n                \"excerpt\": null,\n                \"previousValue\": null,\n                \"currentValue\": null,\n                \"sourceReference\": null\n              }\n            ],\n            \"recommendation\": \"Record the dataset commit hash, version tag, or URI to guarantee data provenance.\",\n            \"resolutionNote\": null,\n            \"createdAt\": \"2026-10-21T11:17:19.209Z\",\n            \"updatedAt\": \"2026-10-21T11:17:19.209Z\"\n          }\n        ],\n        \"summary\": {\n          \"critical\": 0,\n          \"warning\": 1,\n          \"info\": 0,\n          \"open\": 1\n        },\n        \"auditVersion\": \"1.0.0\",\n        \"completedAt\": \"2026-10-21T11:17:19.209Z\"\n      }\n    }\n  },\n  \"speech\": {\n    \"text\": \"I applied the approved changes and reran the deterministic audit.\",\n    \"shouldListen\": true,\n    \"confirmationRequired\": false\n  },\n  \"visual\": {\n    \"view\": \"audit\",\n    \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\"\n  },\n  \"nextAction\": \"listen\"\n}"
           }
         ],
         "structuredContent": {
           "data": {
             "approval": {
-              "id": "213686b0-f3ad-4641-b908-78bd8e525939",
-              "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
+              "id": "84628e29-885b-472c-b30e-fe6ee7320f0d",
+              "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0",
               "revisionIds": [
-                "2a99b713-e449-4431-be61-ae0f80f3875e"
+                "dd08214a-1cba-473a-97f7-0ba872c1a7fe"
               ],
               "summary": "training.randomSeed: null to 42",
               "status": "approved",
-              "expiresAt": "2026-10-18T01:56:46.778Z",
-              "requestedAt": "2026-10-18T01:46:46.778Z",
-              "resolvedAt": "2026-10-18T01:46:47.837Z",
+              "expiresAt": "2026-10-21T11:27:16.838Z",
+              "requestedAt": "2026-10-21T11:17:16.838Z",
+              "resolvedAt": "2026-10-21T11:17:19.209Z",
               "resolvedBy": "researcher"
             },
             "result": {
               "revision": {
-                "id": "2a99b713-e449-4431-be61-ae0f80f3875e",
-                "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                "id": "dd08214a-1cba-473a-97f7-0ba872c1a7fe",
+                "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                 "fieldPath": "training.randomSeed",
                 "previousValue": null,
                 "proposedValue": 42,
@@ -833,21 +885,21 @@
                 "evidence": [
                   {
                     "type": "transcript",
-                    "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                    "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                     "fieldPath": "training.randomSeed",
                     "description": "Alexa+ session observation",
                     "excerpt": "The random seed was 42 in the training script.",
                     "previousValue": null,
                     "currentValue": 42,
-                    "sourceReference": "alexa://session/7cf01a43-65d3-4179-bb7a-e4f52fe7a260"
+                    "sourceReference": "alexa://session/697253ca-64c5-468d-822a-4e129d24e6b0"
                   }
                 ],
                 "proposedBy": "user",
-                "reviewedAt": "2026-10-18T01:46:47.837Z",
-                "createdAt": "2026-10-18T01:46:46.777Z"
+                "reviewedAt": "2026-10-21T11:17:19.209Z",
+                "createdAt": "2026-10-21T11:17:16.838Z"
               },
               "experiment": {
-                "id": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                "id": "8e61eee6-c62c-48b6-b205-64041312124b",
                 "title": "ResNet-50 Evaluation",
                 "hypothesis": null,
                 "objective": null,
@@ -874,7 +926,7 @@
                   "optimizer": null,
                   "randomSeed": 42,
                   "framework": "PyTorch",
-                  "frameworkVersion": null,
+                  "frameworkVersion": "2.4",
                   "environment": {},
                   "otherParameters": {}
                 },
@@ -882,7 +934,7 @@
                   "metrics": {},
                   "evaluationProcedure": null,
                   "evaluationDatasetIdentifier": null,
-                  "codeCommit": null,
+                  "codeCommit": "abc1234",
                   "notes": null
                 },
                 "baselineExperimentId": null,
@@ -892,18 +944,18 @@
                   "sourceReference": "mcp-inspector://complete-tool-trace",
                   "transcriptText": "We trained ResNet-50 on the Atlas Cells dataset with an 80/20 split, learning rate 0.001, batch size 32 for 12 epochs using PyTorch 2.4. Code commit abc1234 produced accuracy 0.87.",
                   "transcriptHash": "34abfa9efd49937031bf327e9ae37e60a18e2e5895fbc89e61d87b4a64be39d8",
-                  "sourceTimestamp": "2026-10-18T01:46:42.532Z"
+                  "sourceTimestamp": "2026-10-21T11:17:05.638Z"
                 },
-                "extractedAt": "2026-10-18T01:46:42.532Z",
-                "createdAt": "2026-10-18T01:46:42.532Z",
-                "updatedAt": "2026-10-18T01:46:47.837Z"
+                "extractedAt": "2026-10-21T11:17:05.638Z",
+                "createdAt": "2026-10-21T11:17:05.638Z",
+                "updatedAt": "2026-10-21T11:17:19.209Z"
               },
               "audit": {
-                "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                 "findings": [
                   {
-                    "id": "463e13bc-ece3-43dc-9c77-fc4f57253bdf",
-                    "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                    "id": "1ac2c09e-3814-4d6e-96cb-b695c1d8b352",
+                    "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                     "ruleId": "MISSING_DATASET_VERSION",
                     "title": "Dataset version or identifier missing",
                     "description": "The experiment record specifies neither a dataset version nor an immutable dataset identifier.",
@@ -912,7 +964,7 @@
                     "evidence": [
                       {
                         "type": "experiment_field",
-                        "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                        "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                         "fieldPath": "dataset.datasetVersion",
                         "description": "Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded",
                         "excerpt": null,
@@ -923,8 +975,8 @@
                     ],
                     "recommendation": "Record the dataset commit hash, version tag, or URI to guarantee data provenance.",
                     "resolutionNote": null,
-                    "createdAt": "2026-10-18T01:46:47.837Z",
-                    "updatedAt": "2026-10-18T01:46:47.837Z"
+                    "createdAt": "2026-10-21T11:17:19.209Z",
+                    "updatedAt": "2026-10-21T11:17:19.209Z"
                   }
                 ],
                 "summary": {
@@ -934,7 +986,7 @@
                   "open": 1
                 },
                 "auditVersion": "1.0.0",
-                "completedAt": "2026-10-18T01:46:47.837Z"
+                "completedAt": "2026-10-21T11:17:19.209Z"
               }
             }
           },
@@ -945,7 +997,7 @@
           },
           "visual": {
             "view": "audit",
-            "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281"
+            "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b"
           },
           "nextAction": "listen"
         }
@@ -954,30 +1006,30 @@
     {
       "toolName": "pause_experiment_session",
       "request": {
-        "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260"
+        "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0"
       },
-      "startedAt": "2026-10-18T01:46:47.853Z",
-      "completedAt": "2026-10-18T01:46:48.329Z",
+      "startedAt": "2026-10-21T11:17:19.224Z",
+      "completedAt": "2026-10-21T11:17:20.326Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"data\": {\n    \"id\": \"7cf01a43-65d3-4179-bb7a-e4f52fe7a260\",\n    \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n    \"sourceId\": null,\n    \"title\": \"Inspector complete tool trace\",\n    \"status\": \"paused\",\n    \"unresolvedFindingId\": \"5a99a969-8c2e-4617-9c37-adb15682fd90\",\n    \"pendingApprovalId\": null,\n    \"lastToolName\": null,\n    \"createdAt\": \"2026-10-18T01:46:45.245Z\",\n    \"updatedAt\": \"2026-10-18T01:46:48.312Z\"\n  },\n  \"speech\": {\n    \"text\": \"I paused this research session. You can resume it later.\",\n    \"shouldListen\": false,\n    \"confirmationRequired\": false\n  },\n  \"visual\": {\n    \"view\": \"session\",\n    \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\"\n  },\n  \"nextAction\": \"none\"\n}"
+            "text": "{\n  \"data\": {\n    \"id\": \"697253ca-64c5-468d-822a-4e129d24e6b0\",\n    \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n    \"sourceId\": null,\n    \"title\": \"Inspector complete tool trace\",\n    \"status\": \"paused\",\n    \"unresolvedFindingId\": \"af8ba4dd-c846-491e-82d5-5103f9ca03dd\",\n    \"pendingApprovalId\": null,\n    \"lastToolName\": null,\n    \"createdAt\": \"2026-10-21T11:17:13.288Z\",\n    \"updatedAt\": \"2026-10-21T11:17:20.308Z\"\n  },\n  \"speech\": {\n    \"text\": \"I paused this research session. You can resume it later.\",\n    \"shouldListen\": false,\n    \"confirmationRequired\": false\n  },\n  \"visual\": {\n    \"view\": \"session\",\n    \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\"\n  },\n  \"nextAction\": \"none\"\n}"
           }
         ],
         "structuredContent": {
           "data": {
-            "id": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
-            "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+            "id": "697253ca-64c5-468d-822a-4e129d24e6b0",
+            "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
             "sourceId": null,
             "title": "Inspector complete tool trace",
             "status": "paused",
-            "unresolvedFindingId": "5a99a969-8c2e-4617-9c37-adb15682fd90",
+            "unresolvedFindingId": "af8ba4dd-c846-491e-82d5-5103f9ca03dd",
             "pendingApprovalId": null,
             "lastToolName": null,
-            "createdAt": "2026-10-18T01:46:45.245Z",
-            "updatedAt": "2026-10-18T01:46:48.312Z"
+            "createdAt": "2026-10-21T11:17:13.288Z",
+            "updatedAt": "2026-10-21T11:17:20.308Z"
           },
           "speech": {
             "text": "I paused this research session. You can resume it later.",
@@ -986,7 +1038,7 @@
           },
           "visual": {
             "view": "session",
-            "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281"
+            "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b"
           },
           "nextAction": "none"
         }
@@ -995,30 +1047,30 @@
     {
       "toolName": "resume_experiment_session",
       "request": {
-        "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260"
+        "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0"
       },
-      "startedAt": "2026-10-18T01:46:48.329Z",
-      "completedAt": "2026-10-18T01:46:48.860Z",
+      "startedAt": "2026-10-21T11:17:20.326Z",
+      "completedAt": "2026-10-21T11:17:21.248Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"data\": {\n    \"id\": \"7cf01a43-65d3-4179-bb7a-e4f52fe7a260\",\n    \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n    \"sourceId\": null,\n    \"title\": \"Inspector complete tool trace\",\n    \"status\": \"waiting_for_answer\",\n    \"unresolvedFindingId\": \"5a99a969-8c2e-4617-9c37-adb15682fd90\",\n    \"pendingApprovalId\": null,\n    \"lastToolName\": null,\n    \"createdAt\": \"2026-10-18T01:46:45.245Z\",\n    \"updatedAt\": \"2026-10-18T01:46:48.843Z\"\n  },\n  \"speech\": {\n    \"text\": \"I resumed Inspector complete tool trace. We still have an unresolved reproducibility question.\",\n    \"shouldListen\": true,\n    \"confirmationRequired\": false\n  },\n  \"visual\": {\n    \"view\": \"session\",\n    \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\"\n  },\n  \"nextAction\": \"ask_follow_up\"\n}"
+            "text": "{\n  \"data\": {\n    \"id\": \"697253ca-64c5-468d-822a-4e129d24e6b0\",\n    \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n    \"sourceId\": null,\n    \"title\": \"Inspector complete tool trace\",\n    \"status\": \"waiting_for_answer\",\n    \"unresolvedFindingId\": \"af8ba4dd-c846-491e-82d5-5103f9ca03dd\",\n    \"pendingApprovalId\": null,\n    \"lastToolName\": null,\n    \"createdAt\": \"2026-10-21T11:17:13.288Z\",\n    \"updatedAt\": \"2026-10-21T11:17:21.232Z\"\n  },\n  \"speech\": {\n    \"text\": \"I resumed Inspector complete tool trace. We still have an unresolved reproducibility question.\",\n    \"shouldListen\": true,\n    \"confirmationRequired\": false\n  },\n  \"visual\": {\n    \"view\": \"session\",\n    \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\"\n  },\n  \"nextAction\": \"ask_follow_up\"\n}"
           }
         ],
         "structuredContent": {
           "data": {
-            "id": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
-            "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+            "id": "697253ca-64c5-468d-822a-4e129d24e6b0",
+            "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
             "sourceId": null,
             "title": "Inspector complete tool trace",
             "status": "waiting_for_answer",
-            "unresolvedFindingId": "5a99a969-8c2e-4617-9c37-adb15682fd90",
+            "unresolvedFindingId": "af8ba4dd-c846-491e-82d5-5103f9ca03dd",
             "pendingApprovalId": null,
             "lastToolName": null,
-            "createdAt": "2026-10-18T01:46:45.245Z",
-            "updatedAt": "2026-10-18T01:46:48.843Z"
+            "createdAt": "2026-10-21T11:17:13.288Z",
+            "updatedAt": "2026-10-21T11:17:21.232Z"
           },
           "speech": {
             "text": "I resumed Inspector complete tool trace. We still have an unresolved reproducibility question.",
@@ -1027,7 +1079,7 @@
           },
           "visual": {
             "view": "session",
-            "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281"
+            "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b"
           },
           "nextAction": "ask_follow_up"
         }
@@ -1036,101 +1088,101 @@
     {
       "toolName": "record_research_decision",
       "request": {
-        "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
-        "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
+        "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
+        "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0",
         "statement": "Use the fixed seed because the comparison must be reproducible.",
         "state": "confirmed",
         "owner": "demo researcher"
       },
-      "startedAt": "2026-10-18T01:46:48.860Z",
-      "completedAt": "2026-10-18T01:46:49.359Z",
+      "startedAt": "2026-10-21T11:17:21.248Z",
+      "completedAt": "2026-10-21T11:17:22.473Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"id\": \"26c9a6e6-04fb-4462-85bb-933572c6af41\",\n  \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n  \"state\": \"confirmed\",\n  \"statement\": \"Use the fixed seed because the comparison must be reproducible.\",\n  \"owner\": \"demo researcher\",\n  \"sourceConversationId\": \"7cf01a43-65d3-4179-bb7a-e4f52fe7a260\",\n  \"evidence\": [\n    {\n      \"type\": \"transcript\",\n      \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n      \"fieldPath\": null,\n      \"description\": \"Decision supplied through Alexa+\",\n      \"excerpt\": \"Use the fixed seed because the comparison must be reproducible.\",\n      \"previousValue\": null,\n      \"currentValue\": \"Use the fixed seed because the comparison must be reproducible.\",\n      \"sourceReference\": \"alexa://session/7cf01a43-65d3-4179-bb7a-e4f52fe7a260\"\n    }\n  ],\n  \"createdAt\": \"2026-10-18T01:46:49.342Z\",\n  \"updatedAt\": \"2026-10-18T01:46:49.342Z\"\n}"
+            "text": "{\n  \"id\": \"3453a191-c6db-4f52-973b-2c9dfd19b985\",\n  \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n  \"state\": \"confirmed\",\n  \"statement\": \"Use the fixed seed because the comparison must be reproducible.\",\n  \"owner\": \"demo researcher\",\n  \"sourceConversationId\": \"697253ca-64c5-468d-822a-4e129d24e6b0\",\n  \"evidence\": [\n    {\n      \"type\": \"transcript\",\n      \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n      \"fieldPath\": null,\n      \"description\": \"Decision supplied through Alexa+\",\n      \"excerpt\": \"Use the fixed seed because the comparison must be reproducible.\",\n      \"previousValue\": null,\n      \"currentValue\": \"Use the fixed seed because the comparison must be reproducible.\",\n      \"sourceReference\": \"alexa://session/697253ca-64c5-468d-822a-4e129d24e6b0\"\n    }\n  ],\n  \"createdAt\": \"2026-10-21T11:17:22.458Z\",\n  \"updatedAt\": \"2026-10-21T11:17:22.458Z\"\n}"
           }
         ],
         "structuredContent": {
-          "id": "26c9a6e6-04fb-4462-85bb-933572c6af41",
-          "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+          "id": "3453a191-c6db-4f52-973b-2c9dfd19b985",
+          "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
           "state": "confirmed",
           "statement": "Use the fixed seed because the comparison must be reproducible.",
           "owner": "demo researcher",
-          "sourceConversationId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
+          "sourceConversationId": "697253ca-64c5-468d-822a-4e129d24e6b0",
           "evidence": [
             {
               "type": "transcript",
-              "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+              "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
               "fieldPath": null,
               "description": "Decision supplied through Alexa+",
               "excerpt": "Use the fixed seed because the comparison must be reproducible.",
               "previousValue": null,
               "currentValue": "Use the fixed seed because the comparison must be reproducible.",
-              "sourceReference": "alexa://session/7cf01a43-65d3-4179-bb7a-e4f52fe7a260"
+              "sourceReference": "alexa://session/697253ca-64c5-468d-822a-4e129d24e6b0"
             }
           ],
-          "createdAt": "2026-10-18T01:46:49.342Z",
-          "updatedAt": "2026-10-18T01:46:49.342Z"
+          "createdAt": "2026-10-21T11:17:22.458Z",
+          "updatedAt": "2026-10-21T11:17:22.458Z"
         }
       }
     },
     {
       "toolName": "propose_experiment_revision",
       "request": {
-        "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
-        "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+        "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0",
+        "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
         "fieldPath": "evaluation.codeCommit",
         "proposedValue": "def5678",
         "reason": "The researcher supplied the final evaluation commit.",
         "evidenceText": "Final evaluation used commit def5678."
       },
-      "startedAt": "2026-10-18T01:46:49.359Z",
-      "completedAt": "2026-10-18T01:46:49.885Z",
+      "startedAt": "2026-10-21T11:17:22.473Z",
+      "completedAt": "2026-10-21T11:17:24.002Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"revision\": {\n    \"id\": \"c5d07e57-4be3-4d20-8567-adc633bbd2da\",\n    \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n    \"fieldPath\": \"evaluation.codeCommit\",\n    \"previousValue\": null,\n    \"proposedValue\": \"def5678\",\n    \"status\": \"proposed\",\n    \"reason\": \"The researcher supplied the final evaluation commit.\",\n    \"evidence\": [\n      {\n        \"type\": \"transcript\",\n        \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n        \"fieldPath\": \"evaluation.codeCommit\",\n        \"description\": \"Value supplied through Alexa+\",\n        \"excerpt\": \"Final evaluation used commit def5678.\",\n        \"previousValue\": null,\n        \"currentValue\": \"def5678\",\n        \"sourceReference\": \"alexa://session/7cf01a43-65d3-4179-bb7a-e4f52fe7a260\"\n      }\n    ],\n    \"proposedBy\": \"assistant\",\n    \"reviewedAt\": null,\n    \"createdAt\": \"2026-10-18T01:46:49.869Z\"\n  },\n  \"approval\": {\n    \"id\": \"462beb17-11a1-425f-9dbf-15a82ed3a8a2\",\n    \"sessionId\": \"7cf01a43-65d3-4179-bb7a-e4f52fe7a260\",\n    \"revisionIds\": [\n      \"c5d07e57-4be3-4d20-8567-adc633bbd2da\"\n    ],\n    \"summary\": \"evaluation.codeCommit: null to \\\"def5678\\\"\",\n    \"status\": \"pending\",\n    \"requestedAt\": \"2026-10-18T01:46:49.869Z\",\n    \"expiresAt\": \"2026-10-18T01:56:49.869Z\",\n    \"resolvedAt\": null,\n    \"resolvedBy\": null\n  },\n  \"nextAction\": \"request_confirmation\",\n  \"message\": \"Ask the researcher to approve or reject this exact correction.\"\n}"
+            "text": "{\n  \"revision\": {\n    \"id\": \"e0ed2cbb-43f0-4062-b243-eb864c77ed1d\",\n    \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n    \"fieldPath\": \"evaluation.codeCommit\",\n    \"previousValue\": \"abc1234\",\n    \"proposedValue\": \"def5678\",\n    \"status\": \"proposed\",\n    \"reason\": \"The researcher supplied the final evaluation commit.\",\n    \"evidence\": [\n      {\n        \"type\": \"transcript\",\n        \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n        \"fieldPath\": \"evaluation.codeCommit\",\n        \"description\": \"Value supplied through Alexa+\",\n        \"excerpt\": \"Final evaluation used commit def5678.\",\n        \"previousValue\": null,\n        \"currentValue\": \"def5678\",\n        \"sourceReference\": \"alexa://session/697253ca-64c5-468d-822a-4e129d24e6b0\"\n      }\n    ],\n    \"proposedBy\": \"assistant\",\n    \"reviewedAt\": null,\n    \"createdAt\": \"2026-10-21T11:17:23.984Z\"\n  },\n  \"approval\": {\n    \"id\": \"1911e5b8-c20d-467b-998b-965d69955e21\",\n    \"sessionId\": \"697253ca-64c5-468d-822a-4e129d24e6b0\",\n    \"revisionIds\": [\n      \"e0ed2cbb-43f0-4062-b243-eb864c77ed1d\"\n    ],\n    \"summary\": \"evaluation.codeCommit: \\\"abc1234\\\" to \\\"def5678\\\"\",\n    \"status\": \"pending\",\n    \"requestedAt\": \"2026-10-21T11:17:23.984Z\",\n    \"expiresAt\": \"2026-10-21T11:27:23.984Z\",\n    \"resolvedAt\": null,\n    \"resolvedBy\": null\n  },\n  \"nextAction\": \"request_confirmation\",\n  \"message\": \"Ask the researcher to approve or reject this exact correction.\"\n}"
           }
         ],
         "structuredContent": {
           "revision": {
-            "id": "c5d07e57-4be3-4d20-8567-adc633bbd2da",
-            "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+            "id": "e0ed2cbb-43f0-4062-b243-eb864c77ed1d",
+            "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
             "fieldPath": "evaluation.codeCommit",
-            "previousValue": null,
+            "previousValue": "abc1234",
             "proposedValue": "def5678",
             "status": "proposed",
             "reason": "The researcher supplied the final evaluation commit.",
             "evidence": [
               {
                 "type": "transcript",
-                "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                 "fieldPath": "evaluation.codeCommit",
                 "description": "Value supplied through Alexa+",
                 "excerpt": "Final evaluation used commit def5678.",
                 "previousValue": null,
                 "currentValue": "def5678",
-                "sourceReference": "alexa://session/7cf01a43-65d3-4179-bb7a-e4f52fe7a260"
+                "sourceReference": "alexa://session/697253ca-64c5-468d-822a-4e129d24e6b0"
               }
             ],
             "proposedBy": "assistant",
             "reviewedAt": null,
-            "createdAt": "2026-10-18T01:46:49.869Z"
+            "createdAt": "2026-10-21T11:17:23.984Z"
           },
           "approval": {
-            "id": "462beb17-11a1-425f-9dbf-15a82ed3a8a2",
-            "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260",
+            "id": "1911e5b8-c20d-467b-998b-965d69955e21",
+            "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0",
             "revisionIds": [
-              "c5d07e57-4be3-4d20-8567-adc633bbd2da"
+              "e0ed2cbb-43f0-4062-b243-eb864c77ed1d"
             ],
-            "summary": "evaluation.codeCommit: null to \"def5678\"",
+            "summary": "evaluation.codeCommit: \"abc1234\" to \"def5678\"",
             "status": "pending",
-            "requestedAt": "2026-10-18T01:46:49.869Z",
-            "expiresAt": "2026-10-18T01:56:49.869Z",
+            "requestedAt": "2026-10-21T11:17:23.984Z",
+            "expiresAt": "2026-10-21T11:27:23.984Z",
             "resolvedAt": null,
             "resolvedBy": null
           },
@@ -1142,104 +1194,68 @@
     {
       "toolName": "comment_on_audit_finding",
       "request": {
-        "findingId": "463e13bc-ece3-43dc-9c77-fc4f57253bdf",
+        "findingId": "1ac2c09e-3814-4d6e-96cb-b695c1d8b352",
         "comment": "The dataset version was v2. Please investigate this gap."
       },
-      "startedAt": "2026-10-18T01:46:49.885Z",
-      "completedAt": "2026-10-18T01:46:50.373Z",
+      "startedAt": "2026-10-21T11:17:24.002Z",
+      "completedAt": "2026-10-21T11:17:24.998Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"findingId\": \"463e13bc-ece3-43dc-9c77-fc4f57253bdf\",\n  \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n  \"sessionId\": \"4ec8af24-04be-4288-8f40-d9d077dc7641\",\n  \"comment\": \"The dataset version was v2. Please investigate this gap.\",\n  \"analysis\": {\n    \"suggestion\": \"I captured dataset.datasetVersion: null to \\\"vor\\\". Should I apply this change and rerun the audit?\",\n    \"speech\": \"I captured dataset.datasetVersion: null to \\\"vor\\\". Should I apply this change and rerun the audit?\",\n    \"nextAction\": \"request_confirmation\",\n    \"visual\": {\n      \"view\": \"approval\",\n      \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n      \"approvalRequestId\": \"55d8c242-deda-4cfb-b832-1a2f3830daab\"\n    },\n    \"data\": {\n      \"revisions\": [\n        {\n          \"id\": \"5da97a93-c2a0-440b-b8b5-8baf6d1c92e3\",\n          \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n          \"fieldPath\": \"dataset.datasetVersion\",\n          \"previousValue\": null,\n          \"proposedValue\": \"vor\",\n          \"status\": \"proposed\",\n          \"reason\": \"Provided during the active Alexa+ research session.\",\n          \"evidence\": [\n            {\n              \"type\": \"transcript\",\n              \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n              \"fieldPath\": \"dataset.datasetVersion\",\n              \"description\": \"Alexa+ session observation\",\n              \"excerpt\": \"Researcher comment on audit finding \\\"Dataset version or identifier missing\\\": The dataset version was v2. Please investigate this gap.\",\n              \"previousValue\": null,\n              \"currentValue\": \"vor\",\n              \"sourceReference\": \"alexa://session/4ec8af24-04be-4288-8f40-d9d077dc7641\"\n            }\n          ],\n          \"proposedBy\": \"user\",\n          \"reviewedAt\": null,\n          \"createdAt\": \"2026-10-18T01:46:50.355Z\"\n        }\n      ],\n      \"approval\": {\n        \"id\": \"55d8c242-deda-4cfb-b832-1a2f3830daab\",\n        \"sessionId\": \"4ec8af24-04be-4288-8f40-d9d077dc7641\",\n        \"revisionIds\": [\n          \"5da97a93-c2a0-440b-b8b5-8baf6d1c92e3\"\n        ],\n        \"summary\": \"dataset.datasetVersion: null to \\\"vor\\\"\",\n        \"status\": \"pending\",\n        \"requestedAt\": \"2026-10-18T01:46:50.355Z\",\n        \"expiresAt\": \"2026-10-18T01:56:50.355Z\",\n        \"resolvedAt\": null,\n        \"resolvedBy\": null\n      }\n    }\n  },\n  \"id\": \"2b17cdf0-eb4b-4fa9-872f-1d43c6227532\",\n  \"createdAt\": \"2026-10-18T01:46:50.355Z\"\n}"
+            "text": "{\n  \"findingId\": \"1ac2c09e-3814-4d6e-96cb-b695c1d8b352\",\n  \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n  \"sessionId\": \"fbcd1eb5-a24a-4122-9d07-5e018d10e1f5\",\n  \"comment\": \"The dataset version was v2. Please investigate this gap.\",\n  \"analysis\": {\n    \"suggestion\": \"Record the dataset commit hash, version tag, or URI to guarantee data provenance.\",\n    \"speech\": \"I checked \\\"Dataset version or identifier missing\\\" against its stored evidence. The experiment record specifies neither a dataset version nor an immutable dataset identifier. Record the dataset commit hash, version tag, or URI to guarantee data provenance. I have not changed the experiment.\",\n    \"nextAction\": \"request_confirmation\",\n    \"visual\": {\n      \"view\": \"audit\",\n      \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n      \"findingId\": \"1ac2c09e-3814-4d6e-96cb-b695c1d8b352\"\n    },\n    \"data\": {\n      \"findingId\": \"1ac2c09e-3814-4d6e-96cb-b695c1d8b352\",\n      \"ruleId\": \"MISSING_DATASET_VERSION\",\n      \"modified\": false\n    }\n  },\n  \"id\": \"98224b4e-fb2f-4e16-95f9-e185d00eadf8\",\n  \"createdAt\": \"2026-10-21T11:17:24.980Z\"\n}"
           }
         ],
         "structuredContent": {
-          "findingId": "463e13bc-ece3-43dc-9c77-fc4f57253bdf",
-          "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
-          "sessionId": "4ec8af24-04be-4288-8f40-d9d077dc7641",
+          "findingId": "1ac2c09e-3814-4d6e-96cb-b695c1d8b352",
+          "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
+          "sessionId": "fbcd1eb5-a24a-4122-9d07-5e018d10e1f5",
           "comment": "The dataset version was v2. Please investigate this gap.",
           "analysis": {
-            "suggestion": "I captured dataset.datasetVersion: null to \"vor\". Should I apply this change and rerun the audit?",
-            "speech": "I captured dataset.datasetVersion: null to \"vor\". Should I apply this change and rerun the audit?",
+            "suggestion": "Record the dataset commit hash, version tag, or URI to guarantee data provenance.",
+            "speech": "I checked \"Dataset version or identifier missing\" against its stored evidence. The experiment record specifies neither a dataset version nor an immutable dataset identifier. Record the dataset commit hash, version tag, or URI to guarantee data provenance. I have not changed the experiment.",
             "nextAction": "request_confirmation",
             "visual": {
-              "view": "approval",
-              "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
-              "approvalRequestId": "55d8c242-deda-4cfb-b832-1a2f3830daab"
+              "view": "audit",
+              "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
+              "findingId": "1ac2c09e-3814-4d6e-96cb-b695c1d8b352"
             },
             "data": {
-              "revisions": [
-                {
-                  "id": "5da97a93-c2a0-440b-b8b5-8baf6d1c92e3",
-                  "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
-                  "fieldPath": "dataset.datasetVersion",
-                  "previousValue": null,
-                  "proposedValue": "vor",
-                  "status": "proposed",
-                  "reason": "Provided during the active Alexa+ research session.",
-                  "evidence": [
-                    {
-                      "type": "transcript",
-                      "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
-                      "fieldPath": "dataset.datasetVersion",
-                      "description": "Alexa+ session observation",
-                      "excerpt": "Researcher comment on audit finding \"Dataset version or identifier missing\": The dataset version was v2. Please investigate this gap.",
-                      "previousValue": null,
-                      "currentValue": "vor",
-                      "sourceReference": "alexa://session/4ec8af24-04be-4288-8f40-d9d077dc7641"
-                    }
-                  ],
-                  "proposedBy": "user",
-                  "reviewedAt": null,
-                  "createdAt": "2026-10-18T01:46:50.355Z"
-                }
-              ],
-              "approval": {
-                "id": "55d8c242-deda-4cfb-b832-1a2f3830daab",
-                "sessionId": "4ec8af24-04be-4288-8f40-d9d077dc7641",
-                "revisionIds": [
-                  "5da97a93-c2a0-440b-b8b5-8baf6d1c92e3"
-                ],
-                "summary": "dataset.datasetVersion: null to \"vor\"",
-                "status": "pending",
-                "requestedAt": "2026-10-18T01:46:50.355Z",
-                "expiresAt": "2026-10-18T01:56:50.355Z",
-                "resolvedAt": null,
-                "resolvedBy": null
-              }
+              "findingId": "1ac2c09e-3814-4d6e-96cb-b695c1d8b352",
+              "ruleId": "MISSING_DATASET_VERSION",
+              "modified": false
             }
           },
-          "id": "2b17cdf0-eb4b-4fa9-872f-1d43c6227532",
-          "createdAt": "2026-10-18T01:46:50.355Z"
+          "id": "98224b4e-fb2f-4e16-95f9-e185d00eadf8",
+          "createdAt": "2026-10-21T11:17:24.980Z"
         }
       }
     },
     {
       "toolName": "continue_audit_finding_investigation",
       "request": {
-        "findingId": "463e13bc-ece3-43dc-9c77-fc4f57253bdf",
-        "sessionId": "4ec8af24-04be-4288-8f40-d9d077dc7641",
+        "findingId": "1ac2c09e-3814-4d6e-96cb-b695c1d8b352",
+        "sessionId": "fbcd1eb5-a24a-4122-9d07-5e018d10e1f5",
         "message": "Why is this needed?"
       },
-      "startedAt": "2026-10-18T01:46:50.373Z",
-      "completedAt": "2026-10-18T01:46:50.868Z",
+      "startedAt": "2026-10-21T11:17:24.998Z",
+      "completedAt": "2026-10-21T11:17:26.166Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"data\": {\n    \"findingId\": \"463e13bc-ece3-43dc-9c77-fc4f57253bdf\",\n    \"evidence\": [\n      {\n        \"type\": \"experiment_field\",\n        \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n        \"fieldPath\": \"dataset.datasetVersion\",\n        \"description\": \"Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded\",\n        \"excerpt\": null,\n        \"previousValue\": null,\n        \"currentValue\": null,\n        \"sourceReference\": null\n      }\n    ],\n    \"modified\": false\n  },\n  \"speech\": {\n    \"text\": \"This recommendation comes from deterministic rule MISSING_DATASET_VERSION. The experiment record specifies neither a dataset version nor an immutable dataset identifier. Evidence: dataset.datasetVersion: Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded (not recorded) Recommendation: Record the dataset commit hash, version tag, or URI to guarantee data provenance. I have not changed the experiment.\",\n    \"shouldListen\": true,\n    \"confirmationRequired\": false\n  },\n  \"visual\": {\n    \"view\": \"audit\",\n    \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n    \"findingId\": \"463e13bc-ece3-43dc-9c77-fc4f57253bdf\"\n  },\n  \"nextAction\": \"listen\"\n}"
+            "text": "{\n  \"data\": {\n    \"findingId\": \"1ac2c09e-3814-4d6e-96cb-b695c1d8b352\",\n    \"evidence\": [\n      {\n        \"type\": \"experiment_field\",\n        \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n        \"fieldPath\": \"dataset.datasetVersion\",\n        \"description\": \"Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded\",\n        \"excerpt\": null,\n        \"previousValue\": null,\n        \"currentValue\": null,\n        \"sourceReference\": null\n      }\n    ],\n    \"modified\": false\n  },\n  \"speech\": {\n    \"text\": \"This recommendation comes from deterministic rule MISSING_DATASET_VERSION. The experiment record specifies neither a dataset version nor an immutable dataset identifier. Evidence: dataset.datasetVersion: Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded (not recorded) Recommendation: Record the dataset commit hash, version tag, or URI to guarantee data provenance. I have not changed the experiment.\",\n    \"shouldListen\": true,\n    \"confirmationRequired\": false\n  },\n  \"visual\": {\n    \"view\": \"audit\",\n    \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n    \"findingId\": \"1ac2c09e-3814-4d6e-96cb-b695c1d8b352\"\n  },\n  \"nextAction\": \"listen\"\n}"
           }
         ],
         "structuredContent": {
           "data": {
-            "findingId": "463e13bc-ece3-43dc-9c77-fc4f57253bdf",
+            "findingId": "1ac2c09e-3814-4d6e-96cb-b695c1d8b352",
             "evidence": [
               {
                 "type": "experiment_field",
-                "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                 "fieldPath": "dataset.datasetVersion",
                 "description": "Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded",
                 "excerpt": null,
@@ -1257,8 +1273,8 @@
           },
           "visual": {
             "view": "audit",
-            "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
-            "findingId": "463e13bc-ece3-43dc-9c77-fc4f57253bdf"
+            "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
+            "findingId": "1ac2c09e-3814-4d6e-96cb-b695c1d8b352"
           },
           "nextAction": "listen"
         }
@@ -1267,26 +1283,26 @@
     {
       "toolName": "finish_experiment_session",
       "request": {
-        "sessionId": "7cf01a43-65d3-4179-bb7a-e4f52fe7a260"
+        "sessionId": "697253ca-64c5-468d-822a-4e129d24e6b0"
       },
-      "startedAt": "2026-10-18T01:46:50.868Z",
-      "completedAt": "2026-10-18T01:46:51.356Z",
+      "startedAt": "2026-10-21T11:17:26.166Z",
+      "completedAt": "2026-10-21T11:17:27.456Z",
       "status": "passed",
       "response": {
         "content": [
           {
             "type": "text",
-            "text": "{\n  \"data\": {\n    \"audit\": {\n      \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n      \"findings\": [\n        {\n          \"id\": \"720582ae-aaf6-4851-a21e-90f2916e682a\",\n          \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n          \"ruleId\": \"MISSING_DATASET_VERSION\",\n          \"title\": \"Dataset version or identifier missing\",\n          \"description\": \"The experiment record specifies neither a dataset version nor an immutable dataset identifier.\",\n          \"severity\": \"warning\",\n          \"status\": \"open\",\n          \"evidence\": [\n            {\n              \"type\": \"experiment_field\",\n              \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n              \"fieldPath\": \"dataset.datasetVersion\",\n              \"description\": \"Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded\",\n              \"excerpt\": null,\n              \"previousValue\": null,\n              \"currentValue\": null,\n              \"sourceReference\": null\n            }\n          ],\n          \"recommendation\": \"Record the dataset commit hash, version tag, or URI to guarantee data provenance.\",\n          \"resolutionNote\": null,\n          \"createdAt\": \"2026-10-18T01:46:51.338Z\",\n          \"updatedAt\": \"2026-10-18T01:46:51.338Z\"\n        }\n      ],\n      \"summary\": {\n        \"critical\": 0,\n        \"warning\": 1,\n        \"info\": 0,\n        \"open\": 1\n      },\n      \"auditVersion\": \"1.0.0\",\n      \"completedAt\": \"2026-10-18T01:46:51.338Z\"\n    },\n    \"report\": {\n      \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n      \"auditRunId\": \"b35e6850-a753-4f67-a82c-51364aa49315\",\n      \"format\": \"markdown\",\n      \"content\": \"# Reproducibility Report: ResNet-50 Evaluation\\n\\nGenerated: 2026-10-18T01:46:51.339Z\\n\\n## Experiment\\n\\n- Model: ResNet-50\\n- Dataset: Not recorded\\n- Learning rate: 0.001\\n- Random seed: 42\\n- Code commit: Not recorded\\n\\n## Audit\\n\\n- Open findings: 1\\n- **Dataset version or identifier missing** (warning): The experiment record specifies neither a dataset version nor an immutable dataset identifier.\\n\\n## Revisions\\n\\n- dataset.datasetVersion: null → \\\"vor\\\" (proposed)\\n- evaluation.codeCommit: null → \\\"def5678\\\" (proposed)\\n- training.randomSeed: null → 42 (applied)\\n\\n## Decisions\\n\\n- Use the fixed seed because the comparison must be reproducible. (confirmed)\\n\",\n      \"id\": \"bf88acb8-c502-40b9-ace6-202dea0ee571\",\n      \"createdAt\": \"2026-10-18T01:46:51.339Z\"\n    }\n  },\n  \"speech\": {\n    \"text\": \"I finished the session. The final audit has 1 open findings. I opened the detailed reproducibility report.\",\n    \"shouldListen\": false,\n    \"confirmationRequired\": false\n  },\n  \"visual\": {\n    \"view\": \"report\",\n    \"experimentId\": \"6c8179ff-6190-476a-a9de-6f4ebc2c5281\",\n    \"reportId\": \"bf88acb8-c502-40b9-ace6-202dea0ee571\"\n  },\n  \"nextAction\": \"show_report\"\n}"
+            "text": "{\n  \"data\": {\n    \"audit\": {\n      \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n      \"findings\": [\n        {\n          \"id\": \"5c6859db-b89c-4ef5-b2ca-b3f7bebcaa55\",\n          \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n          \"ruleId\": \"MISSING_DATASET_VERSION\",\n          \"title\": \"Dataset version or identifier missing\",\n          \"description\": \"The experiment record specifies neither a dataset version nor an immutable dataset identifier.\",\n          \"severity\": \"warning\",\n          \"status\": \"open\",\n          \"evidence\": [\n            {\n              \"type\": \"experiment_field\",\n              \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n              \"fieldPath\": \"dataset.datasetVersion\",\n              \"description\": \"Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded\",\n              \"excerpt\": null,\n              \"previousValue\": null,\n              \"currentValue\": null,\n              \"sourceReference\": null\n            }\n          ],\n          \"recommendation\": \"Record the dataset commit hash, version tag, or URI to guarantee data provenance.\",\n          \"resolutionNote\": null,\n          \"createdAt\": \"2026-10-21T11:17:27.436Z\",\n          \"updatedAt\": \"2026-10-21T11:17:27.436Z\"\n        }\n      ],\n      \"summary\": {\n        \"critical\": 0,\n        \"warning\": 1,\n        \"info\": 0,\n        \"open\": 1\n      },\n      \"auditVersion\": \"1.0.0\",\n      \"completedAt\": \"2026-10-21T11:17:27.436Z\"\n    },\n    \"report\": {\n      \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n      \"auditRunId\": \"4a4bb1af-98b0-4ce5-9b3a-db0af8a53d1a\",\n      \"format\": \"markdown\",\n      \"content\": \"# Reproducibility Report: ResNet-50 Evaluation\\n\\nGenerated: 2026-10-21T11:17:27.437Z\\n\\n## Experiment claims\\n\\n- Model: ResNet-50\\n- Dataset: Not recorded \\n- Learning rate: 0.001\\n- Random seed: 42\\n- Claimed accuracy: Not recorded\\n- Code commit: abc1234\\n\\n## Verification and policy\\n\\n- Policy: No artifact policy configured\\n- Quality gate: not_configured\\n- Audit run: 4a4bb1af-98b0-4ce5-9b3a-db0af8a53d1a\\n- No artifact verification states\\n\\n### Linked source snapshot\\n\\n- No GitLab or MLflow source linked\\n\\n### Imported research documents\\n\\n- None\\n\\n### Stored artifact metadata\\n\\n- None\\n\\nDemo fixtures and typed metadata are labelled user_confirmed. Uploaded file bytes are retained and checked against their stored SHA-256 hash. This verifies the attached evidence file, not the scientific validity of the experiment.\\n\\n## Audit\\n\\n- Open findings: 1\\n- **Dataset version or identifier missing** [MISSING_DATASET_VERSION, warning]: The experiment record specifies neither a dataset version nor an immutable dataset identifier.\\n\\n## Revisions\\n\\n- dataset.datasetVersion: null → \\\"was\\\" (proposed)\\n- evaluation.codeCommit: \\\"abc1234\\\" → \\\"def5678\\\" (proposed)\\n- training.randomSeed: null → 42 (applied)\\n\\n## Decisions\\n\\n- Use the fixed seed because the comparison must be reproducible. (confirmed)\\n\",\n      \"id\": \"b6e994d6-bef4-461b-8705-e2e05de06045\",\n      \"createdAt\": \"2026-10-21T11:17:27.437Z\"\n    }\n  },\n  \"speech\": {\n    \"text\": \"I finished the session. The final audit has 1 open findings. I opened the detailed reproducibility report.\",\n    \"shouldListen\": false,\n    \"confirmationRequired\": false\n  },\n  \"visual\": {\n    \"view\": \"report\",\n    \"experimentId\": \"8e61eee6-c62c-48b6-b205-64041312124b\",\n    \"reportId\": \"b6e994d6-bef4-461b-8705-e2e05de06045\"\n  },\n  \"nextAction\": \"show_report\"\n}"
           }
         ],
         "structuredContent": {
           "data": {
             "audit": {
-              "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+              "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
               "findings": [
                 {
-                  "id": "720582ae-aaf6-4851-a21e-90f2916e682a",
-                  "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                  "id": "5c6859db-b89c-4ef5-b2ca-b3f7bebcaa55",
+                  "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                   "ruleId": "MISSING_DATASET_VERSION",
                   "title": "Dataset version or identifier missing",
                   "description": "The experiment record specifies neither a dataset version nor an immutable dataset identifier.",
@@ -1295,7 +1311,7 @@
                   "evidence": [
                     {
                       "type": "experiment_field",
-                      "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
+                      "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
                       "fieldPath": "dataset.datasetVersion",
                       "description": "Neither dataset.datasetVersion nor dataset.datasetIdentifier is recorded",
                       "excerpt": null,
@@ -1306,8 +1322,8 @@
                   ],
                   "recommendation": "Record the dataset commit hash, version tag, or URI to guarantee data provenance.",
                   "resolutionNote": null,
-                  "createdAt": "2026-10-18T01:46:51.338Z",
-                  "updatedAt": "2026-10-18T01:46:51.338Z"
+                  "createdAt": "2026-10-21T11:17:27.436Z",
+                  "updatedAt": "2026-10-21T11:17:27.436Z"
                 }
               ],
               "summary": {
@@ -1317,15 +1333,15 @@
                 "open": 1
               },
               "auditVersion": "1.0.0",
-              "completedAt": "2026-10-18T01:46:51.338Z"
+              "completedAt": "2026-10-21T11:17:27.436Z"
             },
             "report": {
-              "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
-              "auditRunId": "b35e6850-a753-4f67-a82c-51364aa49315",
+              "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
+              "auditRunId": "4a4bb1af-98b0-4ce5-9b3a-db0af8a53d1a",
               "format": "markdown",
-              "content": "# Reproducibility Report: ResNet-50 Evaluation\n\nGenerated: 2026-10-18T01:46:51.339Z\n\n## Experiment\n\n- Model: ResNet-50\n- Dataset: Not recorded\n- Learning rate: 0.001\n- Random seed: 42\n- Code commit: Not recorded\n\n## Audit\n\n- Open findings: 1\n- **Dataset version or identifier missing** (warning): The experiment record specifies neither a dataset version nor an immutable dataset identifier.\n\n## Revisions\n\n- dataset.datasetVersion: null → \"vor\" (proposed)\n- evaluation.codeCommit: null → \"def5678\" (proposed)\n- training.randomSeed: null → 42 (applied)\n\n## Decisions\n\n- Use the fixed seed because the comparison must be reproducible. (confirmed)\n",
-              "id": "bf88acb8-c502-40b9-ace6-202dea0ee571",
-              "createdAt": "2026-10-18T01:46:51.339Z"
+              "content": "# Reproducibility Report: ResNet-50 Evaluation\n\nGenerated: 2026-10-21T11:17:27.437Z\n\n## Experiment claims\n\n- Model: ResNet-50\n- Dataset: Not recorded \n- Learning rate: 0.001\n- Random seed: 42\n- Claimed accuracy: Not recorded\n- Code commit: abc1234\n\n## Verification and policy\n\n- Policy: No artifact policy configured\n- Quality gate: not_configured\n- Audit run: 4a4bb1af-98b0-4ce5-9b3a-db0af8a53d1a\n- No artifact verification states\n\n### Linked source snapshot\n\n- No GitLab or MLflow source linked\n\n### Imported research documents\n\n- None\n\n### Stored artifact metadata\n\n- None\n\nDemo fixtures and typed metadata are labelled user_confirmed. Uploaded file bytes are retained and checked against their stored SHA-256 hash. This verifies the attached evidence file, not the scientific validity of the experiment.\n\n## Audit\n\n- Open findings: 1\n- **Dataset version or identifier missing** [MISSING_DATASET_VERSION, warning]: The experiment record specifies neither a dataset version nor an immutable dataset identifier.\n\n## Revisions\n\n- dataset.datasetVersion: null → \"was\" (proposed)\n- evaluation.codeCommit: \"abc1234\" → \"def5678\" (proposed)\n- training.randomSeed: null → 42 (applied)\n\n## Decisions\n\n- Use the fixed seed because the comparison must be reproducible. (confirmed)\n",
+              "id": "b6e994d6-bef4-461b-8705-e2e05de06045",
+              "createdAt": "2026-10-21T11:17:27.437Z"
             }
           },
           "speech": {
@@ -1335,8 +1351,8 @@
           },
           "visual": {
             "view": "report",
-            "experimentId": "6c8179ff-6190-476a-a9de-6f4ebc2c5281",
-            "reportId": "bf88acb8-c502-40b9-ace6-202dea0ee571"
+            "experimentId": "8e61eee6-c62c-48b6-b205-64041312124b",
+            "reportId": "b6e994d6-bef4-461b-8705-e2e05de06045"
           },
           "nextAction": "show_report"
         }

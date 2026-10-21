@@ -16,6 +16,7 @@ const expectedTools = [
   "finish_experiment_session",
   "create_experiment_from_transcript",
   "get_experiment",
+  "get_experiment_verification",
   "list_experiments",
   "audit_experiment",
   "generate_reproducibility_report",
@@ -82,7 +83,9 @@ function structured(response) {
 async function call(toolName, args) {
   const startedAt = new Date().toISOString();
   const response = await executeInspector("tools/call", ["--tool-name", toolName, "--tool-args-json", JSON.stringify(args)]);
-  trace.push({ toolName, request: args, startedAt, completedAt: new Date().toISOString(), status: "passed", response: resultBody(response) });
+  const body = resultBody(response);
+  if (body?.isError) throw new Error("MCP tool returned an application error: " + toolName);
+  trace.push({ toolName, request: args, startedAt, completedAt: new Date().toISOString(), status: "passed", response: body });
   return structured(response);
 }
 
@@ -103,6 +106,7 @@ try {
   const experimentId = created.experiment.id;
   await call("list_experiments", { limit: 10, search: "Atlas" });
   await call("get_experiment", { experimentId });
+  await call("get_experiment_verification", { experimentId });
   await call("audit_experiment", { experimentId });
   await call("generate_reproducibility_report", { experimentId, format: "markdown" });
 

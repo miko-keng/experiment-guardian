@@ -11,6 +11,11 @@ import type { Experiment } from "../extraction/experiment-schema.js";
 export const LinkEvidenceSchema = z.object({
   mergeRequestUrl: z.string().trim().url(),
   runId: z.string().trim().regex(/^[a-zA-Z0-9_-]{1,128}$/, "Invalid MLflow run ID"),
+  configFilePath: z.string().trim().min(1).max(512).refine(
+    path => path.toLowerCase().endsWith(".json") &&
+      path.split("/").every(segment => segment !== "." && segment !== ".." && /^[a-zA-Z0-9._-]+$/.test(segment)),
+    "Enter a repository-relative JSON file path, such as configs/experiment.json",
+  ),
   title: z.string().trim().max(160).optional(),
   demoScenario: z.literal("iris-composite").optional(),
 });
@@ -18,6 +23,7 @@ export const LinkEvidenceSchema = z.object({
 export const IRIS_DEMO = {
   mergeRequestUrl: "https://gitlab.com/miko-keng/data-science-ci-example/-/merge_requests/1",
   runId: "e9cf4088-1ebe-44c5-bdcf-9c79007cad1f",
+  configFilePath: "experiment-guardian.json",
   draftNote: "Unverified draft note for the Iris run: random seed 7, learning rate 0.01, and dataset version v2. The train/test split was not written down. Compare these claims with the linked run before accepting them.",
 } as const;
 
@@ -76,7 +82,7 @@ export class LinkedEvidenceService {
   async import(experimentId: string | null, input: z.infer<typeof LinkEvidenceSchema> & { previewOnly?: boolean }) {
     const existing = experimentId ? experimentRepository.findById(experimentId) : null;
     if (experimentId && !existing) throw new Error("Experiment not found");
-    if (input.demoScenario && (experimentId || input.mergeRequestUrl !== IRIS_DEMO.mergeRequestUrl || input.runId !== IRIS_DEMO.runId)) {
+    if (input.demoScenario && (experimentId || input.mergeRequestUrl !== IRIS_DEMO.mergeRequestUrl || input.runId !== IRIS_DEMO.runId || input.configFilePath !== IRIS_DEMO.configFilePath)) {
       throw new Error("The connected judge scenario is available only for its documented Iris merge request and run");
     }
     if (!config.mlflowTrackingUrl) throw new Error("Set MLFLOW_TRACKING_URL on the backend before linking a run");
@@ -94,7 +100,7 @@ export class LinkedEvidenceService {
       throw new Error("GitLab returned a different commit than the merge request head");
     }
     const commitUrl = `${config.gitlabBaseUrl}/${mr.projectPath}/-/commit/${sha}`;
-    const configPath = config.gitlabTrainingConfigPath.replace(/^\/+/, "");
+    const configPath = input.configFilePath;
     const configUrl = serviceUrl(config.gitlabBaseUrl,
       `api/v4/projects/${project}/repository/files/${encodeURIComponent(configPath)}/raw`);
     configUrl.searchParams.set("ref", sha);
@@ -196,7 +202,7 @@ export class LinkedEvidenceService {
     };
     const evidence = { source, gitlab: { title: String(mrData.title || ""), sha,
       commitTitle: String(commitData.title || ""), committedDate: String(commitData.committed_date || ""),
-      projectPath: mr.projectPath, iid: mr.iid, trainingConfig },
+      projectPath: mr.projectPath, iid: mr.iid, trainingConfigPath: configPath, trainingConfig },
       mlflow: { runId: input.runId, experimentId: String(run.info?.experiment_id || ""),
         artifactUri, artifactListingStatus, params, metrics, tags, artifacts,
         datasetInputs: datasetInputs.slice(0, 20) }, observed };
@@ -204,6 +210,7 @@ export class LinkedEvidenceService {
       previewOnly: true,
       mergeRequestUrl: mr.url,
       commitSha: sha,
+      trainingConfigPath: configPath,
       trainingConfigFound: Boolean(trainingConfig),
       runId: input.runId,
       observed,

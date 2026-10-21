@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
   createAndAuditExperiment,
+  createLinkedReview,
   getExperiment,
   listExperiments,
   updateFindingStatus,
@@ -38,6 +39,29 @@ describe("Frontend API Client Suite", () => {
       })
     );
     expect(result.experiment.id).toBe("exp-123");
+  });
+
+  it("sends the selected repository config path with a linked review", async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ experiment: { id: "linked-1" } }),
+    } as any);
+    await createLinkedReview({
+      mergeRequestUrl: "https://gitlab.com/group/project/-/merge_requests/1",
+      runId: "run-1",
+      configFilePath: "configs/train.json",
+    });
+    expect(fetch).toHaveBeenCalledWith(
+      "/api/v1/experiments/linked-review",
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({
+          mergeRequestUrl: "https://gitlab.com/group/project/-/merge_requests/1",
+          runId: "run-1",
+          configFilePath: "configs/train.json",
+        }),
+      })
+    );
   });
 
   it("handles and formats error responses from backend", async () => {

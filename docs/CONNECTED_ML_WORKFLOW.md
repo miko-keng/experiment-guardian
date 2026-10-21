@@ -9,7 +9,6 @@ Set these server-side environment variables (also listed in `.env.example`):
 ```env
 GITLAB_BASE_URL=https://gitlab.com
 GITLAB_TOKEN=
-GITLAB_TRAINING_CONFIG_PATH=experiment-guardian.json
 MLFLOW_TRACKING_URL=https://your-mlflow-server.example.com
 MLFLOW_TOKEN=
 APP_ACCESS_PASSWORD=
@@ -33,7 +32,7 @@ The GitLab MLflow run endpoint returned HTTP 401 without a token, so this demo n
 
 The backend accepts merge request URLs only from `GITLAB_BASE_URL` and contacts only the configured GitLab and MLflow addresses. HTTPS is required outside localhost. Redirects are rejected.
 
-To check access without creating a review, send the same `mergeRequestUrl` and `runId` JSON to `POST /api/v1/experiments/linked-review/check` after signing in. It fetches the MR, pinned commit, training config, and exact run, then returns a small evidence summary. It does **not** write a Guardian experiment or snapshot. HTTP 401 from the GitLab MLflow endpoint means its private run needs `MLFLOW_TOKEN` on the backend.
+To check access without creating a review, send `mergeRequestUrl`, `runId`, and the required `configFilePath` JSON to `POST /api/v1/experiments/linked-review/check` after signing in. It fetches the MR, pinned commit, training config, and exact run, then returns a small evidence summary. It does **not** write a Guardian experiment or snapshot. HTTP 401 from the GitLab MLflow endpoint means its private run needs `MLFLOW_TOKEN` on the backend.
 
 ## 2. Log an identifiable run
 
@@ -49,19 +48,19 @@ The comparison recognizes common MLflow keys:
 | Source commit | tag `git.commit`, `git_commit`, `commit_sha`, or `gitlab.CI_COMMIT_SHA` |
 | Baseline | tag/parameter `baseline_run_id` |
 
-For comparison with a pinned repository configuration, add `experiment-guardian.json` at the merge request head commit (or set `GITLAB_TRAINING_CONFIG_PATH`):
+For comparison with a pinned repository configuration, point Guardian to a repository-relative JSON file when starting or refreshing the review. The Iris demo uses `experiment-guardian.json`:
 
 ```json
-{"randomSeed":42,"learningRate":0.001}
+{"randomSeed":42,"learningRate":0.1}
 ```
 
-The run's artifact list is inspected for an evaluation script, checkpoint, and dependency lockfile. Missing values remain visible as findings; the importer never fills them by guessing. Artifact listing metadata is evidence that a path was reported by MLflow, not a byte-level hash check of a remote model or dataset.
+The selected JSON file can live anywhere in the repository, but the current importer recognizes top-level `randomSeed`/`seed` and `learningRate`/`learning_rate` fields. It does not parse arbitrary Python or nested training configuration. The run's artifact list is inspected for an evaluation script, checkpoint, and dependency lockfile. Missing values remain visible as findings; the importer never fills them by guessing. Artifact listing metadata is evidence that a path was reported by MLflow, not a byte-level hash check of a remote model or dataset.
 
 ## 3. Link and review
 
-Open **Experiments → Review an existing ML run**, paste the merge request URL and run ID, and choose **Start review**. No notes or model access are required for this path. Guardian fetches the exact merge request head commit and its config, the selected run, metrics, parameters, dataset metadata, and artifact references. It saves an immutable snapshot, creates an experiment record, and runs deterministic rules.
+Open **Experiments → Review an existing ML run**, paste the merge request URL, run ID, and repository-relative JSON config path (for example, `configs/train.json`), then choose **Start review**. No notes or model access are required for this path. Guardian fetches the exact merge request head commit and its config, the selected run, metrics, parameters, dataset metadata, and artifact references. It saves an immutable snapshot, creates an experiment record, and runs deterministic rules.
 
-On the experiment page, review the source links and findings. **Refresh evidence** fetches again and appends another snapshot. You can supply a different run ID to correct a mistaken link. Earlier snapshots remain available. **Discuss this run in the Alexa lab** opens an MCP-backed session linked to the same experiment; typed or browser-voice observations can preserve rationale and propose a correction that requires approval. The existing revision controls also support approval and rejection. After an approved change or refreshed evidence, the audit is rerun.
+On the experiment page, review the source links and findings. **Refresh evidence** shows the previously selected config path and lets you change it; it fetches again and appends another snapshot with the selected path. You can supply a different run ID to correct a mistaken link. Earlier snapshots remain available. **Discuss this run in the Alexa lab** opens an MCP-backed session linked to the same experiment; typed or browser-voice observations can preserve rationale and propose a correction that requires approval. The existing revision controls also support approval and rejection. After an approved change or refreshed evidence, the audit is rerun.
 
 If you already have an experiment created from notes, use **Linked GitLab and MLflow evidence** on its detail page to attach the two sources and compare its claims with the actual run.
 
@@ -79,6 +78,5 @@ The job looks up the linked review from the merge request URL, compares the snap
 
 ## Limits
 
-- The connected review has compiled locally. The GitLab MR and MLflow run above exist, but Guardian's importer has not yet been exercised against them with server-side credentials.
 - The optional Bedrock and Amazon Transcribe adapters retain their existing configuration and access requirements. The linked-run workflow does not depend on them.
 - SQLite and shared Basic access are suitable for a demo or a small trusted deployment. A company rollout needs user identity, per-project authorization, durable managed storage, and a controlled connector credential model.

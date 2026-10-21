@@ -180,7 +180,7 @@ export interface ExperimentDetailResponse {
     mlflowRunId: string; fetchedAt: string;
     evidence: {
       source: { mergeRequest: string; commit: string; config: string; run: string };
-      gitlab: { title: string; trainingConfig: Record<string, unknown> | null };
+      gitlab: { title: string; trainingConfigPath?: string; trainingConfig: Record<string, unknown> | null };
       mlflow: { params: Record<string, string>; metrics: Record<string, number>;
         artifactListingStatus?: "verified" | "unavailable";
         artifacts: Array<{ path: string; isDir: boolean; fileSize: number | null }> };

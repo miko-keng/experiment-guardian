@@ -1,8 +1,8 @@
 # Experiment Guardian
 
-**New: GitLab + MLflow linked experiment reviews.** Paste a merge request URL and a run ID in **Experiments** to fetch read-only source evidence, compare it with the research record, and keep immutable snapshots. The setup, logging convention, and advisory GitLab CI job are described in [Connected ML workflow](docs/CONNECTED_ML_WORKFLOW.md).
+**New: GitLab + MLflow linked experiment reviews.** Paste a merge request URL, run ID, and repository-relative JSON config path in **Experiments** to fetch read-only source evidence, compare it with the research record, and keep immutable snapshots. The setup, logging convention, and advisory GitLab CI job are described in [Connected ML workflow](docs/CONNECTED_ML_WORKFLOW.md).
 
-The home page opens **Experiments**. To start without a run ID, choose **Audit meeting notes** there. Open **Discuss this run in the Alexa lab** from a linked review to keep the conversation attached to that experiment. The [recommended connected judge demo](docs/JUDGE_DEMO.md) gives the recording route; [complete scenario answers](docs/JUDGE_SCENARIOS.md) gives exact inputs for every demo card; [Alexa+ Q&A reference](docs/ALEXA_QA_REFERENCE.md) covers all deterministic question shapes.
+The home page opens **Experiments**. To start without a run ID, choose **Audit meeting notes** there. Open **Discuss this run in the Alexa lab** from a linked review to keep the conversation attached to that experiment. The [recommended connected judge demo](docs/JUDGE_DEMO.md) gives the recording route; [complete scenario answers](docs/JUDGE_SCENARIOS.md) gives exact inputs for every demo card; the same scenario reference also covers all deterministic question templates.
 
 In a linked Alexa+ session, **Import document** accepts TXT, Markdown, PDF, and DOCX notes (plus supported audio when transcription is configured). The extracted text appears for review before the researcher sends it through MCP. The included [Iris review note](examples/demo/iris-review-note.txt) and **Linked Iris walkthrough** card exercise this path without creating a second experiment. An approved note-based correction is re-audited against the original GitLab/MLflow snapshot.
 
@@ -203,9 +203,8 @@ See [Public deployment](docs/DEPLOYMENT.md) for the Render and Alexa AI CLI step
 
 - [Project description](docs/SUBMISSION.md)
 - [Judge demo: fixed inputs and expected responses](docs/JUDGE_DEMO.md)
-- [Alexa+ question and answer reference](docs/ALEXA_QA_REFERENCE.md)
-- [Other three-minute demo options](docs/DEMO_SCRIPT.md)
-- [Product feedback and friction log](docs/FEEDBACK_AND_FRICTION_LOG.md)
+- [All demo scenario questions and answers](docs/JUDGE_SCENARIOS.md)
+- [Product feedback and friction log in submission draft](docs/SUBMISSION.md#product-feedback)
 - [Public deployment guide](docs/DEPLOYMENT.md)
 
 ## Demonstration configuration

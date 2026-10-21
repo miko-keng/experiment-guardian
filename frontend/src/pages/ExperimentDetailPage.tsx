@@ -84,6 +84,7 @@ export const ExperimentDetailPage: React.FC = () => {
   const [artifactFile, setArtifactFile] = useState<File | null>(null);
   const [linkedMrUrl, setLinkedMrUrl] = useState("");
   const [linkedRunId, setLinkedRunId] = useState("");
+  const [linkedConfigPath, setLinkedConfigPath] = useState("");
 
   const refreshEvidence = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -94,8 +95,9 @@ export const ExperimentDetailPage: React.FC = () => {
       await refreshLinkedEvidence(id, {
         mergeRequestUrl: linkedMrUrl.trim() || latest?.gitlabMrUrl || "",
         runId: linkedRunId.trim() || latest?.mlflowRunId || "",
+        configFilePath: linkedConfigPath.trim(),
       });
-      setLinkedMrUrl(""); setLinkedRunId(""); loadData();
+      setLinkedMrUrl(""); setLinkedRunId(""); setLinkedConfigPath(""); loadData();
     } catch (error: any) { setActionError(error.message || "Could not refresh linked evidence"); }
     finally { setActionId(null); }
   };
@@ -128,6 +130,7 @@ export const ExperimentDetailPage: React.FC = () => {
     getExperiment(id)
       .then((res) => {
         setData(res);
+        setLinkedConfigPath(res.linkedEvidence?.[0]?.evidence.gitlab.trainingConfigPath || "");
         setError(null);
         Promise.all(res.findingComments.map(async (comment) => [comment.sessionId, await getSession(comment.sessionId)] as const))
           .then((items) => setInvestigationSessions((current) => ({ ...current, ...Object.fromEntries(items) })))
@@ -383,6 +386,9 @@ export const ExperimentDetailPage: React.FC = () => {
           <input type="url" aria-label="GitLab merge request URL" placeholder={data.linkedEvidence?.[0]?.gitlabMrUrl || "GitLab merge request URL"} value={linkedMrUrl} onChange={e => setLinkedMrUrl(e.target.value)} required={!data.linkedEvidence?.length} className="rounded-lg border p-2 text-sm" />
           <input aria-label="MLflow run ID" placeholder={data.linkedEvidence?.[0]?.mlflowRunId || "MLflow run ID"} value={linkedRunId} onChange={e => setLinkedRunId(e.target.value)} required={!data.linkedEvidence?.length} className="rounded-lg border p-2 text-sm" />
           <button disabled={actionId === "link-evidence"} className="rounded-lg bg-indigo-700 px-4 py-2 text-sm font-bold text-white disabled:opacity-50">{actionId === "link-evidence" ? "Reading…" : data.linkedEvidence?.length ? "Refresh evidence" : "Link evidence"}</button>
+          <label className="text-sm font-semibold text-slate-700 md:col-span-3" htmlFor="linked-config-path">Training config file path (JSON, required)</label>
+          <input id="linked-config-path" required aria-label="Training config file path" placeholder="experiment-guardian.json or configs/train.json" value={linkedConfigPath} onChange={e => setLinkedConfigPath(e.target.value)} className="rounded-lg border p-2 text-sm md:col-span-3" />
+          <p className="text-xs text-slate-500 md:col-span-3">Guardian reads this repository file at the MR head commit. Use flat JSON with randomSeed/seed and learningRate/learning_rate fields for code-to-run checks.</p>
         </form>
         {data.linkedEvidence?.[0] && <div className="rounded-md border border-slate-300 bg-slate-50 p-4 text-sm space-y-3">
           {experiment.source.sourceReference === "judge-demo:iris-composite-draft" && <p className="inline-flex rounded-md border border-amber-300 bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-900">Unverified draft note · judge demo</p>}
@@ -391,7 +397,7 @@ export const ExperimentDetailPage: React.FC = () => {
             <a target="_blank" rel="noopener noreferrer" href={data.linkedEvidence[0].evidence.source.commit} className="underline">Pinned commit</a>
             <a target="_blank" rel="noopener noreferrer" href={data.linkedEvidence[0].evidence.source.run} className="underline">Run</a>
           </div>
-          <p className="text-xs text-slate-600">Run {data.linkedEvidence[0].mlflowRunId} · commit {data.linkedEvidence[0].gitlabCommitSha.slice(0, 12)} · fetched {new Date(data.linkedEvidence[0].fetchedAt).toLocaleString()}</p>
+          <p className="text-xs text-slate-600">Config {data.linkedEvidence[0].evidence.gitlab.trainingConfigPath || "Older snapshot: path not recorded"} · Run {data.linkedEvidence[0].mlflowRunId} · commit {data.linkedEvidence[0].gitlabCommitSha.slice(0, 12)} · fetched {new Date(data.linkedEvidence[0].fetchedAt).toLocaleString()}</p>
           <div className="overflow-x-auto rounded-md border border-slate-300 bg-white">
             <div className="grid grid-cols-[minmax(115px,1fr)_minmax(125px,1fr)_minmax(125px,1fr)] border-b border-slate-200 bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600"><span>Field</span><span>Research note</span><span>Linked run</span></div>
             {([

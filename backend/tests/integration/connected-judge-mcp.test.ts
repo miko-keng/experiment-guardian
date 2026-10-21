@@ -25,6 +25,7 @@ describe("Connected judge review through the official MCP client", () => {
 
   it("imports a source snapshot, negotiates MCP 2025-11-25, calls tools, and gates corrections", async () => {
     config.mlflowTrackingUrl = "https://gitlab.com/api/v4/projects/87814901/ml/mlflow";
+    const configRequests: string[] = [];
     globalThis.fetch = async input => {
       const url = new URL(String(input));
       let data: unknown;
@@ -33,6 +34,7 @@ describe("Connected judge review through the official MCP client", () => {
       } else if (url.pathname.includes("/repository/commits/")) {
         data = { id: sha, title: "Add Iris experiment", committed_date: "2026-10-19" };
       } else if (url.pathname.includes("/repository/files/")) {
+        configRequests.push(url.toString());
         data = { randomSeed: 42, learningRate: 0.1 };
       } else if (url.pathname.endsWith("/api/2.0/mlflow/runs/get")) {
         data = { run: { info: { run_id: IRIS_DEMO.runId, experiment_id: "1", artifact_uri: "" },
@@ -49,17 +51,25 @@ describe("Connected judge review through the official MCP client", () => {
     };
 
     const before = experimentService.listExperiments({ limit: 100, offset: 0 }).items.length;
+    await request(app).post("/api/v1/experiments/linked-review/check")
+      .send({ mergeRequestUrl: IRIS_DEMO.mergeRequestUrl, runId: IRIS_DEMO.runId }).expect(400);
+    await request(app).post("/api/v1/experiments/linked-review/check")
+      .send({ mergeRequestUrl: IRIS_DEMO.mergeRequestUrl, runId: IRIS_DEMO.runId, configFilePath: "../secrets.json" }).expect(400);
     const checked = await request(app).post("/api/v1/experiments/linked-review/check")
-      .send({ mergeRequestUrl: IRIS_DEMO.mergeRequestUrl, runId: IRIS_DEMO.runId }).expect(200);
+      .send({ mergeRequestUrl: IRIS_DEMO.mergeRequestUrl, runId: IRIS_DEMO.runId, configFilePath: "configs/iris-review.json" }).expect(200);
     expect(checked.body).toMatchObject({ previewOnly: true, commitSha: sha, runId: IRIS_DEMO.runId });
     expect(checked.body.observed.randomSeed).toBe(42);
+    expect(checked.body.trainingConfigPath).toBe("configs/iris-review.json");
+    expect(configRequests[0]).toContain(encodeURIComponent("configs/iris-review.json"));
+    expect(new URL(configRequests[0]).searchParams.get("ref")).toBe(sha);
     expect(experimentService.listExperiments({ limit: 100, offset: 0 }).items.length).toBe(before);
 
     const linked = await request(app).post("/api/v1/experiments/linked-review")
-      .send({ mergeRequestUrl: IRIS_DEMO.mergeRequestUrl, runId: IRIS_DEMO.runId, demoScenario: "iris-composite" })
+      .send({ mergeRequestUrl: IRIS_DEMO.mergeRequestUrl, runId: IRIS_DEMO.runId, configFilePath: IRIS_DEMO.configFilePath, demoScenario: "iris-composite" })
       .expect(201);
     const id = linked.body.experiment.id;
     expect(linked.body.snapshot.gitlabCommitSha).toBe(sha);
+    expect(linked.body.snapshot.evidence.gitlab.trainingConfigPath).toBe(IRIS_DEMO.configFilePath);
     expect(linked.body.snapshot.evidence.observed.randomSeed).toBe(42);
     expect(linked.body.audit.findings.map((item: any) => item.ruleId)).toEqual(expect.arrayContaining([
       "LINKED_SEED_MISMATCH", "LINKED_LEARNING_RATE_MISMATCH", "LINKED_DATASET_VERSION_MISMATCH",
