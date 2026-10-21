@@ -107,6 +107,16 @@ export class AssistantRepository {
     return (this.database.prepare(`SELECT * FROM session_events WHERE session_id=? AND sequence>? ORDER BY sequence`).all(sessionId, afterSequence) as any[]).map((r)=>({sequence:r.sequence,id:r.id,sessionId:r.session_id,type:r.event_type,payload:json(r.payload_json)||{},createdAt:r.created_at}));
   }
 
+  listImportedSources(experimentId: string): Array<{ sourceId: string; edited: boolean }> {
+    const rows = this.database.prepare(`SELECT events.payload_json FROM session_events AS events
+      JOIN assistant_sessions AS sessions ON sessions.id = events.session_id
+      WHERE sessions.experiment_id = ? AND events.event_type = 'source.observed'
+      ORDER BY events.sequence`).all(experimentId) as Array<{ payload_json: string }>;
+    return rows.map((row) => json(row.payload_json))
+      .filter((payload): payload is { sourceId: string; edited: boolean } => typeof payload?.sourceId === "string")
+      .map((payload) => ({ sourceId: payload.sourceId, edited: Boolean(payload.edited) }));
+  }
+
   private mapSession(r:any): AssistantSession { return {id:r.id,experimentId:r.experiment_id,sourceId:r.source_id,title:r.title,status:r.status as AssistantSessionStatus,unresolvedFindingId:r.unresolved_finding_id,pendingApprovalId:r.pending_approval_id,lastToolName:r.last_tool_name,createdAt:r.created_at,updatedAt:r.updated_at}; }
   private mapMessage(r:any): AssistantMessage { return {id:r.id,sessionId:r.session_id,role:r.role,content:r.content,clientMessageId:r.client_message_id,modelId:r.model_id,linkedExperimentId:r.linked_experiment_id,createdAt:r.created_at}; }
 }

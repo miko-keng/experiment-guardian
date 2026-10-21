@@ -13,12 +13,13 @@ export class FindingInvestigationService {
       experimentId: finding.experimentId,
     });
     assistantRepository.addEvent(started.data.id, "tool.started", { toolName: "comment_on_audit_finding", label: "Alexa+ Simulator called MCP finding investigation" });
-    assistantRepository.addMessage({ sessionId: started.data.id, role: "user", content: comment,
-      linkedExperimentId: finding.experimentId });
+    assistantRepository.updateSession(started.data.id, { unresolvedFindingId: finding.id });
+    // Parse a researcher-supplied value into a proposal, never a direct edit.
+    const observation = await alexaSessionService.addObservation({ sessionId: started.data.id,
+      text: comment, clientObservationId: `finding-start-${findingId}-${Date.now()}` });
     const speech = `I checked "${finding.title}" against its stored evidence. ${finding.description} ${finding.recommendation} I have not changed the experiment.`;
     assistantRepository.addMessage({ sessionId: started.data.id, role: "assistant", content: speech,
       linkedExperimentId: finding.experimentId });
-    assistantRepository.updateSession(started.data.id, { unresolvedFindingId: finding.id });
 
     const saved = auditRepository.createComment({
       findingId: finding.id,
@@ -28,7 +29,7 @@ export class FindingInvestigationService {
       analysis: {
         suggestion: finding.recommendation,
         speech,
-        nextAction: "listen",
+        nextAction: observation.nextAction,
         visual: { view: "audit", experimentId: finding.experimentId, findingId: finding.id },
         data: { findingId: finding.id, ruleId: finding.ruleId, modified: false },
       },

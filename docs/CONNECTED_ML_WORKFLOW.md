@@ -33,6 +33,8 @@ The public GitLab MLflow run endpoint returned HTTP 401 without a token, so this
 
 The backend accepts merge request URLs only from `GITLAB_BASE_URL` and contacts only the configured GitLab and MLflow addresses. HTTPS is required outside localhost. Redirects are rejected.
 
+To check access without creating a review, send the same `mergeRequestUrl` and `runId` JSON to `POST /api/v1/experiments/linked-review/check` after signing in. It fetches the MR, pinned commit, training config, and exact run, then returns a small evidence summary. It does **not** write a Guardian experiment or snapshot. HTTP 401 from the GitLab MLflow endpoint means its private run needs `MLFLOW_TOKEN` on the backend.
+
 ## 2. Log an identifiable run
 
 The comparison recognizes common MLflow keys:

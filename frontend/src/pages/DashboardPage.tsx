@@ -37,10 +37,12 @@ export const DashboardPage: React.FC = () => {
   const needsReviewCount = experiments.filter((e) => e.status === "needs_review").length;
   const auditedCount = experiments.filter((e) => e.status === "audited").length;
 
-  const linkRun = async (event: React.FormEvent) => {
+  const linkRun = async (event: React.FormEvent, demo = false) => {
     event.preventDefault(); setLinkBusy(true); setLinkError(null);
     try {
-      const result = await createLinkedReview({ mergeRequestUrl: mergeRequestUrl.trim(), runId: runId.trim() });
+      const result = await createLinkedReview(demo
+        ? { mergeRequestUrl: "https://gitlab.com/miko-keng/data-science-ci-example/-/merge_requests/1", runId: "e9cf4088-1ebe-44c5-bdcf-9c79007cad1f", demoScenario: "iris-composite" }
+        : { mergeRequestUrl: mergeRequestUrl.trim(), runId: runId.trim() });
       navigate(`/experiments/${result.experiment.id}`);
     } catch (error: any) { setLinkError(error.message || "Could not link the merge request and run"); }
     finally { setLinkBusy(false); }
@@ -48,30 +50,35 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <p className="text-xs font-medium text-slate-500 mb-3">Workspace <span className="mx-1">/</span> Experiments <span className="mx-1">/</span> Reviews</p>
       {/* Header banner */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between pb-6 border-b border-slate-200 gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Research Integrity Dashboard</h1>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Experiment reviews</h1>
           <p className="text-sm text-slate-500 mt-1">
             Audit experiments, detect confounding variables, and safeguard reproducibility before publishing results.
           </p>
         </div>
         <Link
           to="/new"
-          className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg text-sm font-semibold shadow-sm transition"
+          className="inline-flex items-center space-x-2 bg-[#7759b8] hover:bg-[#63479e] text-white px-4 py-2.5 rounded-md text-sm font-semibold shadow-sm transition"
         >
           <PlusCircle className="w-4 h-4" />
           <span>Audit meeting notes</span>
         </Link>
       </div>
 
-      <form onSubmit={linkRun} className="mt-6 rounded-xl border border-indigo-200 bg-indigo-50 p-5 space-y-3">
+      <form onSubmit={linkRun} className="mt-6 rounded-lg border border-slate-300 bg-white p-5 space-y-3 shadow-sm">
         <div><h2 className="font-bold text-slate-900">Review an existing ML run</h2>
           <p className="text-sm text-slate-600">Paste a GitLab merge request and MLflow run ID. Guardian reads their evidence without moving your code or artifacts.</p></div>
         <div className="grid gap-3 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_auto]">
           <input required type="url" aria-label="GitLab merge request URL" placeholder="https://gitlab.com/group/project/-/merge_requests/12" value={mergeRequestUrl} onChange={e => setMergeRequestUrl(e.target.value)} className="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
           <input required aria-label="MLflow run ID" placeholder="MLflow run ID" value={runId} onChange={e => setRunId(e.target.value)} className="rounded-lg border border-slate-300 px-3 py-2 text-sm" />
-          <button disabled={linkBusy} className="rounded-lg bg-indigo-700 px-4 py-2 text-sm font-bold text-white disabled:opacity-50">{linkBusy ? "Reading evidence…" : "Start review"}</button>
+          <button disabled={linkBusy} className="rounded-md bg-[#7759b8] px-4 py-2 text-sm font-bold text-white disabled:opacity-50">{linkBusy ? "Reading evidence…" : "Start review"}</button>
+        </div>
+        <div className="border-t border-slate-200 pt-3 flex flex-wrap items-center gap-3">
+          <button type="button" onClick={event => linkRun(event, true)} disabled={linkBusy} className="rounded-md border border-indigo-300 bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-800 hover:bg-indigo-100 disabled:opacity-50">Launch connected judge demo</button>
+          <span className="text-xs text-slate-600">Loads the documented Iris MR and MLflow run with an intentionally inaccurate draft note for review.</span>
         </div>
         {linkError && <p role="alert" className="text-sm text-red-700">{linkError}</p>}
       </form>

@@ -1,0 +1,1 @@
+Unverified draft note for the Iris run: random seed 7, learning rate 0.01, and dataset version v2. The train/test split was not written down. Compare these claims with the linked run before accepting them.

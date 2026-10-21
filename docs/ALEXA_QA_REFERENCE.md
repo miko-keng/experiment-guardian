@@ -1,6 +1,6 @@
 # Alexa+ simulation: questions, supported answers, and expected behavior
 
-This documents **every question shape selected by the current deterministic follow-up code** in `backend/src/services/alexa-session-service.ts`, plus the finding-investigation chat in `backend/src/services/finding-investigation-service.ts`. It is a judge reference, not a claim that a live Alexa+ or LLM client is running. The web simulation makes real MCP tool calls; its question selection and example corrections are rule-based. Use [the single recommended Iris demo](JUDGE_DEMO.md) for the video.
+This documents deterministic follow-up patterns in `backend/src/services/alexa-session-service.ts` and the finding-investigation chat. The web simulation makes real MCP calls; it does not use a live Alexa+ or LLM client. Use [the connected Iris video guide](JUDGE_DEMO.md) and [complete scenario answers](JUDGE_SCENARIOS.md) for exact inputs for every demo card.
 
 ## How to read the table
 
@@ -15,12 +15,17 @@ Question priority is: first critical finding, otherwise a finding about seed, co
 | Evaluation procedure missing (`evaluation.evaluationProcedure`) | “How exactly did you evaluate the final model?” | `We evaluated once on the held-out test set.` | Records the observation. **Current chat parsing does not update the structured evaluation procedure**; the same question may reappear. A separate approved revision/evidence update is needed. |
 | Split missing (`dataset.trainSplit`) | “What training and test data split did you use?” | `We used an 80/20 data split because the test set was held out.` | Proposes `dataset.trainSplit = "80%"` and `dataset.testSplit = "20%"`; asks for approval. The [video scenario](JUDGE_DEMO.md) uses the actual Iris `75/25` split instead. |
 | Seed differs from run manifest (`SEED_MISMATCH`) | “The note says seed {previousValue}, but the stored run says {currentValue}. Which run produced this result?” | Inspect the manifest and run first. If the recorded claim is wrong, type `The random seed was 7 because the manifest for this run says 7.` | Proposes a correction to the claimed seed and asks for approval. If the manifest is wrong, attach the correct manifest instead. Never invent a number to clear the warning. |
+| Draft seed differs from linked MLflow run (`LINKED_SEED_MISMATCH`) | “The draft note says seed {previousValue}, but the linked MLflow run says {currentValue}. Which seed belongs to this result?” | For the documented Iris run, type `The random seed was 42 because the linked MLflow run records 42.` | Proposes seed 42; approval reruns the audit. |
+| Draft learning rate differs from linked run (`LINKED_LEARNING_RATE_MISMATCH`) | “The note says learning rate {previousValue}, but the linked run says {currentValue}. Which value produced this result?” | Type `The learning rate was 0.1 because the linked MLflow run records 0.1.` | Proposes rate 0.1; approval reruns the audit. |
+| Draft dataset version differs from linked run (`LINKED_DATASET_VERSION_MISMATCH`) | “The note says dataset version {previousValue}, but the linked run says {currentValue}. Which version produced this result?” | Type `The dataset version sklearn-iris was used because the linked run records sklearn-iris.` | Proposes literal version `sklearn-iris`; approval reruns the audit. |
 | Dataset differs from manifest (`DATASET_VERSION_MISMATCH`) | “The note and stored dataset manifest disagree. Which dataset version and hash were used?” | Check the manifest. If the record's version is wrong, type `The dataset version v1 was used because the manifest identifies v1.` | Can propose a version change. **The chat does not set the dataset hash**, so a hash conflict may remain. Correct the evidence or propose a separate approved identifier change. |
 | Result artifact missing (`MISSING_RESULT_ARTIFACT`) | “Can you attach the evaluation output that supports the reported accuracy?” | Attach the real evaluation output in the experiment's artifact controls. | Typing “yes” does not attach a file or clear the finding. Re-audit after adding evidence. |
 | Evaluation script missing (`MISSING_EVALUATION_SCRIPT`) | “Can you attach the evaluation script used for this result?” | Attach the actual evaluation script in the experiment's artifact controls. | Text alone does not verify a script. |
 | Checkpoint missing (`MISSING_MODEL_CHECKPOINT`) | “Can you attach the model checkpoint for this result?” | Attach the actual checkpoint in the experiment's artifact controls. | Text alone does not verify a checkpoint. |
-| Any other open finding, including an unlogged baseline or unavailable linked artifact listing | “Can you clarify: {finding title}?” | State the known context, then inspect the linked source or correct its metadata. | The observation is saved; the same finding can be asked again if no supporting structured evidence changed. For a missing baseline, log `baseline_run_id` in MLflow and refresh evidence. For unavailable artifact listing, investigate the linked run; artifact presence remains unknown. |
+| Any other open finding, including an unlogged baseline or unavailable linked artifact listing | “Can you clarify: {finding title}?” | State the known context, then inspect the linked source or correct its metadata. | Alexa saves the observation and explains that the finding remains open. For a missing baseline, log `baseline_run_id` in MLflow and refresh evidence. For unavailable artifact listing, investigate the linked run; artifact presence remains unknown. |
 | No open findings | “The current audit has no follow-up question.” | No answer required. | Continue or finish the session. |
+
+In the lab, a judge can also type `Why was this flagged?` (or click the matching button) while an experiment is active. Alexa replies with the selected finding's rule ID, stored description, and recommendation. This is a deterministic, read-only answer rather than a general-purpose LLM response.
 
 ## Other recognized observation patterns
 
@@ -57,7 +62,7 @@ Click **Finish & report** to rerun the audit and generate the report. Response t
 
 > I finished the session. The final audit has {number} open findings. I opened the detailed reproducibility report.
 
-The number comes from the current audit. It is **2** in the recommended Iris video only when the three documented starting findings are present and the `75/25` split revision is approved.
+The number comes from the current audit. The connected composite demo deliberately has more initial findings than the plain linked Iris review; the final count changes with the actual source evidence and approved corrections.
 
 ## Finding investigation chat
 
@@ -67,4 +72,4 @@ On an experiment detail page, **Investigate with Alexa+ Simulator** opens a conv
 
 A follow-up beginning `Why`, `Explain`, `Show me the evidence`, or `What evidence` returns the deterministic rule ID, stored evidence, and recommendation. It is read-only. For example, on **Run artifacts could not be verified**, enter `Why is the artifact status unknown?` to see `LINKED_ARTIFACT_LIST_UNAVAILABLE` and the explanation that GitLab's artifact location could not be listed through a supported API. It does not claim that artifacts are absent.
 
-Other follow-up text is treated as an observation. Only the value patterns above can produce a structured proposal; an arbitrary question is not handled by a general-purpose LLM in the current public demo. If an observation does not resolve the selected finding, the same question can reappear. The owner should answer by checking evidence, attaching files, or refreshing the linked run rather than repeatedly guessing in chat.
+Other follow-up text is treated as an observation. Only the value patterns above can produce a structured proposal; an arbitrary question is not handled by a general-purpose LLM in the public demo. With no proposal, Alexa saves the answer and explains that the finding remains open. **Ask next question** selects from current findings again. The owner should check evidence, attach files, or refresh the linked run rather than guess in chat.

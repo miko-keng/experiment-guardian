@@ -44,6 +44,13 @@ experimentsRouter.post("/audit", async (req: Request, res: Response, next: NextF
 });
 
 // Start from an existing GitLab merge request and MLflow run, with no notes or LLM required.
+experimentsRouter.post("/linked-review/check", async (req, res, next) => {
+  try {
+    const input = LinkEvidenceSchema.parse(req.body);
+    res.json(await linkedEvidenceService.import(null, { ...input, previewOnly: true }));
+  } catch (error) { next(linkedFailure(error)); }
+});
+
 experimentsRouter.post("/linked-review", async (req, res, next) => {
   try {
     const result = await linkedEvidenceService.import(null, LinkEvidenceSchema.parse(req.body));

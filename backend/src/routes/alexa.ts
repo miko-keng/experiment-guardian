@@ -5,7 +5,7 @@ import { assistantRepository } from "../database/assistant-repository.js";
 
 export const alexaRouter=Router();
 const Start=z.object({title:z.string().max(160).optional(),experimentId:z.string().uuid().nullable().optional(),sourceId:z.string().uuid().nullable().optional()});
-const Observation=z.object({text:z.string().min(1).max(50000),clientObservationId:z.string().min(1).max(200).optional(),observedAt:z.string().optional()});
+const Observation=z.object({text:z.string().min(1).max(50000),clientObservationId:z.string().min(1).max(200).optional(),observedAt:z.string().optional(),sourceId:z.string().uuid().optional()});
 
 alexaRouter.get("/sessions",(_req,res)=>res.json({items:alexaSessionService.list()}));
 alexaRouter.post("/sessions/start",(req,res,next)=>{try{res.status(201).json(alexaSessionService.start(Start.parse(req.body)));}catch(e){next(e);}});

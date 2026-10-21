@@ -325,7 +325,7 @@ export const ExperimentDetailPage: React.FC = () => {
         <div>
           <Link to="/" className="inline-flex items-center space-x-1 text-sm font-medium text-slate-500 hover:text-slate-800 mb-2">
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Dashboard</span>
+            <span>Experiments / Reviews</span>
           </Link>
           <div className="flex items-center space-x-3">
             <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{experiment.title}</h1>
@@ -376,7 +376,7 @@ export const ExperimentDetailPage: React.FC = () => {
         </div>
       )}
 
-      <section className="rounded-xl border border-indigo-200 bg-white p-6 space-y-4">
+      <section className="rounded-lg border border-slate-300 bg-white p-6 space-y-4 shadow-sm">
         <div><h2 className="font-bold text-slate-900">Linked GitLab and MLflow evidence</h2>
           <p className="text-xs text-slate-500">Import is read-only. Each refresh saves a new snapshot pinned to the merge request head commit; earlier snapshots remain below.</p></div>
         <form onSubmit={refreshEvidence} className="grid gap-2 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_auto]">
@@ -384,15 +384,24 @@ export const ExperimentDetailPage: React.FC = () => {
           <input aria-label="MLflow run ID" placeholder={data.linkedEvidence?.[0]?.mlflowRunId || "MLflow run ID"} value={linkedRunId} onChange={e => setLinkedRunId(e.target.value)} required={!data.linkedEvidence?.length} className="rounded-lg border p-2 text-sm" />
           <button disabled={actionId === "link-evidence"} className="rounded-lg bg-indigo-700 px-4 py-2 text-sm font-bold text-white disabled:opacity-50">{actionId === "link-evidence" ? "Reading…" : data.linkedEvidence?.length ? "Refresh evidence" : "Link evidence"}</button>
         </form>
-        {data.linkedEvidence?.[0] && <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm space-y-3">
+        {data.linkedEvidence?.[0] && <div className="rounded-md border border-slate-300 bg-slate-50 p-4 text-sm space-y-3">
+          {experiment.source.sourceReference === "judge-demo:iris-composite-draft" && <p className="inline-flex rounded-md border border-amber-300 bg-amber-50 px-2 py-1 text-xs font-semibold text-amber-900">Unverified draft note · judge demo</p>}
           <div className="flex flex-wrap gap-3 text-indigo-700 font-semibold">
             <a target="_blank" rel="noopener noreferrer" href={data.linkedEvidence[0].evidence.source.mergeRequest} className="underline">Merge request</a>
             <a target="_blank" rel="noopener noreferrer" href={data.linkedEvidence[0].evidence.source.commit} className="underline">Pinned commit</a>
             <a target="_blank" rel="noopener noreferrer" href={data.linkedEvidence[0].evidence.source.run} className="underline">Run</a>
           </div>
           <p className="text-xs text-slate-600">Run {data.linkedEvidence[0].mlflowRunId} · commit {data.linkedEvidence[0].gitlabCommitSha.slice(0, 12)} · fetched {new Date(data.linkedEvidence[0].fetchedAt).toLocaleString()}</p>
+          <div className="overflow-x-auto rounded-md border border-slate-300 bg-white">
+            <div className="grid grid-cols-[minmax(115px,1fr)_minmax(125px,1fr)_minmax(125px,1fr)] border-b border-slate-200 bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600"><span>Field</span><span>Research note</span><span>Linked run</span></div>
+            {([
+              ["Random seed", experiment.training.randomSeed, data.linkedEvidence[0].evidence.observed.randomSeed],
+              ["Learning rate", experiment.training.learningRate, data.linkedEvidence[0].evidence.observed.learningRate],
+              ["Dataset version", experiment.dataset.datasetVersion, data.linkedEvidence[0].evidence.observed.datasetVersion],
+            ] as const).map(([label, claim, observed]) => <div key={label} className="grid grid-cols-[minmax(115px,1fr)_minmax(125px,1fr)_minmax(125px,1fr)] border-b last:border-b-0 border-slate-200 px-3 py-2 font-mono text-xs"><span className="font-sans font-semibold text-slate-700">{label}</span><span className={claim != null && observed != null && String(claim) !== String(observed) ? "text-red-700 font-bold" : "text-slate-600"}>{String(claim ?? "Not recorded")}</span><span className="text-emerald-700 font-bold">{String(observed ?? "Not recorded")}</span></div>)}
+          </div>
           {data.linkedEvidence[0].evidence.mlflow.artifactListingStatus !== "verified" && <p className="text-xs text-amber-700">Run artifact listing is unavailable; Guardian has not verified whether required files exist.</p>}
-          <Link to={`/lab?experiment=${encodeURIComponent(experiment.id)}`} className="inline-block rounded-lg bg-cyan-700 px-3 py-2 text-xs font-bold text-white">Discuss this run in the Alexa lab</Link>
+          <Link to={`/lab?experiment=${encodeURIComponent(experiment.id)}`} className="inline-block rounded-md bg-[#7759b8] hover:bg-[#63479e] px-3 py-2 text-xs font-bold text-white">Discuss this run in the Alexa lab</Link>
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">{Object.entries(data.linkedEvidence[0].evidence.observed).map(([key, value]) => <div key={key} className="rounded border bg-white p-2"><div className="text-xs text-slate-500">{key}</div><div className="font-mono text-xs break-all">{value === null ? "Missing" : String(value)}</div></div>)}</div>
           <details className="text-xs"><summary className="cursor-pointer font-semibold">Run parameters, metrics, and artifact references</summary><pre className="mt-2 whitespace-pre-wrap break-all">{JSON.stringify(data.linkedEvidence[0].evidence.mlflow, null, 2)}</pre></details>
         </div>}

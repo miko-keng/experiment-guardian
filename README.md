@@ -2,7 +2,11 @@
 
 **New: GitLab + MLflow linked experiment reviews.** Paste a merge request URL and a run ID in **Experiments** to fetch read-only source evidence, compare it with the research record, and keep immutable snapshots. The setup, logging convention, and advisory GitLab CI job are described in [Connected ML workflow](docs/CONNECTED_ML_WORKFLOW.md).
 
-The home page opens **Experiments**. To start without a run ID, choose **Audit meeting notes** there. Open **Discuss this run in the Alexa lab** from a linked review to keep the conversation attached to that experiment. The [recommended single-scenario judge demo](docs/JUDGE_DEMO.md) includes exact inputs and expected responses; [Alexa+ Q&A reference](docs/ALEXA_QA_REFERENCE.md) covers the other deterministic follow-up questions.
+The home page opens **Experiments**. To start without a run ID, choose **Audit meeting notes** there. Open **Discuss this run in the Alexa lab** from a linked review to keep the conversation attached to that experiment. The [recommended connected judge demo](docs/JUDGE_DEMO.md) gives the recording route; [complete scenario answers](docs/JUDGE_SCENARIOS.md) gives exact inputs for every demo card; [Alexa+ Q&A reference](docs/ALEXA_QA_REFERENCE.md) covers all deterministic question shapes.
+
+In a linked Alexa+ session, **Import document** accepts TXT, Markdown, PDF, and DOCX notes (plus supported audio when transcription is configured). The extracted text appears for review before the researcher sends it through MCP. The included [Iris review note](examples/demo/iris-review-note.txt) and **Linked Iris walkthrough** card exercise this path without creating a second experiment. An approved note-based correction is re-audited against the original GitLab/MLflow snapshot.
+
+**Actual runtime boundary:** The React Alexa+ *simulation* is the MCP client. Its UI handlers select tools such as `start_experiment_session`, `add_experiment_observation`, and `confirm_experiment_action`; the Guardian MCP server executes them. There is no live Amazon Alexa+ agent selecting tools. Bedrock is a separate, optional server-side extractor for new transcripts when `ALLOW_MOCK_AI=false` and model access works. A linked GitLab/MLflow review and deterministic audit do not call Bedrock, and the current lab conversation is not a general-purpose LLM chat.
 
 **Alexa+ research memory and reproducibility copilot**  
 *Alexa+ hackathon project with optional AWS and Bee adapters*
@@ -143,6 +147,7 @@ npm run test:frontend
 | `/api/v1/experiments/:id/artifact-files` | `POST` | Store an uploaded artifact file, check its SHA-256 hash, and rerun the audit |
 | `/api/v1/experiments/:id/quality-gate` | `GET` | Read pass, warn, block, or not-configured decision from the latest audit |
 | `/api/v1/experiments/linked-review` | `POST` | Start from a GitLab merge request URL and MLflow run ID |
+| `/api/v1/experiments/linked-review/check` | `POST` | Read and validate linked sources without creating an experiment |
 | `/api/v1/experiments/:id/linked-evidence` | `POST` | Append a fresh, pinned evidence snapshot to an existing experiment |
 | `/api/v1/experiments/linked-review/lookup` | `GET` | Find a merge request's advisory CI review |
 | `/api/v1/experiments/:id/audit` | `GET` | Audit findings for a specific experiment |

@@ -14,7 +14,7 @@ export const confirmAction=(sessionId:string,approvalRequestId:string,decision:"
 export const pauseSession=(id:string)=>requestJson<Envelope>(`/api/v1/alexa/sessions/${id}/pause`,{method:"POST"});
 export const resumeSession=(id:string)=>requestJson<Envelope>(`/api/v1/alexa/sessions/${id}/resume`,{method:"POST"});
 export const finishSession=(id:string)=>requestJson<Envelope>(`/api/v1/alexa/sessions/${id}/finish`,{method:"POST"});
-export interface DemoScenario{id:string;title:string;description:string;databaseBacked?:boolean}
+export interface DemoScenario{id:string;title:string;description:string;databaseBacked?:boolean;linkedOnly?:boolean;judgePrompt?:string;judgeAnswer?:string;judgeExpected?:string}
 export const listDemoScenarios=()=>requestJson<{items:DemoScenario[]}>("/api/v1/sources/demo");
 export const loadDemoSource=(id:string)=>requestJson<any>(`/api/v1/sources/demo/${id}`,{method:"POST"});
 export const loadDatabaseDemo=(id:string)=>requestJson<any>(`/api/v1/sources/demo/${id}/load`,{method:"POST"});

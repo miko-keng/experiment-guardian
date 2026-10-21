@@ -12,7 +12,14 @@ export const LinkEvidenceSchema = z.object({
   mergeRequestUrl: z.string().trim().url(),
   runId: z.string().trim().regex(/^[a-zA-Z0-9_-]{1,128}$/, "Invalid MLflow run ID"),
   title: z.string().trim().max(160).optional(),
+  demoScenario: z.literal("iris-composite").optional(),
 });
+
+export const IRIS_DEMO = {
+  mergeRequestUrl: "https://gitlab.com/miko-keng/data-science-ci-example/-/merge_requests/1",
+  runId: "e9cf4088-1ebe-44c5-bdcf-9c79007cad1f",
+  draftNote: "Unverified draft note for the Iris run: random seed 7, learning rate 0.01, and dataset version v2. The train/test split was not written down. Compare these claims with the linked run before accepting them.",
+} as const;
 
 function serviceUrl(base: string, path: string): URL {
   const url = new URL(`${base.replace(/\/$/, "")}/${path.replace(/^\//, "")}`);
@@ -66,9 +73,12 @@ function parseMergeRequest(input: string) {
 }
 
 export class LinkedEvidenceService {
-  async import(experimentId: string | null, input: z.infer<typeof LinkEvidenceSchema>) {
+  async import(experimentId: string | null, input: z.infer<typeof LinkEvidenceSchema> & { previewOnly?: boolean }) {
     const existing = experimentId ? experimentRepository.findById(experimentId) : null;
     if (experimentId && !existing) throw new Error("Experiment not found");
+    if (input.demoScenario && (experimentId || input.mergeRequestUrl !== IRIS_DEMO.mergeRequestUrl || input.runId !== IRIS_DEMO.runId)) {
+      throw new Error("The connected judge scenario is available only for its documented Iris merge request and run");
+    }
     if (!config.mlflowTrackingUrl) throw new Error("Set MLFLOW_TRACKING_URL on the backend before linking a run");
     const mr = parseMergeRequest(input.mergeRequestUrl);
     const gitlabHeaders: Record<string, string> = {};
@@ -190,26 +200,37 @@ export class LinkedEvidenceService {
       mlflow: { runId: input.runId, experimentId: String(run.info?.experiment_id || ""),
         artifactUri, artifactListingStatus, params, metrics, tags, artifacts,
         datasetInputs: datasetInputs.slice(0, 20) }, observed };
+    if (input.previewOnly) return {
+      previewOnly: true,
+      mergeRequestUrl: mr.url,
+      commitSha: sha,
+      trainingConfigFound: Boolean(trainingConfig),
+      runId: input.runId,
+      observed,
+      artifactListingStatus,
+    };
     const result = db.transaction(() => {
       const now = new Date().toISOString();
+      const demo = input.demoScenario === "iris-composite";
       const experiment: Experiment = existing || {
-        id: crypto.randomUUID(), title: input.title || String(mrData.title || "Linked ML experiment"),
+        id: crypto.randomUUID(), title: demo ? "Iris review — draft note versus linked run" : input.title || String(mrData.title || "Linked ML experiment"),
         hypothesis: null, objective: null, status: "auditing",
         model: { architecture: null, modelName: first(params, ["model_name", "model"]),
           modelVersion: null, parameters: {} },
         dataset: { datasetName: first(params, ["dataset_name"]),
-          datasetVersion: observed.datasetVersion, datasetIdentifier: observed.datasetHash,
+          datasetVersion: demo ? "v2" : observed.datasetVersion, datasetIdentifier: observed.datasetHash,
           trainSplit: null, validationSplit: null, testSplit: null, preprocessing: {} },
-        training: { learningRate: observed.learningRate, batchSize: number(params.batch_size),
+        training: { learningRate: demo ? 0.01 : observed.learningRate, batchSize: number(params.batch_size),
           epochs: number(params.epochs), optimizer: params.optimizer || null,
-          randomSeed: observed.randomSeed, framework: params.framework || null,
+          randomSeed: demo ? 7 : observed.randomSeed, framework: params.framework || null,
           frameworkVersion: params.framework_version || null, environment: {}, otherParameters: {} },
         evaluation: { metrics: observed.accuracy === null ? {} : { accuracy: observed.accuracy },
           evaluationProcedure: null, evaluationDatasetIdentifier: null,
           codeCommit: sha, notes: null },
         baselineExperimentId: null,
-        source: { sourceType: "manual", sourceId: null, sourceReference: mr.url,
-          transcriptText: null, transcriptHash: null, sourceTimestamp: now },
+        source: { sourceType: "manual", sourceId: null, sourceReference: demo ? "judge-demo:iris-composite-draft" : mr.url,
+          transcriptText: demo ? IRIS_DEMO.draftNote : null,
+          transcriptHash: demo ? crypto.createHash("sha256").update(IRIS_DEMO.draftNote).digest("hex") : null, sourceTimestamp: now },
         extractedAt: null, createdAt: now, updatedAt: now,
       };
       if (!existing) experimentRepository.create(experiment, experiment.source);

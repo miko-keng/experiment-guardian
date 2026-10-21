@@ -6,6 +6,8 @@ import { reportRepository } from "../database/report-repository.js";
 import { getVerification } from "./verification-service.js";
 import { BedrockIntegrationError } from "../integrations/bedrock/bedrock-errors.js";
 import { linkedEvidenceRepository } from "../database/linked-evidence-repository.js";
+import { assistantRepository } from "../database/assistant-repository.js";
+import { sourceRepository } from "../database/source-repository.js";
 
 export class ReportService {
   generate(experimentId: string, format: "markdown" | "json" = "markdown") {
@@ -17,8 +19,11 @@ export class ReportService {
     const decisions = decisionRepository.listByExperiment(experimentId);
     const verification = getVerification(experimentId);
     const linkedEvidence = linkedEvidenceRepository.list(experimentId);
+    const importedSources = assistantRepository.listImportedSources(experimentId).map((item) => ({
+      ...item, source: sourceRepository.findById(item.sourceId),
+    }));
     const payload = { experiment, audit: runs[0] || null, findings, revisions, decisions,
-      verification, linkedEvidence, generatedAt: new Date().toISOString() };
+      verification, linkedEvidence, importedSources, generatedAt: new Date().toISOString() };
     const content = format === "json" ? JSON.stringify(payload, null, 2) : this.markdown(payload);
     return reportRepository.create({ experimentId, auditRunId: runs[0]?.id || null, format, content });
   }
@@ -54,6 +59,10 @@ ${data.linkedEvidence[0] ? `- Merge request: ${data.linkedEvidence[0].gitlabMrUr
 - MLflow run: ${data.linkedEvidence[0].mlflowRunId}
 - Fetched at: ${data.linkedEvidence[0].fetchedAt}
 - Earlier snapshots retained: ${data.linkedEvidence.length - 1}` : "- No GitLab or MLflow source linked"}
+
+### Imported research documents
+
+${data.importedSources.map((item: any) => `- ${item.source?.originalName || "Imported note"}: extracted-text SHA-256 ${item.source?.contentHash || "unknown"}${item.edited ? "; text edited before submission" : "; submitted text matches the imported source"}`).join("\n") || "- None"}
 
 ### Stored artifact metadata
 

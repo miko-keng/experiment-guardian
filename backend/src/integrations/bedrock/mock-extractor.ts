@@ -20,6 +20,8 @@ export class MockExtractor implements ExperimentExtractor {
     if (lrMatch) {
       learningRate = parseFloat(lrMatch[1]);
     }
+    const finalLrMatch = input.transcript.match(/final\s+run\s+used\s+(?:a\s+learning\s+rate\s+of\s+)?([0-9.]+)/i);
+    if (finalLrMatch) learningRate = parseFloat(finalLrMatch[1]);
 
     // Check for batch size
     let batchSize: number | null = null;
@@ -61,12 +63,21 @@ export class MockExtractor implements ExperimentExtractor {
       datasetName = "ImageNet";
     } else if (text.includes("glue") || text.includes("sst2")) {
       datasetName = "GLUE-SST2";
+    } else if (text.includes("imdb")) {
+      datasetName = "IMDB";
     }
 
     const dsVerMatch = input.transcript.match(/dataset\s*v(?:ersion)?\s*([0-9.]+)/i);
     if (dsVerMatch) {
       datasetVersion = `v${dsVerMatch[1]}`;
     }
+    const namedDatasetVersion = input.transcript.match(/dataset\s+IMDB\s+version\s+([0-9.]+)/i);
+    if (namedDatasetVersion) datasetVersion = `v${namedDatasetVersion[1]}`;
+
+    const frameworkVersion = input.transcript.match(/\b(?:PyTorch|TensorFlow)\s+([0-9]+(?:\.[0-9]+){1,2})\b/i)?.[1] || null;
+    const codeCommit = input.transcript.match(/\b(?:code\s+)?commit\s+(?:is|was|=)?\s*([a-f0-9]{6,40})\b/i)?.[1] || null;
+    const accuracyClaim = input.transcript.match(/\b(?:accuracy\s+(?:was|reached|of)\s*|reached\s*)([0-9]+(?:\.[0-9]+)?)\s*(?:percent|%)\b/i)?.[1];
+    const accuracy = accuracyClaim ? Number(accuracyClaim) / 100 : null;
 
     // Check for dataset splits
     let trainSplit: string | null = null;
@@ -123,15 +134,15 @@ export class MockExtractor implements ExperimentExtractor {
           optimizer: text.includes("adam") ? "AdamW" : null,
           randomSeed,
           framework: text.includes("pytorch") ? "PyTorch" : null,
-          frameworkVersion: null,
+          frameworkVersion,
           environment: {},
           otherParameters: {},
         },
         evaluation: {
-          metrics: {},
-          evaluationProcedure: null,
+          metrics: accuracy === null ? {} : { accuracy },
+          evaluationProcedure: text.includes("evaluated once on the fixed") ? "Evaluated once on the fixed test split" : null,
           evaluationDatasetIdentifier: null,
-          codeCommit: null,
+          codeCommit,
           notes: null,
         },
         baselineExperimentId: null,
