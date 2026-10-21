@@ -21,7 +21,7 @@ Start from **Experiments → Launch connected judge demo → Discuss this run in
 | Alexa asks for approval after any proposed correction | Click **Approve and re-audit**, or click **Reject**. | Approval changes the Guardian record and reruns rules; rejection changes no experiment field. |
 | No more questions are desired | Click **Finish & report**. | Reruns audit, generates report, and states the **current** number of open findings. |
 
-The previously observed Iris run showed seed `42`, rate `0.1`, version `sklearn-iris`, and no logged baseline. The public GitLab MR, commit, and config were read successfully on 21 October 2026; the MLflow endpoint returned HTTP 401 without a token. A disposable-database integration run with simulated MLflow responses produced the first three conflict questions. Verify the token-backed run after deployment.
+The deployed app's read-only source check successfully fetched the public GitLab MR and private MLflow run on 21 October 2026. It returned seed `42`, rate `0.1`, version `sklearn-iris`, and artifact listing `unavailable`. A disposable-database integration run with simulated source responses produced the first three conflict questions and completed the approval/report flow. The read-only deployed check created no review record.
 
 ## Linked Iris walkthrough card
 
