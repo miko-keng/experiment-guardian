@@ -134,5 +134,16 @@ describe("Connected judge review through the official MCP client", () => {
     expect((finished.structuredContent as any).data.report.content).toContain("Iris");
     expect((finished.structuredContent as any).data.report.content).toContain("Iris linked review walkthrough: extracted-text SHA-256");
     expect(auditService.getFindingsForExperiment(id).some(item => item.ruleId === "LINKED_ARTIFACT_LIST_UNAVAILABLE" && item.status === "open")).toBe(true);
+
+    const complete = await client.callTool({ name: "create_experiment_from_transcript", arguments: {
+      transcript: "We trained ResNet-50 on ImageNet dataset v2 with an 80/20 split using random seed 42 and learning rate 0.001.",
+    } });
+    const cleanId = (complete.structuredContent as any).experiment.id;
+    const cleanSession = await client.callTool({ name: "start_experiment_session", arguments: { experimentId: cleanId } });
+    const cleanSessionId = (cleanSession.structuredContent as any).data.id;
+    const noQuestion = await client.callTool({ name: "ask_next_reproducibility_question", arguments: { sessionId: cleanSessionId } });
+    expect((noQuestion.structuredContent as any).speech.text).toBe("The current audit has no follow-up question.");
+    const cleanDetail = await client.callTool({ name: "get_active_experiment", arguments: { sessionId: cleanSessionId } });
+    expect((cleanDetail.structuredContent as any).messages.some((message: any) => message.content === "The current audit has no follow-up question.")).toBe(true);
   });
 });
